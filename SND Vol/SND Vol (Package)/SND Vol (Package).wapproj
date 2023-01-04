@@ -135,11 +135,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Windows.CppWinRT" Version="2.0.221104.6" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221109.1">
+    <PackageReference Include="Microsoft.Windows.CppWinRT" Version="2.0.221121.5" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221116.1">
       <IncludeAssets>build</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755">
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.25262-preview">
       <IncludeAssets>build</IncludeAssets>
     </PackageReference>
   </ItemGroup>

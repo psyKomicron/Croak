@@ -341,6 +341,11 @@ namespace winrt::SND_Vol::implementation
             RootGrid().Resources().Lookup(box_value(L"GridViewHorizontalLayout")).as<Style>()
         );
         layout = 1;
+
+        // Setting DropDownButton.Content to mimic ComboBox selected item behavior.
+        FontIcon icon{};
+        icon.Glyph(L"\ue8c0");
+        LayoutDropDownButton().Content(icon);
     }
 
     void MainWindow::VerticalViewMenuFlyoutItem_Click(IInspectable const&, winrt::Microsoft::UI::Xaml::RoutedEventArgs const&)
@@ -351,6 +356,13 @@ namespace winrt::SND_Vol::implementation
             RootGrid().Resources().Lookup(box_value(L"GridViewVerticalLayout")).as<Style>()
         );
         layout = 2;
+
+        // Setting DropDownButton.Content to mimic ComboBox selected item behavior.
+        FontIcon icon{};
+        icon.Rotation(90);
+        icon.Translation(::Numerics::float3(16, 0, 0));
+        icon.Glyph(L"\ue8c0");
+        LayoutDropDownButton().Content(icon);
     }
 
     void MainWindow::AutoViewMenuFlyoutItem_Click(IInspectable const&, winrt::Microsoft::UI::Xaml::RoutedEventArgs const&)
@@ -362,6 +374,11 @@ namespace winrt::SND_Vol::implementation
             RootGrid().Resources().Lookup(box_value(L"GridViewHorizontalLayout")).as<Style>()
         );
         layout = 0;
+
+        // Setting DropDownButton.Content to mimic ComboBox selected item behavior.
+        FontIcon icon{};
+        icon.Glyph(L"\uf0e2");
+        LayoutDropDownButton().Content(icon);
     }
 
     void MainWindow::SettingsIconButton_Click(IconButton const& /*sender*/, RoutedEventArgs const& /*args*/)
@@ -452,34 +469,7 @@ namespace winrt::SND_Vol::implementation
         
     void MainWindow::MenuFlyout_Opening(IInspectable const&, IInspectable const&)
     {
-        MenuFlyoutSubItem profilesMenuFlyout{};
-        profilesMenuFlyout.Tag(box_value(L"Profiles"));
-        profilesMenuFlyout.Text(L"Profiles");
-
-        /*if (SettingsCommandBarFlyout().SecondaryCommands().Items().GetAt(0).Tag().try_as<hstring>() == L"Profiles")
-        {
-            SettingsButtonFlyout().Items().RemoveAt(0);
-        }*/
-
-        ApplicationDataContainer audioProfilesContainer = ApplicationData::Current().LocalSettings().Containers().TryLookup(L"AudioProfiles");
-        if (audioProfilesContainer)
-        {
-            for (auto&& profile : audioProfilesContainer.Containers())
-            {
-                hstring key = profile.Key();
-                MenuFlyoutItem item{};
-                item.Text(key);
-                item.Tag(box_value(key));
-                item.Click([this](const IInspectable& sender, RoutedEventArgs)
-                    {
-                        LoadProfile(sender.as<FrameworkElement>().Tag().as<hstring>());
-                    });
-
-                profilesMenuFlyout.Items().Append(item);
-            }
-        }
-
-        //SettingsButtonFlyout().Items().InsertAt(0, profilesMenuFlyout);
+        
     }
 
     void MainWindow::ExpandFlyoutButton_Click(IInspectable const&, RoutedEventArgs const&)
@@ -574,6 +564,44 @@ namespace winrt::SND_Vol::implementation
             ResourceLoader loader{};
             WindowMessageBar().EnqueueMessage(loader.GetString(L"ErrorAppFailedRestart"));
         }
+    }
+
+    void MainWindow::ProfilesButton_Click(IconButton const&, RoutedEventArgs const&)
+    {
+        MoreFlyoutStackpanel().Visibility(MoreFlyoutStackpanel().Visibility() == Visibility::Visible ? Visibility::Collapsed : Visibility::Visible);
+        ProfilesFlyoutGrid().Visibility(ProfilesFlyoutGrid().Visibility() == Visibility::Visible ? Visibility::Collapsed : Visibility::Visible);
+
+        // Load profiles
+        ProfilesFlyoutStackpanel().Children().Clear();
+        ApplicationDataContainer audioProfilesContainer = ApplicationData::Current().LocalSettings().Containers().TryLookup(L"AudioProfiles");
+        if (audioProfilesContainer)
+        {
+            for (auto&& profile : audioProfilesContainer.Containers())
+            {
+                hstring key = profile.Key();
+                Button item{};
+                item.Content(box_value(key));
+                item.Tag(box_value(key));
+                item.Click([this](const IInspectable& sender, RoutedEventArgs)
+                {
+                    LoadProfile(sender.as<FrameworkElement>().Tag().as<hstring>());
+                });
+
+                ProfilesFlyoutStackpanel().Children().Append(item);
+            }
+        }
+    }
+
+    void MainWindow::SettingsButtonFlyout_Closed(IInspectable const&, IInspectable const&)
+    {
+        MoreFlyoutStackpanel().Visibility(Visibility::Visible);
+        ProfilesFlyoutGrid().Visibility(Visibility::Collapsed);
+    }
+
+    void MainWindow::CloseProfilesButton_Click(IInspectable const&, RoutedEventArgs const&)
+    {
+        MoreFlyoutStackpanel().Visibility(MoreFlyoutStackpanel().Visibility() == Visibility::Visible ? Visibility::Collapsed : Visibility::Visible);
+        ProfilesFlyoutGrid().Visibility(ProfilesFlyoutGrid().Visibility() == Visibility::Visible ? Visibility::Collapsed : Visibility::Visible);
     }
     #pragma endregion
 
@@ -1068,7 +1096,7 @@ namespace winrt::SND_Vol::implementation
         ));
         presenter.IsAlwaysOnTop(alwaysOnTop);
 
-        layout = unbox_value_or(settings.TryLookup(L"SessionsLayout"), 0u);
+        layout = unbox_value_or(settings.TryLookup(L"SessionsLayout"), 0);
         switch (layout)
         {
             case 1:
@@ -1213,7 +1241,9 @@ namespace winrt::SND_Vol::implementation
 
                             for (size_t i = 0; i < audioSessions->size(); i++)
                             {
+                                lock.unlock();
                                 auto&& view = CreateAudioView(audioSessions->at(i), true);
+                                lock.lock();
                                 if (view)
                                 {
                                     uniqueSessions.push_back(view);

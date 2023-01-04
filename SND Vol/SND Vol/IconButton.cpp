@@ -9,6 +9,7 @@ using namespace Microsoft::UI::Input;
 using namespace Microsoft::UI::Xaml;
 using namespace Microsoft::UI::Xaml::Input;
 using namespace winrt::Microsoft::UI::Xaml::Controls;
+using namespace winrt::Windows::Foundation;
 
 
 namespace winrt::SND_Vol::implementation
@@ -25,15 +26,30 @@ namespace winrt::SND_Vol::implementation
         xaml_typename<SND_Vol::IconButton>(),
         PropertyMetadata(box_value(L""))
     );
+    DependencyProperty IconButton::_contentProperty = DependencyProperty::Register(
+        L"Content",
+        xaml_typename<winrt::Windows::Foundation::IInspectable>(),
+        xaml_typename<SND_Vol::IconButton>(),
+        PropertyMetadata(nullptr)
+    );
+
 
     IconButton::IconButton()
     {
         DefaultStyleKey(winrt::box_value(L"SND_Vol.IconButton"));
-        auto&& userButton = FindName(L"UserButton");
-        if (userButton)
+
+        loadedRevoker = Loaded(auto_revoke, [this](IInspectable const&, RoutedEventArgs const&)
         {
-            Button button = userButton.as<Button>();
-        }
+            IInspectable value = Content();
+            if (value != nullptr)
+            {
+                VisualStateManager::GoToState(*this, L"UsingPresenter", false);
+            }
+            else
+            {
+                VisualStateManager::GoToState(*this, L"UsingText", false);
+            }
+        });
     }
 
     inline winrt::hstring IconButton::Glyph() const
@@ -54,6 +70,25 @@ namespace winrt::SND_Vol::implementation
     inline void IconButton::Text(const winrt::hstring& value)
     {
         SetValue(_textNameProperty, box_value(value));
+    }
+
+    inline winrt::Windows::Foundation::IInspectable IconButton::Content()
+    {
+        return GetValue(_contentProperty);
+    }
+
+    inline void IconButton::Content(const winrt::Windows::Foundation::IInspectable& value)
+    {
+        if (value != nullptr)
+        {
+            VisualStateManager::GoToState(*this, L"UsingPresenter", false);
+        }
+        else
+        {
+            VisualStateManager::GoToState(*this, L"UsingText", false);
+        }
+
+        SetValue(_contentProperty, value);
     }
 
     void IconButton::OnPointerPressed(const Microsoft::UI::Xaml::Input::PointerRoutedEventArgs& args)

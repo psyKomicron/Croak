@@ -80,28 +80,29 @@
                     </Viewbox>
 
                     <Button.Flyout>
-                        <Flyout x:Name="SettingsButtonFlyout">
+                        <Flyout x:Name="SettingsButtonFlyout" Closed="SettingsButtonFlyout_Closed">
                             <Grid Margin="-16,-17" CornerRadius="{StaticResource ControlCornerRadius}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
+                                <Grid.Resources>
+                                    <Style TargetType="s:IconButton">
+                                        <Setter Property="Padding" Value="10,7" />
+                                        <Setter Property="Margin" Value="1,0" />
+                                    </Style>
+                                    <Style TargetType="s:IconToggleButton">
+                                        <Setter Property="Padding" Value="10,7" />
+                                        <Setter Property="Margin" Value="1,0" />
+                                    </Style>
+                                </Grid.Resources>
 
                                 <Grid Grid.Row="0" Padding="5,7,5,5" VerticalAlignment="Center">
                                     <Grid.Background>
                                         <SolidColorBrush Color="{ThemeResource SolidBackgroundFillColorSecondary}" Opacity="0.4"/>
                                     </Grid.Background>
                                     <Grid.Resources>
-                                        <Style TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
-                                            <Setter Property="Background" Value="{ThemeResource SubtleFillColorTransparentBrush}"/>
-                                            <Setter Property="BorderThickness" Value="0"/>
-                                            <Setter Property="HorizontalAlignment" Value="Center"/>
-                                            <Setter Property="VerticalAlignment" Value="Center"/>
-                                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                                            <Setter Property="Padding" Value="0"/>
-                                            <Setter Property="Height" Value="34"/>
-                                            <Setter Property="Width" Value="37"/>
-                                        </Style>
+                                        <Style TargetType="Button" BasedOn="{StaticResource IconButtonStyle}"/>
                                         <Style TargetType="ToggleButton" BasedOn="{StaticResource DefaultToggleButtonStyle}">
                                             <Setter Property="Background" Value="{ThemeResource SubtleFillColorTransparentBrush}"/>
                                             <Setter Property="BorderThickness" Value="0"/>
@@ -142,19 +143,19 @@
 
                                             <DropDownButton.Flyout>
                                                 <MenuFlyout>
-                                                    <MenuFlyoutItem Text="Vertical">
+                                                    <MenuFlyoutItem Text="Horizontal" Click="HorizontalViewMenuFlyoutItem_Click">
                                                         <MenuFlyoutItem.Icon>
                                                             <FontIcon Glyph="&#xe8c0;" />
                                                         </MenuFlyoutItem.Icon>
                                                     </MenuFlyoutItem>
 
-                                                    <MenuFlyoutItem Text="Horizontal">
+                                                    <MenuFlyoutItem Text="Vertical" Click="VerticalViewMenuFlyoutItem_Click">
                                                         <MenuFlyoutItem.Icon>
-                                                            <FontIcon Glyph="&#xe8c0;" Rotation="170" Translation="0,0,0" />
+                                                            <FontIcon Glyph="&#xe8c0;" Rotation="90" Translation="20,0,0" />
                                                         </MenuFlyoutItem.Icon>
                                                     </MenuFlyoutItem>
 
-                                                    <MenuFlyoutItem Text="Auto">
+                                                    <MenuFlyoutItem Text="Auto" Click="AutoViewMenuFlyoutItem_Click">
                                                         <MenuFlyoutItem.Icon>
                                                             <FontIcon Glyph="&#xf0e2;" />
                                                         </MenuFlyoutItem.Icon>
@@ -184,56 +185,98 @@
                                     </Button>
                                 </Grid>
 
-                                <StackPanel 
-                                    x:Name="MoreFlyoutStackpanel"
-                                    HorizontalAlignment="Stretch" 
-                                    Orientation="Vertical" 
-                                    Grid.Row="1" 
-                                    Spacing="4" 
-                                    Padding="2,7" 
-                                    Visibility="Visible"
-                                    BorderThickness="0,1,0,0"
-                                    BorderBrush="{ThemeResource SubtleFillColorSecondaryBrush}">
-                                    <StackPanel.Resources>
-                                        <Style TargetType="s:IconButton">
-                                            <Setter Property="Padding" Value="10,7" />
-                                            <Setter Property="Margin" Value="1,0" />
-                                        </Style>
-                                        <Style TargetType="s:IconToggleButton">
-                                            <Setter Property="Padding" Value="10,7" />
-                                            <Setter Property="Margin" Value="1,0" />
-                                        </Style>
-                                    </StackPanel.Resources>
-                                    <StackPanel.Transitions>
-                                        <RepositionThemeTransition/>
-                                    </StackPanel.Transitions>
+                                <Grid Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource SubtleFillColorSecondaryBrush}" Padding="2,7">
 
-                                    <s:IconToggleButton 
-                                        x:Name="DisableAnimationsIconToggleButton"
-                                        OnContent="Enable animations" OffContent="Disable animations" Glyph="&#xf4a5;" Click="DisableAnimationsIconButton_Click" />
+                                    <StackPanel 
+                                        x:Name="MoreFlyoutStackpanel"
+                                        HorizontalAlignment="Stretch" 
+                                        Orientation="Vertical"
+                                        Spacing="4"
+                                        Visibility="Visible">
+                                        <StackPanel.Transitions>
+                                            <RepositionThemeTransition/>
+                                        </StackPanel.Transitions>
 
-                                    <s:IconToggleButton OffContent="Disable hot keys" OnContent="Enable hot keys" Glyph="&#xe765;" Click="DisableHotKeysIconButton_Click"/>
+                                        <s:IconButton
+                                            x:Name="ProfilesButton"
+                                            Glyph="&#xe748;" Click="ProfilesButton_Click">
 
-                                    <s:IconToggleButton 
-                                        x:Name="ShowAppBarIconToggleButton"
-                                        OffContent="Show app menu bar" OnContent="Hide app menu bar" Glyph="&#xede3;" Click="ShowAppBarIconButton_Click"/>
+                                            <s:IconButton.Content>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
 
-                                    <s:IconButton Text="Reload audio sessions" Glyph="&#xe895;" Click="ReloadSessionsIconButton_Click">
-                                        <s:IconButton.KeyboardAccelerators>
-                                            <KeyboardAccelerator Modifiers="Control,Shift" Key="R" />
-                                        </s:IconButton.KeyboardAccelerators>
-                                    </s:IconButton>
+                                                    <TextBlock Text="Profiles" />
+                                                    <FontIcon Glyph="&#xe76c;" Grid.Column="1" FontSize="14" Opacity="0.6" />
+                                                </Grid>
+                                            </s:IconButton.Content>
+                                        </s:IconButton>
 
-                                    <s:IconButton Text="Restart application" Glyph="&#xe72c;" Click="RestartIconButton_Click">
-                                        <s:IconButton.KeyboardAccelerators>
-                                            <KeyboardAccelerator Modifiers="Control" Key="R" />
-                                        </s:IconButton.KeyboardAccelerators>
-                                    </s:IconButton>
+                                        <Border Style="{StaticResource BorderFlyoutSeparatorStyle}" />
 
-                                    <Border Style="{StaticResource BorderFlyoutSeparatorStyle}" />
+                                        <s:IconToggleButton 
+                                            x:Name="DisableAnimationsIconToggleButton"
+                                            OnContent="Enable animations" OffContent="Disable animations" Glyph="&#xf4a5;" Click="DisableAnimationsIconButton_Click" />
 
-                                    <s:IconButton Text="Settings" Glyph="&#xe713;" Click="SettingsIconButton_Click"/>
-                                </StackPanel>
+                                        <s:IconToggleButton OffContent="Disable hot keys" OnContent="Enable hot keys" Glyph="&#xe765;" Click="DisableHotKeysIconButton_Click" />
+
+                                        <s:IconToggleButton 
+                                            x:Name="ShowAppBarIconToggleButton"
+                                            OffContent="Show app menu bar" OnContent="Hide app menu bar" Glyph="&#xede3;" Click="ShowAppBarIconButton_Click" />
+
+                                        <s:IconButton Text="Reload audio sessions" Glyph="&#xe895;" Click="ReloadSessionsIconButton_Click">
+                                            <s:IconButton.KeyboardAccelerators>
+                                                <KeyboardAccelerator Modifiers="Control,Shift" Key="R" />
+                                            </s:IconButton.KeyboardAccelerators>
+                                        </s:IconButton>
+
+                                        <s:IconButton Text="Restart application" Glyph="&#xe72c;" Click="RestartIconButton_Click">
+                                            <s:IconButton.KeyboardAccelerators>
+                                                <KeyboardAccelerator Modifiers="Control" Key="R" />
+                                            </s:IconButton.KeyboardAccelerators>
+                                        </s:IconButton>
+
+                                        <Border Style="{StaticResource BorderFlyoutSeparatorStyle}" />
+
+                                        <s:IconButton Text="Settings" Glyph="&#xe713;" Click="SettingsIconButton_Click"/>
+                                    </StackPanel>
+
+                                    <Grid x:Name="ProfilesFlyoutGrid" Visibility="Collapsed">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Button Style="{StaticResource IconButtonStyle}" Click="CloseProfilesButton_Click">
+                                                <FontIcon Glyph="&#xe76b;" FontSize="16" />
+                                            </Button>
+
+                                            <TextBlock Text="Profiles" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                        </Grid>
+
+                                        <Border Style="{StaticResource BorderFlyoutSeparatorStyle}" Grid.Row="1" />
+
+                                        <StackPanel
+                                            x:Name="ProfilesFlyoutStackpanel"
+                                            Grid.Row="2"
+                                            HorizontalAlignment="Stretch" 
+                                            Orientation="Vertical" 
+                                            Spacing="4">
+                                            <StackPanel.Resources>
+                                                <Style TargetType="Button" BasedOn="{StaticResource CustomFlyoutButtonStyle}"/>
+                                            </StackPanel.Resources>
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
                             </Grid>
                         </Flyout>
                     </Button.Flyout>

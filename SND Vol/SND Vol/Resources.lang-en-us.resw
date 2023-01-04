@@ -159,54 +159,51 @@
   <data name="InfoReloadingAudioSessions" xml:space="preserve">
     <value>Reloading audio sessions</value>
   </data>
-  <data name="MainWindowDisableAnimationsMenuFlyoutItem.Text" xml:space="preserve">
+  <data name="MainWindowDisableAnimationsFlyoutItem.Label" xml:space="preserve">
     <value>Disable animations</value>
   </data>
-  <data name="MainWindowDisableHotKeysMenuFlyoutItem.Text" xml:space="preserve">
+  <data name="MainWindowDisableHotKeysFlyoutItem.Label" xml:space="preserve">
     <value>Disable
 hot keys</value>
   </data>
-  <data name="MainWindowDisplayMenuFlyoutItem.Text" xml:space="preserve">
-    <value>Display</value>
-  </data>
-  <data name="MainWindowHideMenuFlyoutItem.Text" xml:space="preserve">
+  <data name="MainWindowHideFlyoutItem.[using System.Windows.Controls]TooltipService.Tooltip" xml:space="preserve">
     <value>Hide</value>
   </data>
-  <data name="MainWindowKeepOnTopToggleMenuFlyoutItem.Text" xml:space="preserve">
+  <data name="MainWindowKeepOnTopToggleFlyoutItem.Label" xml:space="preserve">
     <value>Keep on top</value>
   </data>
-  <data name="MainWindowLayoutMenuFlyoutItem.Text" xml:space="preserve">
-    <value>Layout</value>
-  </data>
-  <data name="MainWindowLayoutMenuFlyoutItemAuto.Text" xml:space="preserve">
+  <data name="MainWindowLayoutAuto.[using System.Windows.Controls]TooltipService.Tooltip" xml:space="preserve">
     <value>Auto</value>
   </data>
-  <data name="MainWindowLayoutMenuFlyoutItemHorizontal.Text" xml:space="preserve">
+  <data name="MainWindowLayoutFlyoutItem.[using System.Windows.Controls]TooltipService.Tooltip" xml:space="preserve">
+    <value>Layout</value>
+  </data>
+  <data name="MainWindowLayoutHorizontal.[using System.Windows.Controls]TooltipService.Tooltip" xml:space="preserve">
     <value>Horizontal</value>
   </data>
-  <data name="MainWindowLayoutMenuFlyoutItemVertical.Text" xml:space="preserve">
+  <data name="MainWindowLayoutVertical.[using System.Windows.Controls]TooltipService.Tooltip" xml:space="preserve">
     <value>Vertical</value>
   </data>
-  <data name="MainWindowReloadMenuFlyoutItem.Text" xml:space="preserve">
+  <data name="MainWindowReloadFlyoutItem.[using System.Windows.Controls]TooltipService.Tooltip" xml:space="preserve">
     <value>Reload</value>
   </data>
-  <data name="MainWindowRestartMenuFlyoutItem.Text" xml:space="preserve">
+  <data name="MainWindowRestartFlyoutItem.[using System.Windows.Controls]TooltipService.Tooltip" xml:space="preserve">
     <value>Restart</value>
   </data>
   <data name="MainWindowSettingsButtonTeachingTip.Title" xml:space="preserve">
     <value>Settings</value>
   </data>
-  <data name="MainWindowSettingsMenuFlyoutItem.Text" xml:space="preserve">
+  <data name="MainWindowSettingsFlyoutItem.Label" xml:space="preserve">
     <value>Settings</value>
   </data>
-  <data name="MainWindowShowAppBarMenuFlyoutItem.Text" xml:space="preserve">
+  <data name="MainWindowShowAppBarFlyoutItem.Label" xml:space="preserve">
     <value>Show menu</value>
   </data>
-  <data name="MainWindowSwitchPresenterStyleMenuFlyoutItem.Text" xml:space="preserve">
+  <data name="MainWindowSwitchPresenterStyleFlyoutItem.Label" xml:space="preserve">
     <value>Show additional
 window buttons</value>
   </data>
-  <data name="MainWindowSwitchStateMenuFlyoutItem.Text" xml:space="preserve">
+  <data name="MainWindowSwitchStateFlyoutItem.[using System.Windows.Controls]TooltipService.Tooltip" xml:space="preserve">
     <value>Mute
 unmute all</value>
   </data>

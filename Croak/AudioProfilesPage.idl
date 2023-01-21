@@ -1,0 +1,12 @@
+import "AudioProfile.idl";
+
+namespace Croak
+{
+    [default_interface]
+    runtimeclass AudioProfilesPage : Microsoft.UI.Xaml.Controls.Page
+    {
+        AudioProfilesPage();
+
+        IObservableVector<AudioProfile> AudioProfiles{ get; };
+    }
+}

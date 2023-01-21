@@ -1,0 +1,35 @@
+namespace Croak
+{
+    enum AudioSessionState
+    {
+        Inactive,
+        Active,
+        Expired,
+        Muted,
+        Unmuted
+    };
+
+    [default_interface]
+    runtimeclass AudioSessionView : Microsoft.UI.Xaml.Controls.UserControl, Microsoft.UI.Xaml.Data.INotifyPropertyChanged
+    {
+        AudioSessionView();
+        AudioSessionView(String header, Double volume);
+        AudioSessionView(String header, Double volume, String logoPath);
+
+        String Header;
+        Guid Id;
+        Boolean Muted;
+        String VolumeGlyph{ get; };
+        Double Volume;
+        Microsoft.UI.Xaml.Controls.Orientation Orientation;
+        Microsoft.UI.Xaml.Controls.ContentPresenter Logo{ get; };
+
+        event Windows.Foundation.TypedEventHandler<AudioSessionView, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs> VolumeChanged;
+        event Windows.Foundation.TypedEventHandler<AudioSessionView, Boolean> VolumeStateChanged;
+        event Windows.Foundation.TypedEventHandler<AudioSessionView, IInspectable> Hidden;
+
+        void SetState(AudioSessionState state);
+        void SetPeak(Single peak);
+        void SetPeak(Single left, Single right);
+    }
+}

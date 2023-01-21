@@ -1,0 +1,39 @@
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+#define SUCCEEDED(hr) (((HRESULT)(hr)) >= 0)
+#define S_OK ((HRESULT)0L)
+#define IFACEMETHODIMP_(type) __override STDMETHODIMP_(type)
+#define IFACEMETHODIMP
+#define REFIID
+#define STDMETHODIMP_(type)
+#define _DEBUG
+#define NULL
+#define NULL ((void *)0)
+#define CLSCTX_ALL (CLSCTX_INPROC_SERVER| CLSCTX_INPROC_HANDLER| CLSCTX_LOCAL_SERVER| CLSCTX_REMOTE_SERVER)
+#define CLSCTX_ALL (CLSCTX_INPROC_SERVER| CLSCTX_INPROC_HANDLER| CLSCTX_LOCAL_SERVER )
+#define IID_PPV_ARGS(ppType) __uuidof(**(ppType)), IID_PPV_ARGS_Helper(ppType)
+#define FAILED(hr) (((HRESULT)(hr)) < 0)
+#define OutputDebugString
+#define WINRT_EXPORT
+#define STDMETHOD(method)
+#define STDMETHOD(method) HRESULT (STDMETHODCALLTYPE * method)
+#define __in _SAL1_Source_(__in, (), _In_)
+#define __in _SAL_VERSION_CHECK(__in)
+#define __in_opt _SAL1_Source_(__in_opt, (), _In_opt_)
+#define __in_opt _SAL_VERSION_CHECK(__in_opt)
+#define VK_UP
+#define VK_DOWN
+#define VK_NAVIGATION_UP
+#define VK_NAVIGATION_DOWN
+#define VK_PRIOR
+#define VK_NEXT
+#define INVALID_HANDLE_VALUE ((HANDLE)(LONG_PTR)-1)
+#define MAX_PATH
+#define GetFileVersionInfo
+#define PathFileExists
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+#define STDMETHOD(method)
+#define STDMETHOD(method) HRESULT (STDMETHODCALLTYPE * method)

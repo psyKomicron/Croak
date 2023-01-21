@@ -1,0 +1,9 @@
+namespace Croak
+{
+    [default_interface]
+    runtimeclass KeyIcon : Microsoft.UI.Xaml.Controls.Control
+    {
+        KeyIcon();
+        KeyIcon(Windows.System.VirtualKey key);
+    }
+}

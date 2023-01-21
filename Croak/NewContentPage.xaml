@@ -1,0 +1,65 @@
+<Page
+    x:Class="Croak.NewContentPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Loading="Page_Loading">
+
+    <ScrollViewer>
+        <Grid Margin="15" RowSpacing="20">
+            <Grid.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="TextWrapping" Value="Wrap" />
+                    <Setter Property="IsTextSelectionEnabled" Value="True" />
+                    <Setter Property="LineHeight" Value="24"/>
+                </Style>
+                <Style TargetType="ListView">
+                    <Setter Property="SelectionMode" Value="None" />
+                    <Setter Property="BorderBrush" Value="{ThemeResource AccentControlElevationBorderBrush}" />
+                    <Setter Property="BorderThickness" Value="1" />
+                    <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
+                    <Setter Property="Background" Value="{ThemeResource SubtleFillColorTertiaryBrush}" />
+                    <Setter Property="Padding" Value="5,12,5,22" />
+                </Style>
+                <Style TargetType="ListViewItem" BasedOn="{StaticResource DefaultListViewItemStyle}">
+                    <Setter Property="MinHeight" Value="0" />
+                    <Setter Property="Margin" Value="5,7" />
+                </Style>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <ListView x:Name="NewContentListView" Grid.Row="0">
+                <ListView.Header>
+                    <StackPanel>
+                        <TextBlock x:Uid="NewContentPageNewContentTitleTextBlock" Margin="20,0,0,0" Style="{StaticResource TitleLargeTextBlockStyle}" />
+                        <ListViewHeaderItem Margin="-20,0"/>
+                    </StackPanel>
+                </ListView.Header>
+            </ListView>
+
+            <ListView x:Name="ChangesListView" Grid.Row="1">
+                <ListView.Header>
+                    <StackPanel>
+                        <TextBlock x:Uid="NewContentPageChangesTitleTextBlock" Margin="20,0,0,0" Style="{StaticResource TitleLargeTextBlockStyle}" />
+                        <ListViewHeaderItem Margin="-20,0"/>
+                    </StackPanel>
+                </ListView.Header>
+            </ListView>
+
+            <ListView x:Name="BugsListView" Grid.Row="2">
+                <ListView.Header>
+                    <StackPanel>
+                        <TextBlock x:Uid="NewContentPageBugsTitleTextBlock" Margin="20,0,0,0" Style="{StaticResource TitleLargeTextBlockStyle}" />
+                        <ListViewHeaderItem Margin="-20,0"/>
+                    </StackPanel>
+                </ListView.Header>
+            </ListView>
+        </Grid>
+    </ScrollViewer>
+</Page>

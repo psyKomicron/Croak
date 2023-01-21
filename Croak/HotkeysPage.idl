@@ -1,0 +1,8 @@
+namespace Croak
+{
+    [default_interface]
+    runtimeclass HotkeysPage : Microsoft.UI.Xaml.Controls.Page
+    {
+        HotkeysPage();
+    }
+}

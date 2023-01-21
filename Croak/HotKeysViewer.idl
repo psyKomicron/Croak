@@ -1,0 +1,15 @@
+import "HotkeyViewModel.idl";
+
+namespace Croak
+{
+    [default_interface]
+    runtimeclass HotKeysViewer : Microsoft.UI.Xaml.Controls.UserControl
+    {
+        HotKeysViewer();
+
+        Boolean ShowMouseMap{ get; set; };
+
+        void SetActiveKeys(IVector<Windows.System.VirtualKey> activeKeys);
+        void AddActiveKey(HotkeyViewModel hotKeyViewModel);
+    }
+}

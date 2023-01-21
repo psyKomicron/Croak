@@ -1,0 +1,8 @@
+namespace Croak
+{
+    [default_interface]
+    runtimeclass SettingsPage : Microsoft.UI.Xaml.Controls.Page
+    {
+        SettingsPage();
+    }
+}

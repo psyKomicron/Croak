@@ -1,0 +1,15 @@
+namespace Croak
+{
+    [default_interface]
+    runtimeclass HotKeyView : Microsoft.UI.Xaml.Controls.UserControl
+    {
+        HotKeyView();
+
+        String HotKeyName{ get; set; };
+        Windows.System.VirtualKeyModifiers Modifiers{ get; set; };
+        Windows.System.VirtualKey Key{ get; set; };
+        Boolean IsHotKeyEnabled{ get; set; };
+
+        IInspectable KeyName{ get; };
+    }
+}

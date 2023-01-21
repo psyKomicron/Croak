@@ -1,0 +1,27 @@
+// Copyright (c) Microsoft Corporation and Contributors.
+// Licensed under the MIT License.
+
+namespace Croak
+{
+    [default_interface]
+    runtimeclass IconToggleButton : Microsoft.UI.Xaml.Controls.Control
+    {
+        IconToggleButton();
+
+        static Microsoft.UI.Xaml.DependencyProperty OnContentProperty{ get; };
+        static Microsoft.UI.Xaml.DependencyProperty OffContentProperty{ get; };
+        static Microsoft.UI.Xaml.DependencyProperty GlyphProperty{ get; };
+        static Microsoft.UI.Xaml.DependencyProperty OnIconProperty{ get; };
+        static Microsoft.UI.Xaml.DependencyProperty OffIconProperty{ get; };
+
+        IInspectable OnContent;
+        IInspectable OffContent;
+        String Glyph;
+        Boolean IsOn;
+        String OnIcon;
+        String OffIcon;
+        Boolean Compact;
+
+        event Windows.Foundation.TypedEventHandler<IconToggleButton, Microsoft.UI.Xaml.RoutedEventArgs> Click;
+    }
+}

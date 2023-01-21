@@ -1,0 +1,172 @@
+<Page
+    x:Class="Croak.AudioSessionsSettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Loaded="Page_Loaded"
+    MinWidth="500">
+
+    <ListView SelectionMode="None">
+        <ListView.Resources>
+            <Style TargetType="ListViewItem" BasedOn="{StaticResource DefaultListViewItemStyle}">
+                <Setter Property="Margin" Value="0,2"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+            </Style>
+        </ListView.Resources>
+
+
+        <Expander Style="{StaticResource ExpanderSettingStyle}" IsEnabled="False">
+            <Expander.Header>
+                <Grid Margin="0,0,-5,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox Height="20" Width="20">
+                        <FontIcon Glyph="&#xe8be;"/>
+                    </Viewbox>
+
+                    <Grid Margin="15,3,0,3" Grid.Column="1" RowSpacing="3" VerticalAlignment="Center" Padding="0,3,4,4">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Remove inactive sessions" />
+
+                        <TextBlock 
+                            Style="{ThemeResource CaptionTextBlockStyle}" 
+                            FontSize="12" 
+                            Opacity="0.7"
+                            Grid.Row="1" 
+                            Grid.Column="0">
+                            Inactive sessions will be removed after a given time.
+                        </TextBlock>
+                    </Grid>
+
+                    <ToggleSwitch 
+                        x:Name="DeleteInactiveSessionsToggleSwitch" 
+                        Grid.Column="2" 
+                        Style="{StaticResource FlippedToggleSwitchStyle}" 
+                        Toggled="DeleteInactiveSessionsToggleSwitch_Toggled" />
+                </Grid>
+            </Expander.Header>
+
+            <Grid Style="{StaticResource ExpanderContentGridStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Inactive timeout" VerticalAlignment="Center" Grid.Row="1"/>
+
+                <TimePicker Grid.Column="1" Grid.Row="1" />
+            </Grid>
+        </Expander>
+
+        <Expander Style="{StaticResource ExpanderSettingStyle}" IsEnabled="False">
+            <Expander.Header>
+                <Grid Margin="0,0,-5,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox Height="20" Width="20">
+                        <FontIcon Glyph="&#xe767;"/>
+                    </Viewbox>
+
+                    <Grid Margin="15,3,0,3" Grid.Column="1" RowSpacing="3" VerticalAlignment="Center" Padding="0,3,4,4">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Limit audio sessions level" />
+
+                        <TextBlock 
+                            Style="{ThemeResource CaptionTextBlockStyle}" 
+                            FontSize="12" 
+                            Opacity="0.7"
+                            Grid.Row="1" 
+                            Grid.Column="0">
+                            Set the maximum audio session level for new or unknown sessions.
+                        </TextBlock>
+                    </Grid>
+
+                    <ToggleSwitch 
+                        x:Name="LimitNewSessionsLevelToggleSwitch" 
+                        Style="{StaticResource FlippedToggleSwitchStyle}" 
+                        Grid.Column="2"
+                        Toggled="LimitNewSessionsLevelToggleSwitch_Toggled" />
+                </Grid>
+            </Expander.Header>
+
+            <Grid Style="{StaticResource ExpanderContentGridStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Volume limit" VerticalAlignment="Center" />
+
+                <Slider 
+                    x:Name="MaxVolumeSlider" 
+                    Grid.Column="1" 
+                    MaxWidth="300" 
+                    HorizontalAlignment="Stretch" 
+                    VerticalAlignment="Center" />
+
+            </Grid>
+        </Expander>
+
+        <Grid Style="{StaticResource GridSettingStyle}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Viewbox Height="20" Width="20" Grid.RowSpan="2">
+                <FontIcon Glyph="&#xf78d;"/>
+            </Viewbox>
+
+            <Grid Margin="15,3,0,3" Grid.Column="1" RowSpacing="3" VerticalAlignment="Center" Padding="0,3,4,4">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Show inactive audio sessions on startup" />
+
+                <TextBlock 
+                    Style="{ThemeResource CaptionTextBlockStyle}" 
+                    FontSize="12" 
+                    Opacity="0.7"
+                    Grid.Row="1" 
+                    Grid.Column="0">
+                    Audio sessions that are not playing audio when the app launches will be shown. If deactivated when any of the hidden sessions start playing audio they will be shown.
+                </TextBlock>
+            </Grid>
+
+            <ToggleSwitch 
+                x:Name="ShowInactiveAudioSessionsToggleSwitch" 
+                Style="{StaticResource FlippedToggleSwitchStyle}" 
+                Grid.Column="2"
+                Toggled="ShowInactiveAudioSessionsToggleSwitch_Toggled" />
+        </Grid>
+
+    </ListView>
+</Page>

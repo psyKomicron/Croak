@@ -1,0 +1,11 @@
+// Copyright (c) Microsoft Corporation and Contributors.
+// Licensed under the MIT License.
+
+namespace Croak
+{
+    [default_interface]
+    runtimeclass NewContentPage : Microsoft.UI.Xaml.Controls.Page
+    {
+        NewContentPage();
+    }
+}

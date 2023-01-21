@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  IgnorableNamespaces="uap rescap">
+
+  <Identity
+    Name="751c2636-5688-4a5f-9a67-e04d5b64d3d3"
+    Publisher="CN=psyKomicron"
+    Version="1.0.0.0" />
+
+  <Properties>
+    <DisplayName>Croak</DisplayName>
+    <PublisherDisplayName>psyKomicron</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
+  </Dependencies>
+
+  <Resources>
+      <Resource Language="en-US"/>
+      <Resource Language="fr-FR"/>
+  </Resources>
+
+  <Applications>
+    <Application Id="App"
+        Executable="$targetnametoken$.exe"
+        EntryPoint="$targetentrypoint$">
+        
+        <uap:VisualElements
+            DisplayName="Croak"
+            Description="Croak"
+            BackgroundColor="transparent"
+            Square150x150Logo="Assets\Square150x150Logo.png"
+            Square44x44Logo="Assets\Square44x44Logo.png">
+          
+            <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
+            <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        </uap:VisualElements>
+
+        <Extensions>
+            <desktop:Extension
+                Category="windows.startupTask"
+                Executable="Croak.exe"
+                EntryPoint="Windows.FullTrustApplication">
+                <desktop:StartupTask
+                    TaskId="CroakStartupTaskId"
+                    Enabled="false"
+                    DisplayName="Croak" />
+            </desktop:Extension>
+        </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>

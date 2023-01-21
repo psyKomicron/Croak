@@ -1,0 +1,16 @@
+namespace Croak
+{
+    [default_interface]
+    runtimeclass NumberBlock : Microsoft.UI.Xaml.Controls.Control
+    {
+        NumberBlock();
+
+        static Microsoft.UI.Xaml.DependencyProperty TextProperty{ get; };
+
+        String Text{ get; };
+        Double Double;
+        Single Single;
+        Int32 Int;
+        UInt32 UInt;
+    }
+}

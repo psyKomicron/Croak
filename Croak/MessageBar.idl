@@ -1,0 +1,14 @@
+// Copyright (c) Microsoft Corporation and Contributors.
+// Licensed under the MIT License.
+
+namespace Croak
+{
+    [default_interface]
+    runtimeclass MessageBar : Microsoft.UI.Xaml.Controls.UserControl
+    {
+        MessageBar();
+
+        void EnqueueMessage(IInspectable message);
+        void EnqueueString(String message);
+    }
+}

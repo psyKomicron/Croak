@@ -1,0 +1,223 @@
+<Page
+    x:Class="Croak.AudioProfileEditPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Loading="Page_Loading"
+    MinWidth="400">
+
+    <Grid>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="CommonStates">
+
+                <VisualState x:Name="ProfileSaved">
+                    <Storyboard>
+                        <DoubleAnimation
+                            x:Name="ProfileSavedAnimation"
+                            Storyboard.TargetName="CompletionProgressRing"
+                            Storyboard.TargetProperty="Value"
+                            EnableDependentAnimation="True"
+                            From="0"
+                            To="100"
+                            Duration="0:0:0.440">
+
+                            <DoubleAnimation.EasingFunction>
+                                <SineEase EasingMode="EaseInOut" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+
+                    <VisualState.Setters>
+                        <Setter Target="CompletionProgressRing.Visibility" Value="Visible"/>
+                        <Setter Target="ProfileNameEditTextBox.Opacity" Value="0" />
+                        <Setter Target="WindowStateGrid.Opacity" Value="0" />
+                        <Setter Target="VolumesGrid.Opacity" Value="0" />
+                        <Setter Target="NavigationButtonsStackPanel.Opacity" Value="0" />
+                        <Setter Target="AcceptIcon.Opacity" Value="1." />
+                        <Setter Target="EditContentScrollViewer.Opacity" Value="0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <ScrollViewer x:Name="EditContentScrollViewer">
+            <ScrollViewer.OpacityTransition>
+                <ScalarTransition Duration="0:0:0.2"/>
+            </ScrollViewer.OpacityTransition>
+
+            <Grid RowSpacing="25" Padding="15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBox x:Name="ProfileNameEditTextBox" TextChanged="ProfileNameEditTextBox_TextChanged" Grid.Column="0">
+                    <TextBox.OpacityTransition>
+                        <ScalarTransition Duration="0:0:0.2"/>
+                    </TextBox.OpacityTransition>
+                </TextBox>
+
+                <Grid 
+                    x:Name="WindowStateGrid"
+                    Grid.Row="1" 
+                    ColumnSpacing="10" 
+                    Padding="15" 
+                    Background="{ThemeResource SubtleFillColorTertiaryBrush}" 
+                    CornerRadius="{StaticResource ControlCornerRadius}"
+                    VerticalAlignment="Center">
+                    <Grid.OpacityTransition>
+                        <ScalarTransition Duration="0:0:0.2"/>
+                    </Grid.OpacityTransition>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <CheckBox x:Name="DisableAnimationsCheckBox" Content="Disable animations" />
+                    <CheckBox x:Name="KeepOnTopCheckBox" Content="Keep on top" Grid.Column="1" Grid.Row="0"/>
+                    <CheckBox x:Name="ShowMenuCheckBox" Content="Show menu" Grid.Column="1" Grid.Row="1"/>
+
+                    <ComboBox x:Name="LayoutComboBox" Grid.Column="2" Grid.RowSpan="2" SelectedIndex="0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                        <ComboBoxItem Content="Auto"/>
+                        <ComboBoxItem Content="Horizontal"/>
+                        <ComboBoxItem Content="Vertical"/>
+                    </ComboBox>
+                </Grid>
+
+                <Grid 
+                    x:Name="VolumesGrid"
+                    Grid.Row="2"
+                    Background="{ThemeResource SubtleFillColorTertiaryBrush}"
+                    Padding="15"
+                    CornerRadius="{StaticResource ControlCornerRadius}"
+                    RowSpacing="20"
+                    VerticalAlignment="Center">
+                    <Grid.OpacityTransition>
+                        <ScalarTransition Duration="0:0:0.2"/>
+                    </Grid.OpacityTransition>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Windows volume" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.6"/>
+                    <Grid Grid.Row="1" ColumnSpacing="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <ToggleButton
+                            x:Name="MuteToggleButton"
+                            Style="{StaticResource MuteToggleButtonStyle}">
+                            <FontIcon x:Name="MuteToggleButtonFontIcon" Glyph="&#xe767;" FontSize="{StaticResource FontIconHeight}"/>
+                        </ToggleButton>
+
+                        <Slider x:Name="SystemVolumeSlider" Grid.Column="1" Maximum="100" Minimum="0"/>
+                    </Grid>
+
+                    <TextBlock Text="Audio sessions" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.6" Grid.Row="2"/>
+
+                    <StackPanel Grid.Row="3" HorizontalAlignment="Right" Orientation="Horizontal" Spacing="7">
+                        <Button Content="Add session" Click="AddAudioSessionButton_Click"/>
+                        <Button Content="Create session" Click="CreateAudioSessionButton_Click"/>
+                    </StackPanel>
+
+                    <ScrollViewer VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Visible" Grid.Row="4">
+                        <GridView
+                            ItemsSource="{x:Bind AudioSessions}"
+                            SelectionMode="None"
+                            CanReorderItems="True"
+                            ReorderMode="Enabled"
+                            AllowDrop="True">
+                            <GridView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </ItemsPanelTemplate>
+                            </GridView.ItemsPanel>
+                        </GridView>
+                    </ScrollViewer>
+                </Grid>
+
+                <StackPanel x:Name="NavigationButtonsStackPanel" Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Right" Spacing="5">
+                    <StackPanel.OpacityTransition>
+                        <ScalarTransition Duration="0:0:0.2"/>
+                    </StackPanel.OpacityTransition>
+
+                    <Button Content="Cancel" Style="{StaticResource LargeButtonStyle}" Click="CancelButton_Click"/>
+
+                    <Button Style="{StaticResource LargeAccentButtonStyle}" Content="Save" Click="NextButton_Click"/>
+
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+
+
+        <Viewbox MaxHeight="150">
+            <Viewbox.OpacityTransition>
+                <ScalarTransition Duration="0:0:0.166"/>
+            </Viewbox.OpacityTransition>
+
+            <ProgressRing 
+                x:Name="CompletionProgressRing" 
+                VerticalAlignment="Center" 
+                HorizontalAlignment="Center"
+                IsIndeterminate="False"
+                IsHitTestVisible="False"/>
+        </Viewbox>
+
+        <Viewbox
+            x:Name="AcceptIcon"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Center" 
+            IsHitTestVisible="False"
+            Height="40"
+            Width="40"
+            Opacity="0">
+            <Viewbox.OpacityTransition>
+                <ScalarTransition Duration="0:0:0.166"/>
+            </Viewbox.OpacityTransition>
+
+            <SymbolIcon Symbol="Accept" />
+        </Viewbox>
+
+
+        <ContentDialog 
+            x:Name="ConfirmDialog"
+            DefaultButton="Primary" 
+            PrimaryButtonText="Save" 
+            SecondaryButtonText="Cancel">
+            <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="Any changes made to the profile will be discarded."/>
+        </ContentDialog>
+
+        <ContentDialog x:Name="AudioProfileCreationDialog" DefaultButton="Primary" PrimaryButtonText="Create" SecondaryButtonText="Cancel" Title="Audio session creation">
+            <Grid RowSpacing="15">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <TextBox x:Name="ProfileCreationTextBox" VerticalAlignment="Center" TextChanged="ProfileCreationTextBox_TextChanged"/>
+                <Slider x:Name="ProfileCreationSlider" Grid.Row="1" Minimum="0" Maximum="100"/>
+                <CheckBox x:Name="ProfileCreationCheckBox" Grid.Row="2" Content="Is muted"/>
+            </Grid>
+        </ContentDialog>
+
+        <ContentDialog x:Name="AudioProfileAddDialog" DefaultButton="Primary" PrimaryButtonText="Create" SecondaryButtonText="Cancel" Title="Select the sessions to add">
+            <GridView x:Name="ProfileAddGridView" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </ContentDialog>
+    </Grid>
+</Page>

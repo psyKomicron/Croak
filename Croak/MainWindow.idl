@@ -1,0 +1,14 @@
+import "AudioSessionView.idl";
+
+namespace Croak
+{
+    [default_interface]
+    runtimeclass MainWindow : Microsoft.UI.Xaml.Window
+    {
+        MainWindow(String args);
+
+        static MainWindow Current{ get; };
+        IObservableVector<AudioSessionView> AudioSessions{ get; };
+        Windows.Graphics.RectInt32 DisplayRect{ get; };
+    }
+}

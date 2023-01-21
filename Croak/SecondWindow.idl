@@ -1,0 +1,18 @@
+import "NavigationBreadcrumbBarItem.idl";
+
+namespace Croak
+{
+    [default_interface]
+    runtimeclass SecondWindow : Microsoft.UI.Xaml.Window
+    {
+        SecondWindow();
+
+        static SecondWindow Current{ get; };
+
+        IObservableVector<NavigationBreadcrumbBarItem> Breadcrumbs{ get; };
+        Windows.Graphics.RectInt32 DisplayRect{ get; };
+        Microsoft.UI.WindowId Id{ get; };
+
+        Boolean NavigateTo(Windows.UI.Xaml.Interop.TypeName typeName);
+    }
+}

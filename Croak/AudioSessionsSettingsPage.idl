@@ -1,0 +1,8 @@
+namespace Croak
+{
+    [default_interface]
+    runtimeclass AudioSessionsSettingsPage : Microsoft.UI.Xaml.Controls.Page
+    {
+        AudioSessionsSettingsPage();
+    }
+}

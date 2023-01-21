@@ -1,0 +1,18 @@
+namespace Croak
+{
+    [default_interface]
+    runtimeclass IconButton : Microsoft.UI.Xaml.Controls.Control
+    {
+        IconButton();
+        
+        static Microsoft.UI.Xaml.DependencyProperty GlyphProperty{ get; };
+        static Microsoft.UI.Xaml.DependencyProperty TextProperty{ get; };
+        static Microsoft.UI.Xaml.DependencyProperty ContentProperty{ get; };
+
+        String Glyph;
+        String Text;
+        IInspectable Content;
+
+        event Windows.Foundation.TypedEventHandler<IconButton, Microsoft.UI.Xaml.RoutedEventArgs> Click;
+    }
+}

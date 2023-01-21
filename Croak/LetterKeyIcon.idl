@@ -1,0 +1,11 @@
+namespace Croak
+{
+    [default_interface]
+    runtimeclass LetterKeyIcon : Microsoft.UI.Xaml.Controls.Control
+    {
+        LetterKeyIcon();
+        LetterKeyIcon(String key);
+
+        String Key{ get; set; };
+    }
+}

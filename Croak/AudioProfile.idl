@@ -1,0 +1,25 @@
+namespace Croak
+{
+    [bindable]
+    [default_interface]
+    runtimeclass AudioProfile 
+    {
+        AudioProfile();
+
+        String ProfileName{ get; set; };
+        Windows.Foundation.Collections.IMap<String, Single> AudioLevels{ get; set; };
+        Windows.Foundation.Collections.IMap<String, Boolean> AudioStates{ get; set; };
+        Windows.Foundation.Collections.IMap<String, UInt32> SessionsIndexes{ get; set; };
+        Boolean IsDefaultProfile{ get; set; };
+        Single SystemVolume{ get; set; };
+        Boolean DisableAnimations{ get; set; };
+        Boolean KeepOnTop{ get; set; };
+        Boolean ShowMenu{ get; set; };
+        UInt32 Layout{ get; set; };
+        Boolean RestoreWindowState{ get; set; };
+        Windows.Graphics.RectInt32 WindowDisplayRect{ get; set; };
+
+        void Restore(Windows.Storage.ApplicationDataContainer container);
+        void Save(Windows.Storage.ApplicationDataContainer container);
+    }
+}

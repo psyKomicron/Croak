@@ -1,0 +1,257 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Midl Include="App.idl" />
+    <Midl Include="MainWindow.idl" />
+    <Midl Include="HotkeyViewModel.idl">
+      <Filter>ViewModels</Filter>
+    </Midl>
+    <Midl Include="NavigationBreadcrumbBarItem.idl">
+      <Filter>ViewModels</Filter>
+    </Midl>
+    <Midl Include="AudioProfile.idl">
+      <Filter>ViewModels</Filter>
+    </Midl>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="AudioSession.cpp">
+      <Filter>Workers\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioController.cpp">
+      <Filter>Workers\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultAudioEndpoint.cpp">
+      <Filter>Workers\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="$(GeneratedFilesDir)module.g.cpp">
+      <Filter>Config</Filter>
+    </ClCompile>
+    <ClCompile Include="IconHelper.cpp">
+      <Filter>Workers\Imaging</Filter>
+    </ClCompile>
+    <ClCompile Include="ManifestApplicationNode.cpp">
+      <Filter>Workers\System\AppX</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessInfo.cpp">
+      <Filter>Workers\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Hotkey.cpp">
+      <Filter>Workers\System\Hotkeys</Filter>
+    </ClCompile>
+    <ClCompile Include="HotkeyManager.cpp">
+      <Filter>Workers\System\Hotkeys</Filter>
+    </ClCompile>
+    <ClCompile Include="IconButton.cpp">
+      <Filter>UI\Controls\CustomControls</Filter>
+    </ClCompile>
+    <ClCompile Include="IconToggleButton.cpp">
+      <Filter>UI\Controls\CustomControls</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyIcon.cpp">
+      <Filter>UI\Controls\CustomControls</Filter>
+    </ClCompile>
+    <ClCompile Include="LetterKeyIcon.cpp">
+      <Filter>UI\Controls\CustomControls</Filter>
+    </ClCompile>
+    <ClCompile Include="NumberBlock.cpp">
+      <Filter>UI\Controls\CustomControls</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="AudioInterfacesSmartPtrs.h">
+      <Filter>SmartPtrs</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugOutput.h" />
+    <ClInclude Include="AudioSession.h">
+      <Filter>Workers\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSessionStates.h">
+      <Filter>Workers\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioController.h">
+      <Filter>Workers\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultAudioEndpoint.h">
+      <Filter>Workers\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="IComEventImplementation.h">
+      <Filter>Workers</Filter>
+    </ClInclude>
+    <ClInclude Include="IconHelper.h">
+      <Filter>Workers\Imaging</Filter>
+    </ClInclude>
+    <ClInclude Include="ManifestApplicationNode.h">
+      <Filter>Workers\System\AppX</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessInfo.h">
+      <Filter>Workers\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Hotkey.h">
+      <Filter>Workers\System\Hotkeys</Filter>
+    </ClInclude>
+    <ClInclude Include="HotkeyManager.h">
+      <Filter>Workers\System\Hotkeys</Filter>
+    </ClInclude>
+    <ClInclude Include="ComSmartPtrTypeDefs.h">
+      <Filter>SmartPtrs</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Wide310x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square150x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\LockScreenLogo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{653b209c-02f5-468b-b799-c2accfb2499e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SmartPtrs">
+      <UniqueIdentifier>{2d590fcb-17fa-40ae-af11-54bc3ddf9785}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{14176e34-3f7f-4833-b666-37c4e510bebd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows">
+      <UniqueIdentifier>{a9babdc8-736a-48be-93a0-100740e0c27c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Controls">
+      <UniqueIdentifier>{f4c7a92e-cf69-4c90-ae59-ce7f6ae21cac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Pages">
+      <UniqueIdentifier>{7659db28-016d-4ae1-a27c-4fc7726747ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Controls\CustomControls">
+      <UniqueIdentifier>{80b77978-3310-4e03-b339-7215922f108b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Workers">
+      <UniqueIdentifier>{6ffa8b94-d67b-4113-b60e-d6f840c4de97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Workers\Audio">
+      <UniqueIdentifier>{91ad3a81-c58c-4954-88bf-eebca15bdcfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Workers\System">
+      <UniqueIdentifier>{0abaded0-8944-450f-a320-9cd4869b53ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Workers\Imaging">
+      <UniqueIdentifier>{f390308f-d120-467a-a829-0ce6d3884170}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{2d2af7d2-4684-4bc8-80a9-3d9e32f14004}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Workers\System\AppX">
+      <UniqueIdentifier>{0b2523fb-b757-4c7e-bf01-8a5966a284cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Workers\System\Hotkeys">
+      <UniqueIdentifier>{e6ef7de2-530d-4111-be69-9794b2e5af2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ViewModels">
+      <UniqueIdentifier>{70ae19e6-1383-423a-ba7e-6aa7734a5229}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Translations">
+      <UniqueIdentifier>{201a8cbe-645b-47e0-9ef4-bcd1fffbe551}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="MainWindow.xaml">
+      <Filter>UI\Windows</Filter>
+    </Page>
+    <Page Include="SecondWindow.xaml">
+      <Filter>UI\Windows</Filter>
+    </Page>
+    <Page Include="AudioSessionView.xaml">
+      <Filter>UI\Controls</Filter>
+    </Page>
+    <Page Include="HotKeysViewer.xaml">
+      <Filter>UI\Controls</Filter>
+    </Page>
+    <Page Include="HotKeyView.xaml">
+      <Filter>UI\Controls</Filter>
+    </Page>
+    <Page Include="MessageBar.xaml">
+      <Filter>UI\Controls</Filter>
+    </Page>
+    <Page Include="SplashScreen.xaml">
+      <Filter>UI\Controls</Filter>
+    </Page>
+    <Page Include="AudioProfileEditPage.xaml">
+      <Filter>UI\Pages</Filter>
+    </Page>
+    <Page Include="AudioProfilesPage.xaml">
+      <Filter>UI\Pages</Filter>
+    </Page>
+    <Page Include="AudioSessionsSettingsPage.xaml">
+      <Filter>UI\Pages</Filter>
+    </Page>
+    <Page Include="NewContentPage.xaml">
+      <Filter>UI\Pages</Filter>
+    </Page>
+    <Page Include="HotkeysPage.xaml">
+      <Filter>UI\Pages</Filter>
+    </Page>
+    <Page Include="SettingsPage.xaml">
+      <Filter>UI\Pages</Filter>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Filter>UI</Filter>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Filter>UI</Filter>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="app.manifest">
+      <Filter>Config</Filter>
+    </Manifest>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <Filter>Config</Filter>
+    </AppxManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="cpp.hint" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Croak.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Resources.lang-en-us.resw">
+      <Filter>Assets\Translations</Filter>
+    </PRIResource>
+    <PRIResource Include="Resources.lang-fr-fr.resw">
+      <Filter>Assets\Translations</Filter>
+    </PRIResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="$(MSBuildThisFileDirectory)..\..\natvis\wil.natvis" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,12 @@
+import "AudioSessionView.idl";
+
+namespace Croak
+{
+    [default_interface]
+    runtimeclass AudioProfileEditPage : Microsoft.UI.Xaml.Controls.Page, Microsoft.UI.Xaml.Data.INotifyPropertyChanged
+    {
+        AudioProfileEditPage();
+
+        Windows.Foundation.Collections.IObservableVector<AudioSessionView> AudioSessions{ get; };
+    }
+}

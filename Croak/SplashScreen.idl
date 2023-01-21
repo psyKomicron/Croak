@@ -1,0 +1,15 @@
+namespace Croak
+{
+    [default_interface]
+    runtimeclass SplashScreen : Microsoft.UI.Xaml.Controls.UserControl
+    {
+        SplashScreen();
+
+        IInspectable TopContent{ get; set; };
+        IInspectable BottomContent{ get; set; };
+        IInspectable MainContent{ get; set; };
+        Windows.Foundation.TimeSpan OnScreenTimeSpan{ get; set; };
+
+        event Windows.Foundation.TypedEventHandler<SplashScreen, IInspectable> Dismissed;
+    }
+}

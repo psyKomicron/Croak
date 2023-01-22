@@ -195,7 +195,7 @@ namespace Croak::Audio
         {
             return SUCCEEDED(audioSessionControl->UnregisterAudioSessionNotification(this));
         }
-        return true;
+        return false;
     }
 
 #pragma region IUnknown

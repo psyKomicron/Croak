@@ -10,6 +10,10 @@ namespace Croak::Audio
 	{
     public:
         AudioSession(IAudioSessionControl2* audioSessionControl, GUID eventContextId);
+        ~AudioSession()
+        {
+            OutputDebugWString(L"Audio session '" + sessionName + L"' destructor called.");
+        }
 
         /**
          * @brief Grouping parameter for the audio session.

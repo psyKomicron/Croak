@@ -36,10 +36,10 @@
     <ClCompile Include="ProcessInfo.cpp">
       <Filter>Workers\System</Filter>
     </ClCompile>
-    <ClCompile Include="Hotkey.cpp">
+    <ClCompile Include="HotKey.cpp">
       <Filter>Workers\System\Hotkeys</Filter>
     </ClCompile>
-    <ClCompile Include="HotkeyManager.cpp">
+    <ClCompile Include="HotKeyManager.cpp">
       <Filter>Workers\System\Hotkeys</Filter>
     </ClCompile>
     <ClCompile Include="IconButton.cpp">
@@ -88,10 +88,10 @@
     <ClInclude Include="ProcessInfo.h">
       <Filter>Workers\System</Filter>
     </ClInclude>
-    <ClInclude Include="Hotkey.h">
+    <ClInclude Include="HotKey.h">
       <Filter>Workers\System\Hotkeys</Filter>
     </ClInclude>
-    <ClInclude Include="HotkeyManager.h">
+    <ClInclude Include="HotKeyManager.h">
       <Filter>Workers\System\Hotkeys</Filter>
     </ClInclude>
     <ClInclude Include="ComSmartPtrTypeDefs.h">

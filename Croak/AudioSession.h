@@ -10,10 +10,6 @@ namespace Croak::Audio
 	{
     public:
         AudioSession(IAudioSessionControl2* audioSessionControl, GUID eventContextId);
-        ~AudioSession()
-        {
-            OutputDebugWString(L"Audio session '" + sessionName + L"' destructor called.");
-        }
 
         /**
          * @brief Grouping parameter for the audio session.
@@ -150,12 +146,10 @@ namespace Croak::Audio
         STDMETHOD(OnSessionDisconnected)(AudioSessionDisconnectReason DisconnectReason);
         STDMETHOD(OnChannelVolumeChanged)(DWORD /*ChannelCount*/, float /*NewChannelVolumeArray*/[], DWORD /*ChangedChannel*/, LPCGUID /*EventContext*/)
         {
-            OutputDebugWString(sessionName + L" : Channel volume changed.");
             return S_OK;
         };
         STDMETHOD(OnGroupingParamChanged)(LPCGUID /*NewGroupingParam*/, LPCGUID /*EventContext*/)
         {
-            OutputDebugWString(sessionName + L" : Grouping param changed.");
             return S_OK;
         };
 	};

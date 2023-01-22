@@ -104,6 +104,15 @@
       <LanguageStandard_C Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</LanguageStandard_C>
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdcpp20</LanguageStandard>
       <LanguageStandard_C Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Default</LanguageStandard_C>
+      <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</MultiProcessorCompilation>
+      <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</MultiProcessorCompilation>
+      <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</MultiProcessorCompilation>
+      <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</MinimalRebuild>
+      <FloatingPointModel Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">Fast</FloatingPointModel>
+      <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</MinimalRebuild>
+      <FloatingPointModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Fast</FloatingPointModel>
+      <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</MinimalRebuild>
+      <FloatingPointModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Fast</FloatingPointModel>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
@@ -115,6 +124,15 @@
       <LanguageStandard_C Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Default</LanguageStandard_C>
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdcpp20</LanguageStandard>
       <LanguageStandard_C Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Default</LanguageStandard_C>
+      <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</MultiProcessorCompilation>
+      <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</MultiProcessorCompilation>
+      <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</MultiProcessorCompilation>
+      <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</MinimalRebuild>
+      <FloatingPointModel Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">Fast</FloatingPointModel>
+      <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</MinimalRebuild>
+      <FloatingPointModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Fast</FloatingPointModel>
+      <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</MinimalRebuild>
+      <FloatingPointModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Fast</FloatingPointModel>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -157,8 +175,8 @@
     <ClInclude Include="ComSmartPtrTypeDefs.h" />
     <ClInclude Include="DebugOutput.h" />
     <ClInclude Include="DefaultAudioEndpoint.h" />
-    <ClInclude Include="Hotkey.h" />
-    <ClInclude Include="HotkeyManager.h" />
+    <ClInclude Include="HotKey.h" />
+    <ClInclude Include="HotKeyManager.h" />
     <ClInclude Include="HotkeysPage.xaml.h">
       <DependentUpon>HotkeysPage.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -297,8 +315,8 @@
       <SubType>Code</SubType>
     </ClCompile>
     <ClCompile Include="DefaultAudioEndpoint.cpp" />
-    <ClCompile Include="Hotkey.cpp" />
-    <ClCompile Include="HotkeyManager.cpp" />
+    <ClCompile Include="HotKey.cpp" />
+    <ClCompile Include="HotKeyManager.cpp" />
     <ClCompile Include="HotkeysPage.xaml.cpp">
       <DependentUpon>HotkeysPage.xaml</DependentUpon>
       <SubType>Code</SubType>

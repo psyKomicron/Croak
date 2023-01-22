@@ -1449,34 +1449,38 @@ namespace winrt::Croak::implementation
         settings.Insert(L"DisableAnimations", box_value(DisableAnimationsIconToggleButton().IsOn()));
         settings.Insert(L"SessionsLayout", IReference<int32_t>(layout));
         settings.Insert(L"ShowAppBar", box_value(ShowAppBarIconToggleButton().IsOn()));
+
         if (currentAudioProfile)
         {
             settings.Insert(L"AudioProfile", box_value(currentAudioProfile.ProfileName()));
-        }
 
-        if (unbox_value_or(settings.TryLookup(L"AllowChangesToLoadedProfile"), false))
-        {
-            currentAudioProfile.SystemVolume(mainAudioEndpoint->Volume());
-            currentAudioProfile.Layout(layout);
-            currentAudioProfile.KeepOnTop(
-                appWindow.Presenter().as<OverlappedPresenter>().IsAlwaysOnTop()
-            );
-            currentAudioProfile.ShowMenu(
-                AppBarGrid().Visibility() == Visibility::Visible
-            );
-            currentAudioProfile.DisableAnimations(
-                mainAudioEndpointPeakTimer.IsRunning()
-            );
-
-            unique_lock lock{ audioSessionsMutex };
-            for (auto iter : audioSessions)
+            if (unbox_value_or(settings.TryLookup(L"AllowChangesToLoadedProfile"), false))
             {
-                auto muted = iter.second->Muted();
-                auto volume = iter.second->Volume();
-                auto name = iter.second->Name();
+                currentAudioProfile.SystemVolume(mainAudioEndpoint->Volume());
+                currentAudioProfile.Layout(layout);
+                currentAudioProfile.KeepOnTop(
+                    appWindow.Presenter().as<OverlappedPresenter>().IsAlwaysOnTop()
+                );
+                currentAudioProfile.ShowMenu(
+                    AppBarGrid().Visibility() == Visibility::Visible
+                );
+                currentAudioProfile.DisableAnimations(
+                    mainAudioEndpointPeakTimer.IsRunning()
+                );
 
-                currentAudioProfile.AudioLevels().Insert(name, volume);
-                currentAudioProfile.AudioStates().Insert(name, muted);
+                unique_lock lock{ audioSessionsMutex };
+                for (auto iter : audioSessions)
+                {
+                    auto muted = iter.second->Muted();
+                    auto volume = iter.second->Volume();
+                    auto name = iter.second->Name();
+
+                    currentAudioProfile.AudioLevels().Insert(name, volume);
+                    currentAudioProfile.AudioStates().Insert(name, muted);
+                }
+
+                // If the user has a profile, the AudioProfile container has to exist, so no TryLookup and container creation.
+                currentAudioProfile.Save(ApplicationData::Current().LocalSettings().Containers().Lookup(L"AudioProfiles"));
             }
         }
     }
@@ -1548,143 +1552,143 @@ namespace winrt::Croak::implementation
                         concurrency::task<void> t = concurrency::task<void>([this]()
                         {
                             try
-                        {
-                            auto audioLevels = currentAudioProfile.AudioLevels();
-                            auto audioStates = currentAudioProfile.AudioStates();
-
-                            // Set audio sessions volume.
-                            unique_lock lock{ audioSessionsMutex }; // Taking the lock will also lock sessions from being added to the display.
-
-                            // Set system volume.
-                            float systemVolume = currentAudioProfile.SystemVolume();
-                            mainAudioEndpoint->SetVolume(systemVolume);
-
-                            for (auto pair : currentAudioProfile.AudioLevels())
                             {
-                                for (auto iter : audioSessions)
+                                auto audioLevels = currentAudioProfile.AudioLevels();
+                                auto audioStates = currentAudioProfile.AudioStates();
+
+                                // Set audio sessions volume.
+                                unique_lock lock{ audioSessionsMutex }; // Taking the lock will also lock sessions from being added to the display.
+
+                                // Set system volume.
+                                float systemVolume = currentAudioProfile.SystemVolume();
+                                mainAudioEndpoint->SetVolume(systemVolume);
+
+                                for (auto pair : audioLevels)
                                 {
-                                    if (iter.second->Name() == pair.Key())
+                                    for (auto iter : audioSessions)
                                     {
-                                        iter.second->SetVolume(pair.Value());
-                                    }
-                                }
-                            }
-
-                            for (auto pair : currentAudioProfile.AudioLevels())
-                            {
-                                for (auto iter : audioSessions)
-                                {
-                                    if (iter.second->Name() == pair.Key())
-                                    {
-                                        iter.second->Muted(pair.Value());
-                                    }
-                                }
-                            }
-
-                            vector<AudioSessionView> uniqueSessions{};
-                            // HACK: IVector<T>::GetMany does not seem to work. Manual copy.
-                            for (uint32_t i = 0; i < audioSessionViews.Size(); i++)
-                            {
-                                uniqueSessions.push_back(audioSessionViews.GetAt(i));
-                            }
-
-                            auto indexes = currentAudioProfile.SessionsIndexes();
-                            auto&& views = vector<AudioSessionView>(indexes.Size(), nullptr);
-                            for (size_t i = 0; i < uniqueSessions.size(); i++)
-                            {
-                                auto&& view = uniqueSessions[i];
-
-                                auto opt = indexes.TryLookup(view.Header());
-                                if (opt.has_value())
-                                {
-                                    size_t index = opt.value();
-                                    if (index < views.size())
-                                    {
-                                        // The index might already be populated by the else if/else statements when the index is over the collection size.
-                                        if (views[index] == nullptr)
+                                        if (iter.second->Name() == pair.Key())
                                         {
-                                            views[index] = view;
-                                        }
-                                        else
-                                        {
-                                            views.push_back(views[index]);
-                                            views[index] = view;
-                                        }
-                                    }
-                                    else if (views[views.size() - 1] == nullptr) // Check if the last index of the collection is free.
-                                    {
-                                        views[views.size() - 1] = view;
-                                    }
-                                    else // The index is over the collection size and the last value of the collection is already populated.
-                                    {
-                                        views.push_back(view);
-                                    }
-
-                                    uniqueSessions[i] = nullptr; // Set to null to tell the session has been added.
-                                }
-                            }
-
-                            // Add the sessions that were not in the profile.
-                            // Try to add the session where there is still space. If not possible, append it.
-                            bool hasTrailingNullptrs = true;
-                            for (size_t i = 0; i < uniqueSessions.size(); i++)
-                            {
-                                if (uniqueSessions[i])
-                                {
-                                    int j = static_cast<int>(views.size()) - 1;
-                                    for (; j >= 0; j--)
-                                    {
-                                        if (views[j] == nullptr)
-                                        {
-                                            views[j] = uniqueSessions[i];
-                                            break;
-                                        }
-                                    }
-
-                                    if (j < 0)
-                                    {
-                                        views.push_back(uniqueSessions[i]);
-                                        hasTrailingNullptrs = false;
-                                    }
-                                }
-                            }
-
-                            if (hasTrailingNullptrs)
-                            {
-                                //HACK: Clear null values by passing another time through the view array.
-                                size_t finalSize = views.size();
-                                for (size_t i = 0; i < views.size(); i++)
-                                {
-                                    if (views[i] == nullptr)
-                                    {
-                                        size_t j = i + 1;
-                                        while (j < views.size() && views[j] == nullptr)
-                                        {
-                                            j++;
-                                        }
-
-                                        if (j < views.size())
-                                        {
-                                            views[i] = move(views[j]);
-                                        }
-                                        else
-                                        {
-                                            finalSize--;
+                                            iter.second->SetVolume(pair.Value());
                                         }
                                     }
                                 }
-                                views.resize(finalSize);
-                            }
 
-                            audioSessionViews = multi_threaded_observable_vector<AudioSessionView>(move(views));
-                            DispatcherQueue().TryEnqueue([this]()
-                            {
-                                // HACK: Can we use INotifyPropertyChanged to raise that the vector has changed ?
-                                AudioSessionsPanel().ItemsSource(audioSessionViews);
+                                for (auto pair : audioStates)
+                                {
+                                    for (auto iter : audioSessions)
+                                    {
+                                        if (iter.second->Name() == pair.Key())
+                                        {
+                                            iter.second->Muted(pair.Value());
+                                        }
+                                    }
+                                }
 
-                            // I18N: Loaded profile [profile name]
-                            WindowMessageBar().EnqueueString(L"Loaded profile " + currentAudioProfile.ProfileName());
-                            AudioSessionsPanelProgressRing().Visibility(Visibility::Collapsed);
+                                vector<AudioSessionView> uniqueSessions{};
+                                // HACK: IVector<T>::GetMany does not seem to work. Manual copy.
+                                for (uint32_t i = 0; i < audioSessionViews.Size(); i++)
+                                {
+                                    uniqueSessions.push_back(audioSessionViews.GetAt(i));
+                                }
+
+                                auto indexes = currentAudioProfile.SessionsIndexes();
+                                auto&& views = vector<AudioSessionView>(indexes.Size(), nullptr);
+                                for (size_t i = 0; i < uniqueSessions.size(); i++)
+                                {
+                                    auto&& view = uniqueSessions[i];
+
+                                    auto opt = indexes.TryLookup(view.Header());
+                                    if (opt.has_value())
+                                    {
+                                        size_t index = opt.value();
+                                        if (index < views.size())
+                                        {
+                                            // The index might already be populated by the else if/else statements when the index is over the collection size.
+                                            if (views[index] == nullptr)
+                                            {
+                                                views[index] = view;
+                                            }
+                                            else
+                                            {
+                                                views.push_back(views[index]);
+                                                views[index] = view;
+                                            }
+                                        }
+                                        else if (views[views.size() - 1] == nullptr) // Check if the last index of the collection is free.
+                                        {
+                                            views[views.size() - 1] = view;
+                                        }
+                                        else // The index is over the collection size and the last value of the collection is already populated.
+                                        {
+                                            views.push_back(view);
+                                        }
+
+                                        uniqueSessions[i] = nullptr; // Set to null to tell the session has been added.
+                                    }
+                                }
+
+                                // Add the sessions that were not in the profile.
+                                // Try to add the session where there is still space. If not possible, append it.
+                                bool hasTrailingNullptrs = true;
+                                for (size_t i = 0; i < uniqueSessions.size(); i++)
+                                {
+                                    if (uniqueSessions[i])
+                                    {
+                                        int j = static_cast<int>(views.size()) - 1;
+                                        for (; j >= 0; j--)
+                                        {
+                                            if (views[j] == nullptr)
+                                            {
+                                                views[j] = uniqueSessions[i];
+                                                break;
+                                            }
+                                        }
+
+                                        if (j < 0)
+                                        {
+                                            views.push_back(uniqueSessions[i]);
+                                            hasTrailingNullptrs = false;
+                                        }
+                                    }
+                                }
+
+                                if (hasTrailingNullptrs)
+                                {
+                                    //HACK: Clear null values by passing another time through the view array.
+                                    size_t finalSize = views.size();
+                                    for (size_t i = 0; i < views.size(); i++)
+                                    {
+                                        if (views[i] == nullptr)
+                                        {
+                                            size_t j = i + 1;
+                                            while (j < views.size() && views[j] == nullptr)
+                                            {
+                                                j++;
+                                            }
+
+                                            if (j < views.size())
+                                            {
+                                                views[i] = move(views[j]);
+                                            }
+                                            else
+                                            {
+                                                finalSize--;
+                                            }
+                                        }
+                                    }
+                                    views.resize(finalSize);
+                                }
+
+                                audioSessionViews = multi_threaded_observable_vector<AudioSessionView>(move(views));
+                                DispatcherQueue().TryEnqueue([this]()
+                                {
+                                    // HACK: Can we use INotifyPropertyChanged to raise that the vector has changed ?
+                                    AudioSessionsPanel().ItemsSource(audioSessionViews);
+
+                                // I18N: Loaded profile [profile name]
+                                WindowMessageBar().EnqueueString(L"Loaded profile " + currentAudioProfile.ProfileName());
+                                AudioSessionsPanelProgressRing().Visibility(Visibility::Collapsed);
                             });
                         }
                         catch (const std::out_of_range& ex)
@@ -1802,8 +1806,8 @@ namespace winrt::Croak::implementation
             {
                 iter.second->VolumeChanged(audioSessionVolumeChanged[iter.first]);
                 iter.second->StateChanged(audioSessionsStateChanged[iter.first]);
-                iter.second->Unregister();
-                iter.second->Release();
+                assert(iter.second->Unregister());
+                assert(iter.second->Release() == 0);
             }
         }
 
@@ -1820,8 +1824,8 @@ namespace winrt::Croak::implementation
             audioController->EndpointChanged(audioControllerEndpointChangedToken);
             audioController->SessionAdded(audioControllerSessionAddedToken);
 
-            audioController->Unregister();
-            audioController->Release();
+            assert(audioController->Unregister());
+            assert(audioController->Release() == 0);
         }
 
         if (forReload)
@@ -1847,9 +1851,9 @@ namespace winrt::Croak::implementation
 
     void MainWindow::AppWindow_Closing(winrt::Microsoft::UI::Windowing::AppWindow, winrt::Microsoft::UI::Windowing::AppWindowClosingEventArgs)
     {
-        CleanUpResources(false);
-
         SaveSettings();
+
+        CleanUpResources(false);
     }
 
     void MainWindow::MainAudioEndpoint_VolumeChanged(IInspectable, const float& newVolume)
@@ -1909,15 +1913,14 @@ namespace winrt::Croak::implementation
                     {
                         lock.unlock();
 
-                        // I do the same thing twice, but i can't assume that the index of the audio session will remain the same
                         DispatcherQueue().TryEnqueue([this, id]()
                         {
                             unique_lock lock{ audioSessionsMutex };
 
-                        if (AudioSessionView view = CreateAudioSessionView(audioSessions.at(id), true))
-                        {
-                            audioSessionViews.InsertAt(0, view);
-                        }
+                            if (AudioSessionView view = CreateAudioSessionView(audioSessions.at(id), true))
+                            {
+                                audioSessionViews.InsertAt(0, view);
+                            }
                         });
 
                         // The function exists here since the code in DispatcherQueue().TryEnqueue() relies on finding an AudioSessionView with the matching id. Or I found that the AudioSessionView with the given id does not exists.
@@ -1931,7 +1934,7 @@ namespace winrt::Croak::implementation
                     AudioSession* session = audioSessions.at(id);
                     session->VolumeChanged(audioSessionVolumeChanged[session->Id()]);
                     session->StateChanged(audioSessionsStateChanged[session->Id()]);
-                    session->Unregister();
+                    assert(session->Unregister());
                     session->Release();
 
                     audioSessions.erase(id);
@@ -1988,20 +1991,22 @@ namespace winrt::Croak::implementation
         DispatcherQueue().TryEnqueue([this]()
         {
             audioSessionsPeakTimer.Stop();
-        while (AudioSession* newSession = audioController->NewSession())
-        {
+
+            while (AudioSession* newSession = audioController->NewSession())
             {
-                unique_lock lock{ audioSessionsMutex };
-                audioSessions.insert({ newSession->Id(), newSession });
+                {
+                    unique_lock lock{ audioSessionsMutex };
+                    audioSessions.insert({ newSession->Id(), newSession });
+                }
+
+                if (AudioSessionView view = CreateAudioView(newSession))
+                {
+                    // TODO: If a profile is loaded, find the right index for the audio session to be added to.
+                    audioSessionViews.InsertAt(0, view);
+                }
             }
 
-            if (AudioSessionView view = CreateAudioView(newSession))
-            {
-                // TODO: If a profile is loaded, find the right index for the audio session to be added to.
-                audioSessionViews.InsertAt(0, view);
-            }
-        }
-        audioSessionsPeakTimer.Start();
+            audioSessionsPeakTimer.Start();
         });
     }
 

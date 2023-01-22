@@ -4,11 +4,13 @@
 #include <appmodel.h>
 #include <winrt/Windows.Data.Xml.Dom.h>
 #include "IconHelper.h"
+#include "DebugOutput.h"
 
 using namespace std;
 using namespace winrt;
 using namespace winrt::Windows::Data::Xml;
 using namespace winrt::Windows::Data::Xml::Dom;
+
 
 namespace Croak::System
 {

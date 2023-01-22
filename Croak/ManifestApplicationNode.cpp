@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "ManifestApplicationNode.h"
 
+#include "DebugOutput.h"
+
 using namespace std;
 
 

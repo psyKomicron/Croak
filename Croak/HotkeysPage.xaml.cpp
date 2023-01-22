@@ -4,6 +4,8 @@
 #include "HotkeysPage.g.cpp"
 #endif
 
+#include "DebugOutput.h"
+
 using namespace winrt;
 using namespace Microsoft::UI::Xaml;
 using namespace winrt::Windows::Foundation;

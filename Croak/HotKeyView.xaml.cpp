@@ -1,11 +1,10 @@
-// Copyright (c) Microsoft Corporation and Contributors.
-// Licensed under the MIT License.
-
 #include "pch.h"
 #include "HotKeyView.xaml.h"
 #if __has_include("HotKeyView.g.cpp")
 #include "HotKeyView.g.cpp"
 #endif
+
+#include "DebugOutput.h"
 
 using namespace winrt;
 using namespace winrt::Microsoft::UI::Xaml;

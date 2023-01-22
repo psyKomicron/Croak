@@ -7,6 +7,7 @@
 #include <math.h>
 #include <limits>
 #include "IconHelper.h"
+#include "DebugOutput.h"
 
 using namespace winrt;
 using namespace winrt::Microsoft::UI::Xaml;

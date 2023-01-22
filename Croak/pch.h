@@ -73,7 +73,7 @@
 #include <wil/cppwinrt_helpers.h>
 #include <microsoft.ui.xaml.window.h>
 
-#include "DebugOutput.h"
+//#include "DebugOutput.h"
 
 
 _COM_SMARTPTR_TYPEDEF(IStream, __uuidof(IStream));

@@ -6,6 +6,7 @@
 #include "AudioSessionStates.h"
 #include "ManifestApplicationNode.h"
 #include "IconHelper.h"
+#include "DebugOutput.h"
 
 using namespace winrt;
 using namespace std;

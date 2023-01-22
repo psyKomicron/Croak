@@ -4,6 +4,7 @@
 #include <Functiondiscoverykeys_devpkey.h>
 #include "AudioController.h"
 #include "AudioInterfacesSmartPtrs.h"
+#include "DebugOutput.h"
 
 using namespace winrt;
 

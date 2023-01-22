@@ -10,6 +10,7 @@
 #include <winrt/Windows.Data.Json.h>
 #include <winrt/Windows.System.UserProfile.h>
 #include <winrt/Windows.Storage.Streams.h>
+#include "DebugOutput.h"
 
 using namespace winrt;
 using namespace Microsoft::UI::Xaml;

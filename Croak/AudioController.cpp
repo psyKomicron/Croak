@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "AudioController.h"
+#include "DebugOutput.h"
 
 using namespace winrt;
 using namespace std;

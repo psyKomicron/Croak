@@ -1,23 +1,14 @@
 #pragma once
 #include <atomic>
 
-namespace Croak::System::Hotkeys
+namespace Croak::System::HotKeys
 {
-	class Hotkey
+	class HotKey
 	{
 	public:
-		Hotkey() = delete;
-		Hotkey(const winrt::Windows::System::VirtualKeyModifiers& modifiers, const uint32_t& key);
-		~Hotkey();
-
-		/**
-		 * @brief Key modifiers (control, alt, etc...).
-		 * @return Virtual key modifiers
-		*/
-		inline winrt::Windows::System::VirtualKeyModifiers KeyModifiers()
-		{
-			return TranslateModifiers(modifiers);
-		};
+		HotKey() = delete;
+		HotKey(const winrt::Windows::System::VirtualKeyModifiers& modifiers, const uint32_t& key, const bool& isRepeating);
+		~HotKey();
 
 		/**
 		 * @brief Key.
@@ -26,7 +17,7 @@ namespace Croak::System::Hotkeys
 		inline uint32_t Key()
 		{
 			return key;
-		};
+		}
 
 		/**
 		 * @brief If the key is not enabled, Fired event will not be fired when the hotkey is pressed.
@@ -35,7 +26,7 @@ namespace Croak::System::Hotkeys
 		inline bool Enabled()
 		{
 			return keyEnabled.load();
-		};
+		}
 
 		/**
 		 * @brief If the key is not enabled, Fired event will not be fired when the hotkey is pressed.
@@ -44,16 +35,23 @@ namespace Croak::System::Hotkeys
 		inline void Enabled(const bool& enabled)
 		{
 			keyEnabled.exchange(enabled);
-		};
+		}
+
+		inline uint32_t KeyId()
+		{
+			return hotKeyId;
+		}
+
 
 		inline winrt::event_token Fired(const winrt::Windows::Foundation::TypedEventHandler<winrt::Windows::Foundation::IInspectable, winrt::guid>& handler)
 		{
 			return e_fired.add(handler);
-		};
+		}
+
 		inline void Fired(const winrt::event_token& token)
 		{
 			e_fired.remove(token);
-		};
+		}
 
 		/**
 		 * @brief Activates the key to fire events.
@@ -61,12 +59,12 @@ namespace Croak::System::Hotkeys
 		void Activate();
 
 	private:
-		static std::atomic_int32_t id;
+		static std::atomic_int32_t globalIds;
 
-		uint32_t modifiers = 0u;
-		uint32_t key = 0u;
-		std::atomic_flag threadFlag{};
-		int32_t hotkeyId = 0;
+		uint32_t key;
+		bool repeating;
+		uint32_t modifiers{};
+		uint32_t hotKeyId = 0;
 		std::thread* notificationThread = nullptr;
 		std::atomic_bool threadRunning = false;
 		std::atomic_bool keyEnabled = true;
@@ -74,8 +72,8 @@ namespace Croak::System::Hotkeys
 
 		winrt::event<winrt::Windows::Foundation::TypedEventHandler<winrt::Windows::Foundation::IInspectable, winrt::guid>> e_fired {};
 
-		winrt::Windows::System::VirtualKeyModifiers TranslateModifiers(const uint32_t& win32Mods) const;
-		void ThreadFunction();
+		bool CheckParametersValidity(const DWORD& modifiers, const DWORD& key);
+		void ThreadFunction(std::atomic_flag* startFlag);
 	};
 }
 

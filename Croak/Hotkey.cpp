@@ -1,17 +1,19 @@
 #include "pch.h"
-#include "Hotkey.h"
+#include "HotKey.h"
+#include "DebugOutput.h"
 
 using namespace winrt::Windows::System;
 
 
-namespace Croak::System::Hotkeys
+namespace Croak::System::HotKeys
 {
-	std::atomic_int32_t Hotkey::id = 1;
+	std::atomic_int32_t HotKey::globalIds = 1;
 
-	Hotkey::Hotkey(const VirtualKeyModifiers& modifiers, const uint32_t& key) :
-		key{ key }
+	HotKey::HotKey(const VirtualKeyModifiers& modifiers, const uint32_t& key, const bool& isRepeating) :
+		key{ key },
+		repeating{ isRepeating }
 	{
-		hotkeyId = id.fetch_add(1);
+		hotKeyId = globalIds.fetch_add(1);
 
 		if (static_cast<uint32_t>(modifiers & VirtualKeyModifiers::Control))
 		{
@@ -32,67 +34,47 @@ namespace Croak::System::Hotkeys
 		}
 	}
 
-	Hotkey::~Hotkey()
+	HotKey::~HotKey()
 	{
 		if (notificationThread != nullptr)
 		{
-			PostThreadMessage(threadId, WM_QUIT, 0, 0); // Post quit message to the Hotkey thread (GetMessage will return 0).
+			PostThreadMessage(threadId, WM_QUIT, 0, 0); // Post quit message to the HotKey thread (GetMessage will return 0).
 			notificationThread->join(); // Wait for the thread to exit.
 			delete notificationThread; // Free the memory.
+
+			DebugLog(std::format("Successfully free resources (key id: {0})", std::to_string(hotKeyId)));
 		}
 	}
 
-
-	void Hotkey::Activate()
+	void HotKey::Activate()
 	{
-		notificationThread = new std::thread(&Hotkey::ThreadFunction, this);
-		threadFlag.wait(false); // Wait to check if the Hotkey was registered successfully or not.
-		if (!threadFlag.test()) // If the test returns false it means the Hotkey registration has failed, throw exception.
+		std::atomic_flag startFlag{};
+
+		notificationThread = new std::thread(&HotKey::ThreadFunction, this, &startFlag);
+
+		startFlag.wait(false); // Wait to check if the HotKey was registered successfully or not.
+		if (!startFlag.test()) // If the test returns false it means the HotKey registration has failed, throw exception.
 		{
 			throw std::invalid_argument("Hot key is not valid (rejected by the system).");
 		}
 	}
 
 
-	VirtualKeyModifiers Hotkey::TranslateModifiers(const uint32_t& win32Mods) const
-	{
-		VirtualKeyModifiers virtualKeyModifiers = VirtualKeyModifiers::None;
-
-		if (win32Mods & MOD_CONTROL)
-		{
-			virtualKeyModifiers |= VirtualKeyModifiers::Control;
-		}
-		if (win32Mods & MOD_ALT)
-		{
-			virtualKeyModifiers |= VirtualKeyModifiers::Menu;
-		}
-		if (win32Mods & MOD_SHIFT)
-		{
-			virtualKeyModifiers |= VirtualKeyModifiers::Shift;
-		}
-		if (win32Mods & MOD_WIN)
-		{
-			virtualKeyModifiers |= VirtualKeyModifiers::Windows;
-		}
-
-		return virtualKeyModifiers;
-	}
-
-	void Hotkey::ThreadFunction()
+	void HotKey::ThreadFunction(std::atomic_flag* startFlag)
 	{
 		threadId = GetCurrentThreadId();
 
-		if (!::RegisterHotKey(nullptr, hotkeyId, modifiers, key))
+		if (!::RegisterHotKey(nullptr, hotKeyId, modifiers, key))
 		{
-			OutputDebugHString(L"Failed to register hot key.");
-			threadFlag.test_and_set();
-			threadFlag.notify_one();
+			DebugLog(std::format("Hotkey (id: {0}) > Failed to register hot key.\n", std::to_string(hotKeyId)));
+			//threadFlag.test_and_set();
+			startFlag->notify_one();
 		}
 		else
 		{
-			OutputDebugHString(L"Hotkey (id: " + winrt::to_hstring(static_cast<uint64_t>(hotkeyId)) + L") registered.");
-			threadFlag.test_and_set();
-			threadFlag.notify_one();
+			DebugLog(std::format("Hotkey (id: {0}) > Registered.\n", std::to_string(hotKeyId)));
+			startFlag->test_and_set();
+			startFlag->notify_one();
 
 			MSG message{};
 			while (1)
@@ -102,7 +84,7 @@ namespace Croak::System::Hotkeys
 				{
 					if (message.message == WM_HOTKEY)
 					{
-						OutputDebugHString(L"Hotkey (id: " + winrt::to_hstring(static_cast<uint64_t>(hotkeyId)) + L") > Hotkey pressed.");
+						DebugLog(std::format("Hotkey (id: {0}) > Hotkey pressed.\n", std::to_string(hotKeyId)));
 
 						if (keyEnabled.load())
 						{
@@ -112,14 +94,15 @@ namespace Croak::System::Hotkeys
 				}
 				else
 				{
-					OutputDebugString(L"Hotkey.cpp > GetMessage returned 0\n");
+					DebugLog(std::format("Hotkey (id: {0}) > GetMessage returned 0.\n", std::to_string(hotKeyId)));
 					break;
 				}
 			}
 
-			// Unregister the Hotkey when exiting the thread.
-			UnregisterHotKey(nullptr, hotkeyId);
-			OutputDebugHString(L"Hotkey (id: " + winrt::to_hstring(static_cast<uint64_t>(hotkeyId)) + L") thread exiting.");
+			// Unregister the HotKey when exiting the thread.
+			UnregisterHotKey(nullptr, hotKeyId);
+
+			DebugLog(std::format("Hotkey (id: {0}) > thread exiting.\n", std::to_string(hotKeyId)));
 		}
 	}
 }

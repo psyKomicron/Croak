@@ -1,14 +1,15 @@
 #include "pch.h"
-#include "HotkeyManager.h"
+#include "HotKeyManager.h"
+#include "DebugOutput.h"
 
 using namespace std;
 using namespace winrt;
 using namespace winrt::Windows::System;
 
 
-namespace Croak::System::Hotkeys
+namespace Croak::System::HotKeys
 {
-	HotkeyManager::~HotkeyManager()
+	HotKeyManager::~HotKeyManager()
 	{
 		// TODO: Take read-write lock.
 		for (auto&& pair : hotKeys)
@@ -17,62 +18,48 @@ namespace Croak::System::Hotkeys
 		}
 	}
 
-	guid HotkeyManager::RegisterHotKey(const VirtualKeyModifiers& modifiers, const uint32_t& virtualKey)
+	HotKeyID HotKeyManager::RegisterHotKey(const VirtualKeyModifiers& modifiers, const uint32_t& virtualKey, const bool& isRepeating)
 	{
 		// TODO:
 		// - Check arguments validity
 		// - Activate and throw properly if the key has failed to activate.
-		// - Return an ID so that the caller can identify witch key has been fired.
-		// - Handle Fired events and send dispatch them.
-		UUID hotKeyId{};
-		if (SUCCEEDED((UuidCreate(&hotKeyId))))
-		{
-			Hotkey* hotKey = new Hotkey(modifiers, virtualKey);
-			hotKey->Fired([this, id = guid(hotKeyId)](auto, auto)
-			{
-				e_hotKeyFired(id, nullptr);
-			});
 
-			hotKeys.insert({ guid(hotKeyId), hotKey });
-			return guid(move(hotKeyId));
-		}
-		else
-		{
-			// TODO: Throw exception.
-		}
-	}
+		HotKey* hotKey = new HotKey(modifiers, virtualKey, isRepeating);
 
-	void HotkeyManager::EditKey(const winrt::guid& hotKeyId, const VirtualKeyModifiers& modifiers, const uint32_t& virtualKey)
-	{
-		Hotkey* hotKeyPtr = hotKeys.at(hotKeyId);
-		if (!hotKeyPtr)
-		{
-			throw exception("Hot key was null.");
-		}
-		delete hotKeyPtr;
+		hotKey->Activate();
 
-		hotKeyPtr = new Hotkey(modifiers, virtualKey);
-		hotKeyPtr->Fired([this, id = guid(hotKeyId)](auto, auto)
+		hotKey->Fired([this, id = hotKey->KeyId()](auto, auto)
 		{
 			e_hotKeyFired(id, nullptr);
 		});
 
-		hotKeys.insert({ guid(hotKeyId), hotKeyPtr });
+		hotKeys.insert({ hotKey->KeyId(), hotKey});
+		return hotKey->KeyId();
 	}
 
-	void HotkeyManager::ReplaceOrInsertKey(Hotkey* previousKey, Hotkey* newKey)
+	void HotKeyManager::EditKey(const HotKeyID& hotKeyId, const VirtualKeyModifiers& modifiers, const uint32_t& virtualKey)
 	{
-		for (auto&& pair : hotKeys)
+		if (hotKeys.find(hotKeyId) != hotKeys.cend())
 		{
-			//VirtualKeyModifiers modifiers = previousKey->KeyModifiers();
-			//VirtualKeyModifiers currentModifiers = pair.second->KeyModifiers();
-
-			if ((static_cast<uint32_t>(previousKey->KeyModifiers()) == static_cast<uint32_t>(pair.second->KeyModifiers())) &&
-				(pair.second->Key() == previousKey->Key()))
+			//TODO: Don't reallocate memory, make the HotKey able to re-register itself with new parameters.
+			unique_ptr<HotKey> hotKeyPtr{ hotKeys[hotKeyId] };
+			if (hotKeyPtr.get())
 			{
-				hotKeys.insert({ pair.first, newKey }); // Could break iterator.
-				break;
+				//DebugLog(format(L"Replacing hot key (id: {0}).", hotKey->Id()));
+				HotKey* newHotKey = new HotKey(modifiers, virtualKey, false);
+				newHotKey->Activate();
+
+				newHotKey->Fired([this, id = newHotKey->KeyId()](auto, auto)
+				{
+					e_hotKeyFired(id, nullptr);
+				});
+
+				hotKeys[hotKeyId] = newHotKey;
 			}
 		}
+	}
+
+	void HotKeyManager::ReplaceOrInsertKey(HotKey* previousKey, HotKey* newKey)
+	{
 	}
 }

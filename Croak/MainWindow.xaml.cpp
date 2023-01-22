@@ -4,15 +4,17 @@
 #include "MainWindow.g.cpp"
 #endif
 
-#include "HotKey.h"
-#include "SecondWindow.xaml.h"
 #include <ppl.h>
 #include <ppltasks.h>
+#include "SecondWindow.xaml.h"
 #include "IconHelper.h"
+#include "HotKey.h"
+#include "HotKeyManager.h"
+#include "DebugOutput.h"
 
 #define USE_TIMER 1
 #define DEACTIVATE_TIMER 0
-#define ENABLE_HOTKEYS 1
+#define ENABLE_HOTKEYS 0
 
 using namespace ::Croak::Audio;
 
@@ -395,52 +397,25 @@ namespace winrt::Croak::implementation
             }
         }
 
+
+        ::Croak::System::HotKeys::HotKeyManager& hotKeyManager = ::Croak::System::HotKeys::HotKeyManager::GetHotKeyManager();
+        hotKeyManager.HotKeyFired([this](auto id, auto)
+        {
+            DebugLog("Hot key fired.\n");
+        });
+
+        try
+        {
+            auto id = hotKeyManager.RegisterHotKey(Windows::System::VirtualKeyModifiers::Control, static_cast<uint32_t>('M'), false);
+        }
+        catch (const hresult_error& e)
+        {
+            DebugLog("Could not register hot key.\n");
+        }
+
 #if ENABLE_HOTKEYS
         // Activate hotkeys.
-        try
-        {
-            volumeUpHotKeyPtr.Activate();
-        }
-        catch (const std::invalid_argument&)
-        {
-            WindowMessageBar().EnqueueString(L"Failed to activate system volume up hot key");
-        }
-
-        try
-        {
-            volumeDownHotKeyPtr.Activate();
-        }
-        catch (const std::invalid_argument&)
-        {
-            WindowMessageBar().EnqueueString(L"Failed to activate system volume down hot key");
-        }
-
-        try
-        {
-            volumePageUpHotKeyPtr.Activate();
-        }
-        catch (const std::invalid_argument&)
-        {
-            WindowMessageBar().EnqueueString(L"Failed to activate system volume up (PageUp) hot key");
-        }
-
-        try
-        {
-            volumePageDownHotKeyPtr.Activate();
-        }
-        catch (const std::invalid_argument&)
-        {
-            WindowMessageBar().EnqueueString(L"Failed to activate system volume down (PageDown) hot key");
-        }
-
-        try
-        {
-            muteHotKeyPtr.Activate();
-        }
-        catch (const std::invalid_argument&)
-        {
-            WindowMessageBar().EnqueueString(L"Failed to activate mute/unmute hot key");
-        }
+        
 #endif // ENABLE_HOTKEYS
     }
 
@@ -977,69 +952,6 @@ namespace winrt::Croak::implementation
         *  - Alt/Menu + Shift + M : system volume mute/unmute
         */
 
-        volumeUpHotKeyPtr.Fired([this](auto, auto)
-        {
-            try
-        {
-            constexpr float stepping = 0.02f;
-            mainAudioEndpoint->SetVolume(mainAudioEndpoint->Volume() + stepping < 1.f ? mainAudioEndpoint->Volume() + stepping : 1.f);
-        }
-        catch (...)
-        {
-        }
-        });
-
-        volumeDownHotKeyPtr.Fired([this](auto, auto)
-        {
-            try
-        {
-            constexpr float stepping = 0.02f;
-            mainAudioEndpoint->SetVolume(mainAudioEndpoint->Volume() - stepping > 0.f ? mainAudioEndpoint->Volume() - stepping : 0.f);
-        }
-        catch (...)
-        {
-        }
-        });
-
-        volumePageUpHotKeyPtr.Fired([this](auto, auto)
-        {
-            try
-        {
-            constexpr float stepping = 0.07f;
-            mainAudioEndpoint->SetVolume(mainAudioEndpoint->Volume() + stepping < 1.f ? mainAudioEndpoint->Volume() + stepping : 1.f);
-        }
-        catch (...)
-        {
-        }
-        });
-
-        volumePageDownHotKeyPtr.Fired([this](auto, auto)
-        {
-            try
-        {
-            constexpr float stepping = 0.07f;
-            mainAudioEndpoint->SetVolume(mainAudioEndpoint->Volume() - stepping > 0.f ? mainAudioEndpoint->Volume() - stepping : 0.f);
-        }
-        catch (...)
-        {
-        }
-        });
-
-        muteHotKeyPtr.Fired([this](auto, auto)
-        {
-            try
-        {
-            mainAudioEndpoint->SetMute(!mainAudioEndpoint->Muted());
-            /*DispatcherQueue().TryEnqueue([this]()
-            {
-                MuteToggleButtonFontIcon().Glyph(mainAudioEndpoint->Muted() ? L"\ue74f" : L"\ue767");
-                MuteToggleButton().IsChecked(IReference(mainAudioEndpoint->Muted()));
-            });*/
-        }
-        catch (...)
-        {
-        }
-        });
 
 #pragma warning(pop)  
 #endif // ENABLE_HOTKEYS

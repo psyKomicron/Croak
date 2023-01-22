@@ -4,7 +4,6 @@
 #include "AudioController.h"
 #include "AudioSession.h"
 #include "DefaultAudioEndpoint.h"
-#include "Hotkey.h"
 
 using namespace winrt::Windows::System;
 
@@ -18,12 +17,12 @@ namespace winrt::Croak::implementation
         static winrt::Croak::MainWindow Current()
         {
             return singleton;
-        };
+        }
 
         inline winrt::Windows::Foundation::Collections::IObservableVector<winrt::Croak::AudioSessionView> AudioSessions() const
         {
             return audioSessionViews;
-        };
+        }
 
         inline winrt::Windows::Graphics::RectInt32 DisplayRect()
         {
@@ -37,7 +36,7 @@ namespace winrt::Croak::implementation
             {
                 return winrt::Windows::Graphics::RectInt32();
             }
-        };
+        }
 
         void OnLoaded(winrt::Windows::Foundation::IInspectable const& sender, Microsoft::UI::Xaml::RoutedEventArgs const& e);
         void AudioSessionView_VolumeChanged(winrt::Croak::AudioSessionView const& sender, winrt::Microsoft::UI::Xaml::Controls::Primitives::RangeBaseValueChangedEventArgs const& args);
@@ -87,12 +86,6 @@ namespace winrt::Croak::implementation
         winrt::event_token audioControllerEndpointChangedToken;
         std::map<winrt::guid, winrt::event_token> audioSessionVolumeChanged{};
         std::map<winrt::guid, winrt::event_token> audioSessionsStateChanged{};
-        // Hot keys.
-        ::Croak::System::Hotkeys::Hotkey volumeUpHotKeyPtr{ VirtualKeyModifiers::Control | VirtualKeyModifiers::Shift, VK_UP };
-        ::Croak::System::Hotkeys::Hotkey volumeDownHotKeyPtr{ VirtualKeyModifiers::Control | VirtualKeyModifiers::Shift, VK_DOWN };
-        ::Croak::System::Hotkeys::Hotkey volumePageUpHotKeyPtr{ VirtualKeyModifiers::Control | VirtualKeyModifiers::Shift, VK_PRIOR };
-        ::Croak::System::Hotkeys::Hotkey volumePageDownHotKeyPtr{ VirtualKeyModifiers::Control | VirtualKeyModifiers::Shift, VK_NEXT };
-        ::Croak::System::Hotkeys::Hotkey muteHotKeyPtr{ VirtualKeyModifiers::Control | VirtualKeyModifiers::Shift, static_cast<uint32_t>('M') };
         // UI related attributes.
         bool loaded = false;
         bool compact = false;

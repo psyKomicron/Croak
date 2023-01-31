@@ -1,9 +1,12 @@
+import "HotkeyViewModel.idl";
+
 namespace Croak
 {
     [default_interface]
     runtimeclass HotKeyView : Microsoft.UI.Xaml.Controls.UserControl
     {
         HotKeyView();
+        HotKeyView(HotkeyViewModel model);
 
         String HotKeyName{ get; set; };
         Windows.System.VirtualKeyModifiers Modifiers{ get; set; };
@@ -11,5 +14,9 @@ namespace Croak
         Boolean IsHotKeyEnabled{ get; set; };
 
         IInspectable KeyName{ get; };
+
+        event Windows.Foundation.TypedEventHandler<HotKeyView, Windows.System.VirtualKeyModifiers> VirtualModifiersChanged;
+        event Windows.Foundation.TypedEventHandler<HotKeyView, Windows.System.VirtualKey> VirtualKeyChanged;
+        event Windows.Foundation.TypedEventHandler<HotKeyView, Boolean> Toggled;
     }
 }

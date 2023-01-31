@@ -27,6 +27,7 @@
 #include <Shlwapi.h>
 #include <filesystem>
 #include <regex>
+#include <functional>
 
 
 #ifdef _DEBUG

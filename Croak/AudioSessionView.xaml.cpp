@@ -9,15 +9,17 @@
 #include "IconHelper.h"
 #include "DebugOutput.h"
 
-using namespace winrt;
-using namespace winrt::Microsoft::UI::Xaml;
-using namespace winrt::Microsoft::UI::Xaml::Controls;
-using namespace winrt::Microsoft::UI::Xaml::Controls::Primitives;
-using namespace winrt::Microsoft::UI::Xaml::Input;
-using namespace winrt::Microsoft::UI::Xaml::Media;
-using namespace winrt::Microsoft::UI::Xaml::Media::Imaging;
-using namespace winrt::Windows::Foundation;
-using namespace winrt::Windows::UI;
+namespace Foundation = winrt::Windows::Foundation;
+namespace UI = winrt::Windows::UI;
+namespace Xaml
+{
+    using namespace winrt::Microsoft::UI::Xaml;
+    using namespace winrt::Microsoft::UI::Xaml::Controls;
+    using namespace winrt::Microsoft::UI::Xaml::Controls::Primitives;
+    using namespace winrt::Microsoft::UI::Xaml::Input;
+    using namespace winrt::Microsoft::UI::Xaml::Media;
+    using namespace winrt::Microsoft::UI::Xaml::Media::Imaging;
+}
 
 
 namespace winrt::Croak::implementation
@@ -47,15 +49,15 @@ namespace winrt::Croak::implementation
         return _volumeGlyph;
     }
 
-    Orientation AudioSessionView::Orientation()
+    Xaml::Orientation AudioSessionView::Orientation()
     {
-        return isVertical ? Orientation::Vertical : Orientation::Horizontal;
+        return isVertical ? Xaml::Orientation::Vertical : Xaml::Orientation::Horizontal;
     }
 
-    void AudioSessionView::Orientation(const ::Controls::Orientation& value)
+    void AudioSessionView::Orientation(const Xaml::Orientation& value)
     {
-        isVertical = value == Orientation::Vertical;
-        VisualStateManager::GoToState(*this, isVertical ? L"VerticalLayout" : L"HorizontalLayout", false);
+        isVertical = value == Xaml::Orientation::Vertical;
+        Xaml::VisualStateManager::GoToState(*this, isVertical ? L"VerticalLayout" : L"HorizontalLayout", false);
     }
 
     winrt::Microsoft::UI::Xaml::Controls::ContentPresenter AudioSessionView::Logo()
@@ -134,7 +136,7 @@ namespace winrt::Croak::implementation
         e_propertyChanged.remove(token);
     }
 
-    winrt::event_token AudioSessionView::VolumeChanged(winrt::Windows::Foundation::TypedEventHandler<winrt::Croak::AudioSessionView, Microsoft::UI::Xaml::Controls::Primitives::RangeBaseValueChangedEventArgs> const& handler)
+    winrt::event_token AudioSessionView::VolumeChanged(Foundation::TypedEventHandler<winrt::Croak::AudioSessionView, Microsoft::UI::Xaml::Controls::Primitives::RangeBaseValueChangedEventArgs> const& handler)
     {
         return e_volumeChanged.add(handler);
     }
@@ -144,7 +146,7 @@ namespace winrt::Croak::implementation
         e_volumeChanged.remove(token);
     }
 
-    winrt::event_token AudioSessionView::VolumeStateChanged(winrt::Windows::Foundation::TypedEventHandler<winrt::Croak::AudioSessionView, bool> const& handler)
+    winrt::event_token AudioSessionView::VolumeStateChanged(Foundation::TypedEventHandler<winrt::Croak::AudioSessionView, bool> const& handler)
     {
         return e_volumeStateChanged.add(handler);
     }
@@ -154,7 +156,7 @@ namespace winrt::Croak::implementation
         e_volumeStateChanged.remove(token);
     }
 
-    winrt::event_token AudioSessionView::Hidden(TypedEventHandler<winrt::Croak::AudioSessionView, IInspectable> const& handler)
+    winrt::event_token AudioSessionView::Hidden(Foundation::TypedEventHandler<winrt::Croak::AudioSessionView, Foundation::IInspectable> const& handler)
     {
         return e_hidden.add(handler);
     }
@@ -168,12 +170,12 @@ namespace winrt::Croak::implementation
 
     void AudioSessionView::SetState(const AudioSessionState& state)
     {
-        auto resources = Application::Current().Resources();
+        auto resources = Xaml::Application::Current().Resources();
         switch (state)
         {
             case AudioSessionState::Active:
                 active = true;
-                VolumeFontIcon().Foreground(::Media::SolidColorBrush(Windows::UI::Colors::LimeGreen()));
+                VolumeFontIcon().Foreground(Xaml::SolidColorBrush(Windows::UI::Colors::LimeGreen()));
                 VolumeFontIcon().Opacity(1);
                 break;
 
@@ -188,7 +190,7 @@ namespace winrt::Croak::implementation
                 );*/
 
                 VolumeFontIcon().Foreground(
-                    Application::Current().Resources().Lookup(box_value(L"TextFillColorPrimaryBrush")).as<Brush>()
+                    Xaml::Application::Current().Resources().Lookup(box_value(L"TextFillColorPrimaryBrush")).as<Xaml::Brush>()
                 );
                 VolumeFontIcon().Opacity(0.6);
                 break;
@@ -225,17 +227,17 @@ namespace winrt::Croak::implementation
     }
 
 
-    void AudioSessionView::UserControl_Loaded(IInspectable const&, RoutedEventArgs const&)
+    void AudioSessionView::UserControl_Loaded(IInspectable const&, Xaml::RoutedEventArgs const&)
     {
         Grid_SizeChanged(nullptr, nullptr);
 
         if (AudioSessionAppLogo().Content() != nullptr)
         {
-            VisualStateManager::GoToState(*this, L"UsingLogo", true);
+            Xaml::VisualStateManager::GoToState(*this, L"UsingLogo", true);
         }
     }
 
-    void AudioSessionView::Slider_ValueChanged(IInspectable const&, RangeBaseValueChangedEventArgs const& e)
+    void AudioSessionView::Slider_ValueChanged(IInspectable const&, Xaml::RangeBaseValueChangedEventArgs const& e)
     {
         _volume = e.NewValue();
 
@@ -248,7 +250,7 @@ namespace winrt::Croak::implementation
         e_volumeChanged(*this, e);
     }
 
-    void AudioSessionView::MuteToggleButton_Click(IInspectable const&, RoutedEventArgs const&)
+    void AudioSessionView::MuteToggleButton_Click(IInspectable const&, Xaml::RoutedEventArgs const&)
     {
         _muted = !_muted;
         if (_muted)
@@ -264,12 +266,12 @@ namespace winrt::Croak::implementation
         e_volumeStateChanged(*this, _muted);
     }
 
-    void AudioSessionView::Grid_SizeChanged(IInspectable const&, SizeChangedEventArgs const&)
+    void AudioSessionView::Grid_SizeChanged(IInspectable const&, Xaml::SizeChangedEventArgs const&)
     {
         // For vertical layout.
-        Rect borderClippingLeftRect = Rect(0, 0, VolumePeakBorderLeft().ActualWidth(), VolumePeakBorderLeft().ActualHeight());
+        Foundation::Rect borderClippingLeftRect = Foundation::Rect(0, 0, VolumePeakBorderLeft().ActualWidth(), VolumePeakBorderLeft().ActualHeight());
         BorderClippingLeft().Rect(borderClippingLeftRect);
-        Rect borderClippingRightRect = Rect(0, 0, VolumePeakBorderRight().ActualWidth(), VolumePeakBorderRight().ActualHeight());
+        Foundation::Rect borderClippingRightRect = Foundation::Rect(0, 0, VolumePeakBorderRight().ActualWidth(), VolumePeakBorderRight().ActualHeight());
         BorderClippingRight().Rect(borderClippingRightRect);
         double yTranslate = VolumePeakBorderLeft().ActualHeight();
         double yTranslate2 = VolumePeakBorderRight().ActualHeight();
@@ -277,55 +279,55 @@ namespace winrt::Croak::implementation
         BorderClippingRightCompositeTransform().TranslateY(yTranslate2);
 
         // For horizontal layout.
-        VolumePeakBorderClippingTop().Rect(Rect(0, 0, VolumePeakBorderTop().ActualWidth(), VolumePeakBorderTop().ActualHeight()));
+        VolumePeakBorderClippingTop().Rect(Foundation::Rect(0, 0, VolumePeakBorderTop().ActualWidth(), VolumePeakBorderTop().ActualHeight()));
         VolumePeakBorderClippingBottom().Rect(
-            Rect(0, 0, VolumePeakBorderBottom().ActualWidth(), VolumePeakBorderBottom().ActualHeight()));
+            Foundation::Rect(0, 0, VolumePeakBorderBottom().ActualWidth(), VolumePeakBorderBottom().ActualHeight()));
     }
 
-    void AudioSessionView::RootGrid_PointerEntered(winrt::Windows::Foundation::IInspectable const&, PointerRoutedEventArgs const&)
+    void AudioSessionView::RootGrid_PointerEntered(Foundation::IInspectable const&, Xaml::PointerRoutedEventArgs const&)
     {
-        VisualStateManager::GoToState(*this, L"PointerOver", true);
+        Xaml::VisualStateManager::GoToState(*this, L"PointerOver", true);
     }
 
-    void AudioSessionView::RootGrid_PointerExited(IInspectable const&, PointerRoutedEventArgs const&)
+    void AudioSessionView::RootGrid_PointerExited(IInspectable const&, Xaml::PointerRoutedEventArgs const&)
     {
-        VisualStateManager::GoToState(*this, L"Normal", true);
+        Xaml::VisualStateManager::GoToState(*this, L"Normal", true);
     }
 
-    void AudioSessionView::RootGrid_RightTapped(IInspectable const&, RightTappedRoutedEventArgs const&)
+    void AudioSessionView::RootGrid_RightTapped(IInspectable const&, Xaml::RightTappedRoutedEventArgs const&)
     {
     }
 
-    void AudioSessionView::LockMenuFlyoutItem_Click(IInspectable const&, RoutedEventArgs const&)
+    void AudioSessionView::LockMenuFlyoutItem_Click(IInspectable const&, Xaml::RoutedEventArgs const&)
     {
         if (isLocked)
         {
-            VisualStateManager::GoToState(*this, L"Unlocked", true);
+            Xaml::VisualStateManager::GoToState(*this, L"Unlocked", true);
         }
         else
         {
-            VisualStateManager::GoToState(*this, L"Locked", true);
+            Xaml::VisualStateManager::GoToState(*this, L"Locked", true);
         }
 
         isLocked = !isLocked;
     }
 
-    void AudioSessionView::HideMenuFlyoutItem_Click(IInspectable const&, RoutedEventArgs const&)
+    void AudioSessionView::HideMenuFlyoutItem_Click(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
     {
         e_hidden(*this, IInspectable());
     }
 
-    void AudioSessionView::RootGrid_ActualThemeChanged(FrameworkElement const&, IInspectable const&)
+    void AudioSessionView::RootGrid_ActualThemeChanged(Xaml::FrameworkElement const&, Foundation::IInspectable const&)
     {
         if (!active)
         {
             VolumeFontIcon().Foreground(
-                Application::Current().Resources().Lookup(box_value(L"TextFillColorPrimaryBrush")).as<Brush>()
+                Xaml::Application::Current().Resources().Lookup(box_value(L"TextFillColorPrimaryBrush")).as<Xaml::Brush>()
             );
         }
     }
 
-    IAsyncAction AudioSessionView::UserControl_Loading(FrameworkElement const&, IInspectable const&)
+    Foundation::IAsyncAction AudioSessionView::UserControl_Loading(Xaml::FrameworkElement const&, Foundation::IInspectable const&)
     {
         if (audioSessionProcessPath.empty())
         {
@@ -362,8 +364,8 @@ namespace winrt::Croak::implementation
         dataWriter.DetachStream();
         inMemoryRAS.Seek(0);
 
-        Image logo{};
-        BitmapImage image{};
+        Xaml::Image logo{};
+        Xaml::BitmapImage image{};
         logo.Source(image);
         AudioSessionAppLogo().Content(logo);
 

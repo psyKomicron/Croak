@@ -8,8 +8,13 @@ namespace winrt::Croak::implementation
     {
         HotkeysPage();
 
-        void OnKeyDown(const winrt::Microsoft::UI::Xaml::Input::KeyRoutedEventArgs& args);
-        void Button_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
+        void HotKeysListView_Loading(winrt::Microsoft::UI::Xaml::FrameworkElement const& sender, winrt::Windows::Foundation::IInspectable const& args);
+        void HotKeyView_VirtualKeyModifiersChanged(const Croak::HotKeyView& sender, const Windows::System::VirtualKeyModifiers& args);
+        void HotKeyView_VirtualKeyChanged(const Croak::HotKeyView& sender, const Windows::System::VirtualKey& args);
+        void HotKeyView_Toggled(const Croak::HotKeyView& sender, const bool& args);
+
+    private:
+        uint32_t GetMods(const Windows::System::VirtualKeyModifiers& virtualKeyModifiers);
     };
 }
 

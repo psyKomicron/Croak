@@ -144,6 +144,21 @@
   <data name="ErrorUuidCreateFailed" xml:space="preserve">
     <value />
   </data>
+  <data name="HotKeyName.1" xml:space="preserve">
+    <value>System volume up</value>
+  </data>
+  <data name="HotKeyName.2" xml:space="preserve">
+    <value>System volume down</value>
+  </data>
+  <data name="HotKeyName.3" xml:space="preserve">
+    <value>System volume up (alternative)</value>
+  </data>
+  <data name="HotKeyName.4" xml:space="preserve">
+    <value>System volume down (alternative)</value>
+  </data>
+  <data name="HotKeyName.5" xml:space="preserve">
+    <value>Mute volume</value>
+  </data>
   <data name="HotKeysPageDisplayName" xml:space="preserve">
     <value>Hot keys</value>
   </data>
@@ -205,6 +220,9 @@ hot keys</value>
   <data name="MainWindowShowAppBarMenuFlyoutItem.Text" xml:space="preserve">
     <value>Show menu</value>
   </data>
+  <data name="MainWindowShowHiddenSessionsButton.Text" xml:space="preserve">
+    <value>Show hidden sessions</value>
+  </data>
   <data name="MainWindowSwitchPresenterStyleMenuFlyoutItem.Text" xml:space="preserve">
     <value>Show additional
 window buttons</value>
@@ -248,20 +266,5 @@ unmute all</value>
   </data>
   <data name="SystemAudioSessionName" xml:space="preserve">
     <value>System</value>
-  </data>
-  <data name="SystemVolumeDownHotKeyName" xml:space="preserve">
-    <value>System volume down</value>
-  </data>
-  <data name="SystemVolumePageDownHotKeyName" xml:space="preserve">
-    <value>System volume fast down</value>
-  </data>
-  <data name="SystemVolumePageUpHotKeyName" xml:space="preserve">
-    <value>System volume fast up</value>
-  </data>
-  <data name="SystemVolumeSwitchStateHotKeyName" xml:space="preserve">
-    <value>Mute/unmute system volume</value>
-  </data>
-  <data name="SystemVolumeUpHotKeyName" xml:space="preserve">
-    <value>System volume up</value>
   </data>
 </root>

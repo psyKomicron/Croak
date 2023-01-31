@@ -133,16 +133,31 @@
     <value>L'application n'a pas pu être redémarrée</value>
   </data>
   <data name="ErrorAudioSessionsUnavailable" xml:space="preserve">
-    <value />
+    <value>Pas de sessions audio disponibles</value>
   </data>
   <data name="ErrorFatalFailure" xml:space="preserve">
     <value>Oh oh... Une erreur est survenue, essayez de redémarrer l'application</value>
   </data>
   <data name="ErrorLoadingAudioObjects" xml:space="preserve">
-    <value />
+    <value>Un problème est survenu, pas d'audio</value>
   </data>
   <data name="ErrorUuidCreateFailed" xml:space="preserve">
     <value />
+  </data>
+  <data name="HotKeyName.1" xml:space="preserve">
+    <value>Augmenter le volume système</value>
+  </data>
+  <data name="HotKeyName.2" xml:space="preserve">
+    <value>Diminuer le volume système</value>
+  </data>
+  <data name="HotKeyName.3" xml:space="preserve">
+    <value>Augmenter le volume système (alternatif)</value>
+  </data>
+  <data name="HotKeyName.4" xml:space="preserve">
+    <value>Diminuer le volume système (alternatif)</value>
+  </data>
+  <data name="HotKeyName.5" xml:space="preserve">
+    <value>Couper le son</value>
   </data>
   <data name="HotKeysPageDisplayName" xml:space="preserve">
     <value>Hot keys</value>
@@ -156,15 +171,11 @@
   <data name="InfoHotKeysEnabled" xml:space="preserve">
     <value>Hot keys activées</value>
   </data>
-  <data name="InfoReloadingAudioSessions" xml:space="preserve">
-    <value />
-  </data>
-  <data name="MainWindowDisableAnimationsMenuFlyoutItem.Text" xml:space="preserve">
+  <data name="MainWindowDisableAnimationsButton.OffContent" xml:space="preserve">
     <value>Désactiver les animations</value>
   </data>
-  <data name="MainWindowDisableHotKeysMenuFlyoutItem.Text" xml:space="preserve">
-    <value>Couper les
-hot keys</value>
+  <data name="MainWindowDisableHotKeysButton.OffContent" xml:space="preserve">
+    <value>Désactiver les hot keys</value>
   </data>
   <data name="MainWindowDisplayMenuFlyoutItem.Text" xml:space="preserve">
     <value>Affichage</value>
@@ -174,9 +185,6 @@ hot keys</value>
   </data>
   <data name="MainWindowKeepOnTopToggleMenuFlyoutItem.Text" xml:space="preserve">
     <value>Garder au dessus</value>
-  </data>
-  <data name="MainWindowLayoutMenuFlyoutItem.Text" xml:space="preserve">
-    <value>Disposition</value>
   </data>
   <data name="MainWindowLayoutMenuFlyoutItemAuto.Text" xml:space="preserve">
     <value>Auto</value>
@@ -190,31 +198,26 @@ hot keys</value>
   <data name="MainWindowNewContentHyperlinkButton.Content" xml:space="preserve">
     <value>Voir les nouveautées</value>
   </data>
-  <data name="MainWindowReloadMenuFlyoutItem.Text" xml:space="preserve">
+  <data name="MainWindowOpenProfilesText.Text" xml:space="preserve">
+    <value>Profiles</value>
+  </data>
+  <data name="MainWindowReloadSessionsButton.Text" xml:space="preserve">
     <value>Recharger</value>
   </data>
-  <data name="MainWindowRestartMenuFlyoutItem.Text" xml:space="preserve">
+  <data name="MainWindowRestartApplicationButton.Text" xml:space="preserve">
     <value>Redémarrer</value>
+  </data>
+  <data name="MainWindowSettingsButton.Text" xml:space="preserve">
+    <value>Paramètres</value>
   </data>
   <data name="MainWindowSettingsButtonTeachingTip.Title" xml:space="preserve">
     <value>Paramètres</value>
   </data>
-  <data name="MainWindowSettingsMenuFlyoutItem.Text" xml:space="preserve">
-    <value>Paramètres</value>
+  <data name="MainWindowShowAppBarButton.OffContent" xml:space="preserve">
+    <value>Afficher les boutons additionels</value>
   </data>
-  <data name="MainWindowShowAppBarMenuFlyoutItem.Text" xml:space="preserve">
-    <value>Afficher le menu</value>
-  </data>
-  <data name="MainWindowSwitchPresenterStyleMenuFlyoutItem.Text" xml:space="preserve">
-    <value>Afficher les
-boutons additionels</value>
-  </data>
-  <data name="MainWindowSwitchStateMenuFlyoutItem.Text" xml:space="preserve">
-    <value>Couper/rétablir
-le son</value>
-  </data>
-  <data name="MainWindowTeachingTipViewHotkeysHyperlinkButton.Content" xml:space="preserve">
-    <value>Ouvrir les paramètres</value>
+  <data name="MainWindowShowHiddenSessionsButton.Text" xml:space="preserve">
+    <value>Afficher les sessions cachées</value>
   </data>
   <data name="MainWindowTeachingTipViewSettingsTextBlock.Text" xml:space="preserve">
     <value>Afficher les paramètres, les fonctions de l'application, modifier la disposition des éléments et personnaliser l'affichage.</value>
@@ -248,20 +251,5 @@ le son</value>
   </data>
   <data name="SystemAudioSessionName" xml:space="preserve">
     <value>Système</value>
-  </data>
-  <data name="SystemVolumeDownHotKeyName" xml:space="preserve">
-    <value>Volume système - 2</value>
-  </data>
-  <data name="SystemVolumePageDownHotKeyName" xml:space="preserve">
-    <value>Volume système - 7</value>
-  </data>
-  <data name="SystemVolumePageUpHotKeyName" xml:space="preserve">
-    <value>Volume système + 7</value>
-  </data>
-  <data name="SystemVolumeSwitchStateHotKeyName" xml:space="preserve">
-    <value>Couper/rétablir le son</value>
-  </data>
-  <data name="SystemVolumeUpHotKeyName" xml:space="preserve">
-    <value>Volume système +2</value>
   </data>
 </root>

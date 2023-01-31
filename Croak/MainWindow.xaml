@@ -117,7 +117,6 @@
                                     <Grid.Background>
                                         <SolidColorBrush Color="{ThemeResource SolidBackgroundFillColorSecondary}" Opacity="0.4"/>
                                     </Grid.Background>
-
                                     <Grid.Resources>
                                         <Style TargetType="Button" BasedOn="{StaticResource IconButtonStyle}"/>
 
@@ -162,19 +161,19 @@
 
                                             <DropDownButton.Flyout>
                                                 <MenuFlyout>
-                                                    <MenuFlyoutItem Text="Vertical" Click="VerticalViewMenuFlyoutItem_Click">
+                                                    <MenuFlyoutItem x:Uid="MainWindowLayoutMenuFlyoutItemVertical" Text="Vertical" Click="VerticalViewMenuFlyoutItem_Click">
                                                         <MenuFlyoutItem.Icon>
                                                             <FontIcon Glyph="&#xe8c0;" Rotation="90" Translation="20,0,0" />
                                                         </MenuFlyoutItem.Icon>
                                                     </MenuFlyoutItem>
 
-                                                    <MenuFlyoutItem Text="Horizontal" Click="HorizontalViewMenuFlyoutItem_Click">
+                                                    <MenuFlyoutItem x:Uid="MainWindowLayoutMenuFlyoutItemHorizontal" Text="Horizontal" Click="HorizontalViewMenuFlyoutItem_Click">
                                                         <MenuFlyoutItem.Icon>
                                                             <FontIcon Glyph="&#xe8c0;" />
                                                         </MenuFlyoutItem.Icon>
                                                     </MenuFlyoutItem>
 
-                                                    <MenuFlyoutItem Text="Auto" Click="AutoViewMenuFlyoutItem_Click">
+                                                    <MenuFlyoutItem x:Uid="MainWindowLayoutMenuFlyoutItemAuto" Click="AutoViewMenuFlyoutItem_Click">
                                                         <MenuFlyoutItem.Icon>
                                                             <FontIcon Glyph="&#xf0e2;" />
                                                         </MenuFlyoutItem.Icon>
@@ -183,15 +182,15 @@
                                             </DropDownButton.Flyout>
                                         </DropDownButton>
 
-                                        <Button>
+                                        <Button x:Name="MuteAllButton">
                                             <FontIcon Glyph="&#xe74f;"/>
                                         </Button>
 
-                                        <Button>
+                                        <Button x:Uid="MainWindowShowHiddenSessionsButton" x:Name="ShowHiddenSessionsButton" Click="ShowHiddenSessionsButton_Click">
                                             <FontIcon Glyph="&#xe7b3;"/>
                                         </Button>
 
-                                        <ToggleButton x:Name="KeepOnTopToggleButton" Click="KeepOnTopToggleButton_Click">
+                                        <ToggleButton x:Name="KeepOnTopToggleButton" ToolTipService.ToolTip="Picture-in-picture" Click="KeepOnTopToggleButton_Click">
                                             <FontIcon Glyph="&#xee49;" />
                                         </ToggleButton>
                                     </StackPanel>
@@ -239,7 +238,7 @@
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
 
-                                                    <TextBlock TextWrapping="Wrap" Text="Profiles" />
+                                                    <TextBlock x:Uid="MainWindowOpenProfilesText" TextWrapping="Wrap" />
                                                     <FontIcon Glyph="&#xe76c;" Grid.Column="1" FontSize="14" Opacity="0.6" />
                                                 </Grid>
                                             </s:IconButton.Content>
@@ -248,26 +247,27 @@
                                         <Border Style="{StaticResource BorderFlyoutSeparatorStyle}" />
 
                                         <s:IconToggleButton 
+                                            x:Uid="MainWindowDisableAnimationsButton"
                                             x:Name="DisableAnimationsIconToggleButton"
-                                            OnContent="Enable animations"
                                             OffContent="Disable animations" 
                                             Glyph="&#xf4a5;" 
                                             Click="DisableAnimationsIconButton_Click" />
 
                                         <s:IconToggleButton 
+                                            x:Uid="MainWindowDisableHotKeysButton"
                                             OffContent="Disable hot keys" 
-                                            OnContent="Enable hot keys" 
                                             Glyph="&#xe765;" 
                                             Click="DisableHotKeysIconButton_Click"/>
 
                                         <s:IconToggleButton 
+                                            x:Uid="MainWindowShowAppBarButton"
                                             x:Name="ShowAppBarIconToggleButton"
-                                            OffContent="Show app menu bar" 
-                                            OnContent="Hide app menu bar" 
+                                            OffContent="Show app menu bar"
                                             Glyph="&#xede3;" 
                                             Click="ShowAppBarIconButton_Click"/>
 
                                         <s:IconButton 
+                                            x:Uid="MainWindowReloadSessionsButton"
                                             Text="Reload audio sessions" 
                                             Glyph="&#xe895;" 
                                             Click="ReloadSessionsIconButton_Click">
@@ -277,6 +277,7 @@
                                         </s:IconButton>
 
                                         <s:IconButton 
+                                            x:Uid="MainWindowRestartApplicationButton"
                                             Text="Restart application" 
                                             Glyph="&#xe72c;" 
                                             Click="RestartIconButton_Click">
@@ -287,7 +288,7 @@
 
                                         <Border Style="{StaticResource BorderFlyoutSeparatorStyle}" />
 
-                                        <s:IconButton Text="Settings" Glyph="&#xe713;" Click="SettingsIconButton_Click"/>
+                                        <s:IconButton x:Uid="MainWindowSettingsButton" Text="Settings" Glyph="&#xe713;" Click="SettingsIconButton_Click"/>
                                     </StackPanel>
 
                                     <Grid x:Name="ProfilesGrid" Visibility="Collapsed">
@@ -392,6 +393,7 @@
                     </Grid.Resources>
 
                     <ToggleButton
+                        x:Uid="MainWindowMuteToggleButton"
                         x:Name="MuteToggleButton"
                         Style="{StaticResource MuteToggleButtonStyle}"
                         Click="MuteToggleButton_Click">
@@ -441,6 +443,7 @@
                     </Border>
 
                     <Slider 
+                        x:Uid="MainWindowSystemVolumeSlider"
                         x:Name="SystemVolumeSlider"
                         Grid.Column="1"
                         VerticalAlignment="Center"
@@ -513,27 +516,33 @@
                         Grid.Row="1"
                         HorizontalScrollBarVisibility="Disabled">
 
-                        <GridView
-                            x:Name="AudioSessionsPanel"
-                            Style="{StaticResource GridViewHorizontalLayout}"
-                            ItemsSource="{x:Bind AudioSessions}"
-                            Margin="0,0,0,-7"
-                            SelectionMode="None"
-                            CanReorderItems="True"
-                            ReorderMode="Enabled"
-                            AllowDrop="True"
-                            Grid.Row="1"
-                            Loading="AudioSessionsPanel_Loading"
-                            Loaded="OnLoaded">
-                            <GridView.Resources>
-                                <Style TargetType="GridViewItem" BasedOn="{StaticResource DefaultGridViewItemStyle}">
-                                    <Setter Property="AllowDrop" Value="False" />
-                                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                    <Setter Property="VerticalAlignment" Value="Center"/>
-                                </Style>
-                            </GridView.Resources>
-                        </GridView>
+                        <Grid>
+                            <Canvas
+                                x:Name="RootCanvas"
+                                Background="Transparent" />
+                            
+                            <GridView
+                                x:Name="AudioSessionsPanel"
+                                Style="{StaticResource GridViewHorizontalLayout}"
+                                ItemsSource="{x:Bind AudioSessions}"
+                                Margin="0,0,0,-7"
+                                SelectionMode="None"
+                                CanReorderItems="True"
+                                ReorderMode="Enabled"
+                                AllowDrop="True"
+                                Grid.Row="1"
+                                Loading="AudioSessionsPanel_Loading"
+                                Loaded="OnLoaded">
+                                <GridView.Resources>
+                                    <Style TargetType="GridViewItem" BasedOn="{StaticResource DefaultGridViewItemStyle}">
+                                        <Setter Property="AllowDrop" Value="False" />
+                                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </GridView.Resources>
+                            </GridView>
+                        </Grid>
                     </ScrollViewer>
 
                     <s:MessageBar
@@ -575,7 +584,7 @@
 
                 <s:SplashScreen.MainContent>
                     <Viewbox MaxHeight="80" MaxWidth="80">
-                        <FontIcon Glyph="&#xe767;"/>
+                        <FontIcon Glyph="&#xf4c3;"/>
                     </Viewbox>
                 </s:SplashScreen.MainContent>
 

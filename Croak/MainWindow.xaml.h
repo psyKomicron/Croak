@@ -67,6 +67,7 @@ namespace winrt::Croak::implementation
         void OpenProfilesButton_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
         void RootGrid_ActualThemeChanged(winrt::Microsoft::UI::Xaml::FrameworkElement const& sender, winrt::Windows::Foundation::IInspectable const& args);
         void NewContentButton_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
+        void ShowHiddenSessionsButton_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
 
     private:
         using BackdropController = winrt::Microsoft::UI::Composition::SystemBackdrops::DesktopAcrylicController;
@@ -124,7 +125,9 @@ namespace winrt::Croak::implementation
         std::map<winrt::guid, ::Croak::Audio::AudioSession*> MapAudioSessions(std::vector<::Croak::Audio::AudioSession*>* vect);
         void CleanUpResources(const bool& forReload);
         void InsertSessionAccordingToProfile(::Croak::Audio::AudioSession* audioSession);
+        void SetSizeIndicators();
 
+        void HotKeyFired(const uint32_t& id, const Windows::Foundation::IInspectable& /*args*/);
         void AppWindow_Closing(winrt::Microsoft::UI::Windowing::AppWindow, winrt::Microsoft::UI::Windowing::AppWindowClosingEventArgs);
         void UpdatePeakMeters(winrt::Windows::Foundation::IInspectable /*sender*/, winrt::Windows::Foundation::IInspectable /*args*/);
         void MainAudioEndpoint_VolumeChanged(winrt::Windows::Foundation::IInspectable /*sender*/, const float& newVolume);

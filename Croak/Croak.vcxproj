@@ -535,6 +535,7 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\CHANGELOG.md" />
     <None Include="cpp.hint" />
     <None Include="packages.config" />
   </ItemGroup>

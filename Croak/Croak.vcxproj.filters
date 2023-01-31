@@ -370,6 +370,7 @@
       <Filter>Config</Filter>
     </None>
     <None Include="cpp.hint" />
+    <None Include="..\CHANGELOG.md" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Croak.rc" />

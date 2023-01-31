@@ -11,7 +11,7 @@
 ### Bugs
 ### Todo
 - [ ] Disable/enable hot keys.
-- [ ] Show/hide audio sessions.
+- [?] Show/hide audio sessions.
 - [ ] Re-implement I18Ned "What's new" page.
 - [ ] Enable the user to change hot key key, not only modifiers.
 - [ ] Add more hot keys (audio session control, reload, restart, show on current screen, PiP).

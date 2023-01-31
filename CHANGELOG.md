@@ -10,7 +10,7 @@
 
 ### Bugs
 ### Todo
-- [ ] Disable hot keys.
+- [ ] Disable/enable hot keys.
 - [ ] Show/hide audio sessions.
 - [ ] Re-implement I18Ned "What's new" page.
 - [ ] Enable the user to change hot key key, not only modifiers.

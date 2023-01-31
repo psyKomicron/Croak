@@ -5,7 +5,7 @@ namespace Croak
     runtimeclass HotkeyViewModel 
     {
         HotkeyViewModel();
-        HotkeyViewModel(String hotKeyName, Boolean enabled, Windows.System.VirtualKey key, Windows.System.VirtualKeyModifiers modifiers);
+        HotkeyViewModel(String hotKeyName, Boolean enabled, UInt32 key, UInt32 modifiers);
 
         String HotKeyName{ get; set; };
         Windows.System.VirtualKeyModifiers Modifiers{ get; set; };

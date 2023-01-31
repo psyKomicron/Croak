@@ -51,7 +51,7 @@ inline void DebugLog(const std::string& text, const std::source_location& source
     fileName = fileName.substr(0, fileName.find_last_of('.'));
 
     std::string out = std::format(
-        "DEBUG: {0}::{4}({1},{2}): {3}", 
+        "DEBUG  {0}::{4}({1},{2}): {3}\n", 
         fileName, 
         std::to_string(sourceLocation.line()), std::to_string(sourceLocation.column()), 
         text,

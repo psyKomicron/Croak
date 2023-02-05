@@ -190,6 +190,21 @@
                         Toggled="StartupProfileToggleSwitch_Toggled" />
                 </Grid>
 
+                <Grid Style="{StaticResource GridSettingStyle}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox Height="20" Width="20">
+                        <FontIcon Glyph="&#xe737;"/>
+                    </Viewbox>
+                    <TextBlock Text="Hide window in compact mode" VerticalAlignment="Center" Margin="15,0,0,0" Grid.Column="1"/>
+                    <ToggleSwitch 
+                        x:Name="HideWindowToggleSwitch" Grid.Column="2" Style="{StaticResource FlippedToggleSwitchStyle}" Toggled="HideWindowToggleSwitch_Toggled" />
+                </Grid>
+
                 <ListViewHeaderItem Margin="0,10,0,0"/>
 
                 <Button Style="{ThemeResource SettingsButtonStyle}" Click="AudioSessionsButton_Click">
@@ -234,6 +249,21 @@
                         </Viewbox>
 
                         <TextBlock Text="Hot keys" VerticalAlignment="Center" Grid.Column="1"/>
+                    </Grid>
+                </Button>
+
+                <Button Style="{ThemeResource SettingsButtonStyle}" Click="OverlayButton_Click">
+                    <Grid ColumnSpacing="15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Viewbox Height="20" Width="20">
+                            <FontIcon Glyph="&#xeda7;"/>
+                        </Viewbox>
+
+                        <TextBlock Text="Overlay" VerticalAlignment="Center" Grid.Column="1"/>
                     </Grid>
                 </Button>
 

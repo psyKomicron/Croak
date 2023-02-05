@@ -229,6 +229,10 @@
       <DependentUpon>NumberBlock.cpp</DependentUpon>
       <SubType>Code</SubType>
     </ClInclude>
+    <ClInclude Include="OverlaySettingsPage.xaml.h">
+      <DependentUpon>OverlaySettingsPage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </ClInclude>
     <ClInclude Include="OverlayWindow.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h">
@@ -280,6 +284,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="NewContentPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="OverlaySettingsPage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Include="SecondWindow.xaml">
@@ -363,6 +370,10 @@
       <SubType>Code</SubType>
     </ClCompile>
     <ClCompile Include="NumberBlock.cpp">
+      <SubType>Code</SubType>
+    </ClCompile>
+    <ClCompile Include="OverlaySettingsPage.xaml.cpp">
+      <DependentUpon>OverlaySettingsPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClCompile>
     <ClCompile Include="OverlayWindow.cpp" />
@@ -462,6 +473,10 @@
     </Midl>
     <Midl Include="NumberBlock.idl">
       <DependentUpon>NumberBlock.cpp</DependentUpon>
+      <SubType>Code</SubType>
+    </Midl>
+    <Midl Include="OverlaySettingsPage.idl">
+      <DependentUpon>OverlaySettingsPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Midl>
     <Midl Include="SecondWindow.idl">

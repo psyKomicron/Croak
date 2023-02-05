@@ -4,14 +4,15 @@
 #include "SettingsPage.g.cpp"
 #endif
 
-using namespace winrt;
-using namespace winrt::Microsoft::UI::Xaml;
-using namespace winrt::Microsoft::UI::Xaml::Navigation;
-using namespace winrt::Windows::UI::Xaml::Interop;
-using namespace winrt::Windows::Foundation;
-using namespace winrt::Windows::Storage;
-using namespace winrt::Windows::ApplicationModel;
-using namespace winrt::Windows::Storage::Pickers;
+namespace Foundation  = winrt::Windows::Foundation;
+namespace Storage = winrt::Windows::Storage;
+namespace ApplicationModel = winrt::Windows::ApplicationModel;
+namespace Xaml
+{
+    using namespace winrt::Microsoft::UI::Xaml;
+    using namespace winrt::Microsoft::UI::Xaml::Navigation;
+    using namespace winrt::Windows::UI::Xaml::Interop;
+}
 
 
 namespace winrt::Croak::implementation
@@ -26,19 +27,21 @@ namespace winrt::Croak::implementation
         );
     }
 
-    IAsyncAction SettingsPage::Page_Loaded(IInspectable const&, RoutedEventArgs const&)
+    Foundation::IAsyncAction SettingsPage::Page_Loaded(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
     {
-        TransparencyEffectsToggleButton().IsOn(unbox_value_or(ApplicationData::Current().LocalSettings().Values().TryLookup(L"TransparencyAllowed"), true));
-        CustomTitleBarToggleButton().IsOn(unbox_value_or(ApplicationData::Current().LocalSettings().Values().TryLookup(L"UseCustomTitleBar"), true));
-        StartupTask startupTask = co_await StartupTask::GetAsync(L"CroakStartupTaskId");
-        AddToStartupToggleSwitch().IsOn(startupTask.State() == StartupTaskState::Enabled);
-        PowerEfficiencyToggleButton().IsOn(unbox_value_or(ApplicationData::Current().LocalSettings().Values().TryLookup(L"PowerEfficiencyEnabled"), true));
-        StartupProfileToggleSwitch().IsOn(unbox_value_or(ApplicationData::Current().LocalSettings().Values().TryLookup(L"LoadLastProfile"), true));
+        ApplicationModel::StartupTask startupTask = co_await ApplicationModel::StartupTask::GetAsync(L"CroakStartupTaskId");
+        AddToStartupToggleSwitch().IsOn(startupTask.State() == ApplicationModel::StartupTaskState::Enabled);
+
+        TransparencyEffectsToggleButton().IsOn(unbox_value_or(Storage::ApplicationData::Current().LocalSettings().Values().TryLookup(L"TransparencyAllowed"), true));
+        CustomTitleBarToggleButton().IsOn(unbox_value_or(Storage::ApplicationData::Current().LocalSettings().Values().TryLookup(L"UseCustomTitleBar"), true));
+        PowerEfficiencyToggleButton().IsOn(unbox_value_or(Storage::ApplicationData::Current().LocalSettings().Values().TryLookup(L"PowerEfficiencyEnabled"), true));
+        StartupProfileToggleSwitch().IsOn(unbox_value_or(Storage::ApplicationData::Current().LocalSettings().Values().TryLookup(L"LoadLastProfile"), true));
+        HideWindowToggleSwitch().IsOn(unbox_value_or(Storage::ApplicationData::Current().LocalSettings().Values().TryLookup(L"HideWindowOnCompactMode"), false));
     }
 
-    void SettingsPage::OnNavigatedTo(NavigationEventArgs const& args)
+    void SettingsPage::OnNavigatedTo(Xaml::NavigationEventArgs const& args)
     {
-        if (args.NavigationMode() == NavigationMode::New)
+        if (args.NavigationMode() == Xaml::NavigationMode::New)
         {
             winrt::Windows::ApplicationModel::Resources::ResourceLoader loader{};
             SecondWindow::Current().Breadcrumbs().Append(
@@ -47,56 +50,56 @@ namespace winrt::Croak::implementation
         }
     }
 
-    void SettingsPage::AudioProfilesButton_Click(IInspectable const&, RoutedEventArgs const&)
+    void SettingsPage::AudioProfilesButton_Click(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
     {
         Frame().Navigate(xaml_typename<AudioProfilesPage>());
     }
 
-    void SettingsPage::HotKeysButton_Click(IInspectable const&, RoutedEventArgs const&)
+    void SettingsPage::HotKeysButton_Click(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
     {
         Frame().Navigate(xaml_typename<HotkeysPage>());
 
-        winrt::Windows::ApplicationModel::Resources::ResourceLoader loader{};
+        ApplicationModel::Resources::ResourceLoader loader{};
         SecondWindow::Current().Breadcrumbs().Append(
             winrt::Croak::NavigationBreadcrumbBarItem{ loader.GetString(L"HotKeysPageDisplayName"), xaml_typename<winrt::Croak::HotkeysPage>() }
         );
     }
 
-    void SettingsPage::NewContentButton_Click(IInspectable const&, RoutedEventArgs const&)
+    void SettingsPage::NewContentButton_Click(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
     {
         Frame().Navigate(xaml_typename<NewContentPage>());
     }
 
-    void SettingsPage::TransparencyEffectsToggleButton_Toggled(IInspectable const&, RoutedEventArgs const&)
+    void SettingsPage::TransparencyEffectsToggleButton_Toggled(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
     {
-        ApplicationData::Current().LocalSettings().Values().Insert(L"TransparencyAllowed", IReference(TransparencyEffectsToggleButton().IsOn()));
+        Storage::ApplicationData::Current().LocalSettings().Values().Insert(L"TransparencyAllowed", Foundation::IReference(TransparencyEffectsToggleButton().IsOn()));
     }
 
-    void SettingsPage::CustomTitleBarToggleButton_Toggled(IInspectable const&, RoutedEventArgs const&)
+    void SettingsPage::CustomTitleBarToggleButton_Toggled(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
     {
-        ApplicationData::Current().LocalSettings().Values().Insert(L"UseCustomTitleBar", IReference(CustomTitleBarToggleButton().IsOn()));
+        Storage::ApplicationData::Current().LocalSettings().Values().Insert(L"UseCustomTitleBar", Foundation::IReference(CustomTitleBarToggleButton().IsOn()));
     }
 
-    IAsyncAction SettingsPage::AddToStartupToggleSwitch_Toggled(IInspectable const&, RoutedEventArgs const&)
+    Foundation::IAsyncAction SettingsPage::AddToStartupToggleSwitch_Toggled(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
     {
-        AddToStartupProgressRing().Visibility(Visibility::Visible);
-        StartupTask startupTask = co_await StartupTask::GetAsync(L"CroakStartupTaskId");
+        AddToStartupProgressRing().Visibility(Xaml::Visibility::Visible);
+        ApplicationModel::StartupTask startupTask = co_await ApplicationModel::StartupTask::GetAsync(L"CroakStartupTaskId");
         if (AddToStartupToggleSwitch().IsOn())
         {
             // Add app to startup.
-            if (startupTask.State() == StartupTaskState::Disabled)
+            if (startupTask.State() == ApplicationModel::StartupTaskState::Disabled)
             {
-                StartupTaskState newState = co_await startupTask.RequestEnableAsync();
-                if (newState == StartupTaskState::Enabled)
+                ApplicationModel::StartupTaskState newState = co_await startupTask.RequestEnableAsync();
+                if (newState == ApplicationModel::StartupTaskState::Enabled)
                 {
-                    UserMessageBar().EnqueueString(L"App added to startup");
+                    UserMessageBar().EnqueueString(L"App added to startup"); // I18N:
                 }
             }
         }
         else
         {
             // Remove app from startup.
-            if (startupTask.State() == StartupTaskState::Enabled)
+            if (startupTask.State() == ApplicationModel::StartupTaskState::Enabled)
             {
                 // Disable task
                 startupTask.Disable();
@@ -104,12 +107,12 @@ namespace winrt::Croak::implementation
             }
         }
 
-        AddToStartupProgressRing().Visibility(Visibility::Collapsed);
+        AddToStartupProgressRing().Visibility(Xaml::Visibility::Collapsed);
     }
 
-    IAsyncAction SettingsPage::BrowseButton_Click(IInspectable const&, RoutedEventArgs const&)
+    Foundation::IAsyncAction SettingsPage::BrowseButton_Click(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
     {
-        FileOpenPicker picker{};
+        Storage::Pickers::FileOpenPicker picker{};
 
         // HACK: https://github.com/microsoft/WindowsAppSDK/issues/1063
         HWND mainWindowHandle = GetWindowFromWindowId(SecondWindow::Current().Id());
@@ -117,28 +120,40 @@ namespace winrt::Croak::implementation
 
         picker.FileTypeFilter().ReplaceAll({ L"*" });
         picker.SettingsIdentifier(L"Spotlight Importer");
-        picker.SuggestedStartLocation(PickerLocationId::PicturesLibrary);
-        picker.ViewMode(PickerViewMode::List);
+        picker.SuggestedStartLocation(Storage::Pickers::PickerLocationId::PicturesLibrary);
+        picker.ViewMode(Storage::Pickers::PickerViewMode::List);
 
-        StorageFile chosenFile = co_await picker.PickSingleFileAsync();
+        Storage::StorageFile chosenFile = co_await picker.PickSingleFileAsync();
         if (chosenFile)
         {
-            ApplicationData::Current().LocalSettings().Values().Insert(L"BackgroundImageUri", box_value(chosenFile.Path()));
+            Storage::ApplicationData::Current().LocalSettings().Values().Insert(L"BackgroundImageUri", box_value(chosenFile.Path()));
         }
     }
 
-    void SettingsPage::PowerEfficiencyToggleButton_Toggled(IInspectable const&, RoutedEventArgs const&)
+    void SettingsPage::PowerEfficiencyToggleButton_Toggled(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
     {
-        ApplicationData::Current().LocalSettings().Values().Insert(L"PowerEfficiencyEnabled", box_value(PowerEfficiencyToggleButton().IsOn()));
+        Storage::ApplicationData::Current().LocalSettings().Values().Insert(L"PowerEfficiencyEnabled", box_value(PowerEfficiencyToggleButton().IsOn()));
     }
 
-    void SettingsPage::StartupProfileToggleSwitch_Toggled(IInspectable const&, RoutedEventArgs const&)
+    void SettingsPage::StartupProfileToggleSwitch_Toggled(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
     {
-        ApplicationData::Current().LocalSettings().Values().Insert(L"LoadLastProfile", box_value(StartupProfileToggleSwitch().IsOn()));
+        Storage::ApplicationData::Current().LocalSettings().Values().Insert(L"LoadLastProfile", box_value(StartupProfileToggleSwitch().IsOn()));
     }
 
-    void SettingsPage::AudioSessionsButton_Click(IInspectable const&, RoutedEventArgs const&)
+    void SettingsPage::AudioSessionsButton_Click(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
     {
         Frame().Navigate(xaml_typename<AudioSessionsSettingsPage>());
     }
+
+    void SettingsPage::HideWindowToggleSwitch_Toggled(Foundation::IInspectable const&, Xaml::RoutedEventArgs const& e)
+    {
+        Storage::ApplicationData::Current().LocalSettings().Values().Insert(L"HideWindowOnCompactMode", box_value(HideWindowToggleSwitch().IsOn()));
+    }
+
+    void SettingsPage::OverlayButton_Click(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
+    {
+        Frame().Navigate(xaml_typename<OverlaySettingsPage>());
+    }
 }
+
+

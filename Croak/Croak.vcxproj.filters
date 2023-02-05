@@ -349,6 +349,9 @@
     <Page Include="Themes\Generic.xaml">
       <Filter>UI</Filter>
     </Page>
+    <Page Include="OverlaySettingsPage.xaml">
+      <Filter>UI\Pages</Filter>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

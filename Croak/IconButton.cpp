@@ -87,14 +87,7 @@ namespace winrt::Croak::implementation
 
     void IconButton::OnPointerReleased(const Microsoft::UI::Xaml::Input::PointerRoutedEventArgs& args)
     {
-        if (pointerExited)
-        {
-            VisualStateManager::GoToState(*this, L"Normal", true);
-        }
-        else
-        {
-            VisualStateManager::GoToState(*this, L"PointerOver", true);
-        }
+        VisualStateManager::GoToState(*this, pointerExited ? L"Normal" : L"PointerOver", true);
     }
 
     void IconButton::OnPointerEntered(const PointerRoutedEventArgs& args)
@@ -108,10 +101,7 @@ namespace winrt::Croak::implementation
             leftButtonPressed = point.Properties().IsLeftButtonPressed();
         }
 
-        if (!leftButtonPressed)
-        {
-            VisualStateManager::GoToState(*this, L"PointerOver", true);
-        }
+        VisualStateManager::GoToState(*this, L"PointerOver", !leftButtonPressed);
     }
 
     void IconButton::OnPointerExited(const Microsoft::UI::Xaml::Input::PointerRoutedEventArgs& args)

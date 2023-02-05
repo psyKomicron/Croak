@@ -14,14 +14,9 @@ namespace winrt::Croak::implementation
     {
         IconToggleButton();
 
-        static Microsoft::UI::Xaml::DependencyProperty OnContentProperty()
+        static Microsoft::UI::Xaml::DependencyProperty ContentProperty()
         {
-            return _onContentProperty;
-        }
-
-        static Microsoft::UI::Xaml::DependencyProperty OffContentProperty()
-        {
-            return _offContentProperty;
+            return _contentProperty;
         }
 
         static Microsoft::UI::Xaml::DependencyProperty GlyphProperty()
@@ -49,10 +44,8 @@ namespace winrt::Croak::implementation
             e_click.remove(token);
         }
 
-        inline winrt::Windows::Foundation::IInspectable OnContent();
-        inline void OnContent(const winrt::Windows::Foundation::IInspectable& value);
-        inline winrt::Windows::Foundation::IInspectable OffContent();
-        inline void OffContent(const winrt::Windows::Foundation::IInspectable& value);
+        inline winrt::Windows::Foundation::IInspectable Content();
+        inline void Content(const winrt::Windows::Foundation::IInspectable& value);
         inline winrt::hstring Glyph();
         inline void Glyph(const winrt::hstring& value);
         inline bool IsOn();
@@ -70,8 +63,7 @@ namespace winrt::Croak::implementation
         void OnPointerReleased(const Microsoft::UI::Xaml::Input::PointerRoutedEventArgs& args);
 
     private:
-        static Microsoft::UI::Xaml::DependencyProperty _onContentProperty;
-        static Microsoft::UI::Xaml::DependencyProperty _offContentProperty;
+        static Microsoft::UI::Xaml::DependencyProperty _contentProperty;
         static Microsoft::UI::Xaml::DependencyProperty _glyphProperty;
         static Microsoft::UI::Xaml::DependencyProperty _onIconProperty;
         static Microsoft::UI::Xaml::DependencyProperty _offIconProperty;

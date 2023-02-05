@@ -159,6 +159,9 @@
   <data name="HotKeyName.5" xml:space="preserve">
     <value>Mute volume</value>
   </data>
+  <data name="HotKeyName.6" xml:space="preserve">
+    <value>Bring to screen</value>
+  </data>
   <data name="HotKeysPageDisplayName" xml:space="preserve">
     <value>Hot keys</value>
   </data>
@@ -171,27 +174,17 @@
   <data name="InfoHotKeysEnabled" xml:space="preserve">
     <value>Hot keys enabled</value>
   </data>
-  <data name="InfoReloadingAudioSessions" xml:space="preserve">
-    <value>Reloading audio sessions</value>
-  </data>
-  <data name="MainWindowDisableAnimationsMenuFlyoutItem.Text" xml:space="preserve">
+  <data name="MainWindowDisableAnimationsButton.Content" xml:space="preserve">
     <value>Disable animations</value>
   </data>
-  <data name="MainWindowDisableHotKeysMenuFlyoutItem.Text" xml:space="preserve">
-    <value>Disable
-hot keys</value>
+  <data name="MainWindowDisableHotKeysButton.Content" xml:space="preserve">
+    <value>Disable hot keys</value>
   </data>
   <data name="MainWindowDisplayMenuFlyoutItem.Text" xml:space="preserve">
     <value>Display</value>
   </data>
   <data name="MainWindowHideMenuFlyoutItem.Text" xml:space="preserve">
     <value>Hide</value>
-  </data>
-  <data name="MainWindowKeepOnTopToggleMenuFlyoutItem.Text" xml:space="preserve">
-    <value>Keep on top</value>
-  </data>
-  <data name="MainWindowLayoutMenuFlyoutItem.Text" xml:space="preserve">
-    <value>Layout</value>
   </data>
   <data name="MainWindowLayoutMenuFlyoutItemAuto.Text" xml:space="preserve">
     <value>Auto</value>
@@ -205,31 +198,26 @@ hot keys</value>
   <data name="MainWindowNewContentHyperlinkButton.Content" xml:space="preserve">
     <value>See what's new</value>
   </data>
-  <data name="MainWindowReloadMenuFlyoutItem.Text" xml:space="preserve">
-    <value>Reload</value>
+  <data name="MainWindowOpenProfilesText.Text" xml:space="preserve">
+    <value>Profiles</value>
   </data>
-  <data name="MainWindowRestartMenuFlyoutItem.Text" xml:space="preserve">
+  <data name="MainWindowReloadSessionsButton.Text" xml:space="preserve">
+    <value>Reload sessions</value>
+  </data>
+  <data name="MainWindowRestartApplicationButton.Text" xml:space="preserve">
     <value>Restart</value>
+  </data>
+  <data name="MainWindowSettingsButton.Text" xml:space="preserve">
+    <value>Settings</value>
   </data>
   <data name="MainWindowSettingsButtonTeachingTip.Title" xml:space="preserve">
     <value>Settings</value>
   </data>
-  <data name="MainWindowSettingsMenuFlyoutItem.Text" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="MainWindowShowAppBarMenuFlyoutItem.Text" xml:space="preserve">
+  <data name="MainWindowShowAppBarButton.Content" xml:space="preserve">
     <value>Show menu</value>
   </data>
-  <data name="MainWindowShowHiddenSessionsButton.Text" xml:space="preserve">
+  <data name="MainWindowShowHiddenSessionsButton.Content" xml:space="preserve">
     <value>Show hidden sessions</value>
-  </data>
-  <data name="MainWindowSwitchPresenterStyleMenuFlyoutItem.Text" xml:space="preserve">
-    <value>Show additional
-window buttons</value>
-  </data>
-  <data name="MainWindowSwitchStateMenuFlyoutItem.Text" xml:space="preserve">
-    <value>Mute
-unmute all</value>
   </data>
   <data name="MainWindowTeachingTipViewHotkeysHyperlinkButton.Content" xml:space="preserve">
     <value>Open settings</value>

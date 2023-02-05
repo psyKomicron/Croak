@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AudioObjectsLoaded" xml:space="preserve">
-    <value>Sessions audio rechargées</value>
+    <value>Audio sessions loaded</value>
   </data>
   <data name="AudioProfilesPageDisplayName" xml:space="preserve">
     <value>Profiles audio</value>
@@ -159,6 +159,9 @@
   <data name="HotKeyName.5" xml:space="preserve">
     <value>Couper le son</value>
   </data>
+  <data name="HotKeyName.6" xml:space="preserve">
+    <value>Bring to screen</value>
+  </data>
   <data name="HotKeysPageDisplayName" xml:space="preserve">
     <value>Hot keys</value>
   </data>
@@ -171,10 +174,10 @@
   <data name="InfoHotKeysEnabled" xml:space="preserve">
     <value>Hot keys activées</value>
   </data>
-  <data name="MainWindowDisableAnimationsButton.OffContent" xml:space="preserve">
+  <data name="MainWindowDisableAnimationsButton.Content" xml:space="preserve">
     <value>Désactiver les animations</value>
   </data>
-  <data name="MainWindowDisableHotKeysButton.OffContent" xml:space="preserve">
+  <data name="MainWindowDisableHotKeysButton.Content" xml:space="preserve">
     <value>Désactiver les hot keys</value>
   </data>
   <data name="MainWindowDisplayMenuFlyoutItem.Text" xml:space="preserve">
@@ -182,9 +185,6 @@
   </data>
   <data name="MainWindowHideMenuFlyoutItem.Text" xml:space="preserve">
     <value>Cacher</value>
-  </data>
-  <data name="MainWindowKeepOnTopToggleMenuFlyoutItem.Text" xml:space="preserve">
-    <value>Garder au dessus</value>
   </data>
   <data name="MainWindowLayoutMenuFlyoutItemAuto.Text" xml:space="preserve">
     <value>Auto</value>
@@ -202,7 +202,7 @@
     <value>Profiles</value>
   </data>
   <data name="MainWindowReloadSessionsButton.Text" xml:space="preserve">
-    <value>Recharger</value>
+    <value>Recharger les sessions</value>
   </data>
   <data name="MainWindowRestartApplicationButton.Text" xml:space="preserve">
     <value>Redémarrer</value>
@@ -213,11 +213,14 @@
   <data name="MainWindowSettingsButtonTeachingTip.Title" xml:space="preserve">
     <value>Paramètres</value>
   </data>
-  <data name="MainWindowShowAppBarButton.OffContent" xml:space="preserve">
+  <data name="MainWindowShowAppBarButton.Content" xml:space="preserve">
     <value>Afficher les boutons additionels</value>
   </data>
-  <data name="MainWindowShowHiddenSessionsButton.Text" xml:space="preserve">
+  <data name="MainWindowShowHiddenSessionsButton.Content" xml:space="preserve">
     <value>Afficher les sessions cachées</value>
+  </data>
+  <data name="MainWindowTeachingTipViewHotkeysHyperlinkButton.Content" xml:space="preserve">
+    <value>Ouvrir les paramètres</value>
   </data>
   <data name="MainWindowTeachingTipViewSettingsTextBlock.Text" xml:space="preserve">
     <value>Afficher les paramètres, les fonctions de l'application, modifier la disposition des éléments et personnaliser l'affichage.</value>

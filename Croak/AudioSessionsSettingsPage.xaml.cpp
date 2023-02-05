@@ -38,7 +38,7 @@ namespace winrt::Croak::implementation
 
     void AudioSessionsSettingsPage::DeleteInactiveSessionsToggleSwitch_Toggled(IInspectable const&, RoutedEventArgs const&)
     {
-        // TODO:
+        // TODO: Limit new sessions volume level.
         ApplicationData::Current().LocalSettings().Values().Insert(L"LimitNewSessionsVolumeLevel", box_value(LimitNewSessionsLevelToggleSwitch().IsOn()));
     }
 

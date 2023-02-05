@@ -21,6 +21,7 @@ constexpr int VOLUME_UP = 2;
 constexpr int VOLUME_UP_ALT = 3;
 constexpr int VOLUME_DOWN_ALT = 4;
 constexpr int MUTE_SYSTEM = 5;
+constexpr int MOVE_WINDOW = 6;
 
 namespace CAudio = ::Croak::Audio;
 namespace Microsoft = winrt::Microsoft;
@@ -331,7 +332,7 @@ namespace winrt::Croak::implementation
                 if (!secondWindow)
                 {
                     secondWindow = make<SecondWindow>();
-                    secondWindow.Closed([this](IInspectable, UI::WindowEventArgs)
+                    secondWindow.Closed([this](IInspectable, Xaml::WindowEventArgs)
                     {
                         secondWindow = nullptr;
                     });
@@ -347,7 +348,7 @@ namespace winrt::Croak::implementation
         }
     }
 
-    void MainWindow::Window_Activated(IInspectable const&, WindowActivatedEventArgs const&)
+    void MainWindow::Window_Activated(IInspectable const&, Xaml::WindowActivatedEventArgs const& e)
     {
 #if DEACTIVATE_TIMER
         if (args.WindowActivationState() == WindowActivationState::Deactivated && audioSessionsPeakTimer.IsRunning())
@@ -359,6 +360,13 @@ namespace winrt::Croak::implementation
             audioSessionsPeakTimer.Start();
         }
 #endif
+        if (unbox_value_or(Storage::ApplicationData::Current().LocalSettings().Values().TryLookup(L"HideWindowOnCompactMode"), false) &&
+            e.WindowActivationState() == Xaml::WindowActivationState::Deactivated &&
+            KeepOnTopToggleButton().IsChecked().GetBoolean())
+        {
+            //appWindow.Hide();
+            appWindow.Presenter().as<UI::OverlappedPresenter>().Minimize();
+        }
     }
 
     void MainWindow::Grid_SizeChanged(IInspectable const&, Xaml::SizeChangedEventArgs const&)
@@ -659,17 +667,23 @@ namespace winrt::Croak::implementation
 
     void MainWindow::KeepOnTopToggleButton_Click(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
     {
+        bool alwaysOnTop = KeepOnTopToggleButton().IsChecked().GetBoolean();
+#if FALSE
+        auto&& presenter = alwaysOnTop ? UI::OverlappedPresenter::CreateForContextMenu() : UI::OverlappedPresenter::CreateForToolWindow();
+        appWindow.SetPresenter(presenter);
+#else
         UI::OverlappedPresenter presenter = appWindow.Presenter().as<UI::OverlappedPresenter>();
         presenter.IsMaximizable(!presenter.IsMaximizable());
         presenter.IsMinimizable(!presenter.IsMinimizable());
 
-        bool alwaysOnTop = KeepOnTopToggleButton().IsChecked().GetBoolean();
         presenter.IsAlwaysOnTop(alwaysOnTop);
         Storage::ApplicationData::Current().LocalSettings().Values().Insert(L"IsAlwaysOnTop", box_value(alwaysOnTop));
 
         RightPaddingColumn().Width(Xaml::GridLengthHelper::FromPixels(
             presenter.IsMinimizable() ? 135 : 45
         ));
+#endif // DEBUG
+
     }
 
     void MainWindow::ReloadSessionsIconButton_Click(IconButton const&, Xaml::RoutedEventArgs const&)
@@ -707,7 +721,7 @@ namespace winrt::Croak::implementation
         // Unregister VolumeChanged event handler & unregister audio sessions from audio events and release com ptrs.
         {
             std::unique_lock lock{ audioSessionsMutex };
-            for (auto it : audioSessions)
+            for (std::pair<winrt::guid, CAudio::AudioSession*> it : audioSessions)
             {
                 it.second->VolumeChanged(audioSessionVolumeChanged[it.first]);
                 it.second->StateChanged(audioSessionsStateChanged[it.first]);
@@ -893,7 +907,7 @@ namespace winrt::Croak::implementation
                         }
                     }
 
-                    if (presenter.State() != UI::OverlappedPresenterState::Maximized)
+                    if (presenter.State() == UI::OverlappedPresenterState::Restored)
                     {
                         if (args.DidPositionChange())
                         {
@@ -946,23 +960,6 @@ namespace winrt::Croak::implementation
         }
 
         SetBackground();
-
-#if ENABLE_HOTKEYS
-#pragma warning(push)
-#pragma warning(disable:4305)
-#pragma warning(disable:4244)
-        /*
-        * Currently used hotkeys:
-        *  - Control + Shift + Up : system volume up
-        *  - Control + Shift + Down : system volume down
-        *  - Control + Shift + PageUp : system volume big up
-        *  - Control + Shift + PageDown : system volume big down
-        *  - Alt/Menu + Shift + M : system volume mute/unmute
-        */
-
-
-#pragma warning(pop)  
-#endif // ENABLE_HOTKEYS
     }
 
     void MainWindow::SetBackground()
@@ -1051,10 +1048,10 @@ namespace winrt::Croak::implementation
                     mainAudioEndpointStateChangedToken = mainAudioEndpoint->StateChanged([this](IInspectable, bool muted)
                     {
                         DispatcherQueue().TryEnqueue([this, muted]()
-                    {
-                        MuteToggleButton().IsChecked(mainAudioEndpoint->Muted());
-                    MuteToggleButtonFontIcon().Glyph(muted ? L"\ue74f" : L"\ue767");
-                    });
+                        {
+                            MuteToggleButton().IsChecked(mainAudioEndpoint->Muted());
+                            MuteToggleButtonFontIcon().Glyph(muted ? L"\ue74f" : L"\ue767");
+                        });
                     });
                 }
 
@@ -1085,6 +1082,7 @@ namespace winrt::Croak::implementation
                             }
                             else
                             {
+                                //DebugLog(format(L"Failed to register audio session '{0}'. This session will never be shown.", audioSessionsVector->at(i)->Name()));
                                 OutputDebugWString(L"Failed to register audio session '" + audioSessionsVector->at(i)->Name() + L"'. This session will never be shown.");
                                 WindowMessageBar().EnqueueString(audioSessionsVector->at(i)->Name() + L" : notifications off");
                             }
@@ -1124,17 +1122,17 @@ namespace winrt::Croak::implementation
                         return;
                     }
 
-                try
-                {
-                    pair<float, float> peakValues = mainAudioEndpoint->GetPeaks();
-                    LeftVolumeAnimation().To(static_cast<double>(peakValues.first));
-                    RightVolumeAnimation().To(static_cast<double>(peakValues.second));
-                    VolumeStoryboard().Begin();
-                }
-                catch (const hresult_error&)
-                {
-                    // TODO: Handle error.
-                }
+                    try
+                    {
+                        std::pair<float, float> peakValues = mainAudioEndpoint->GetPeaks();
+                        LeftVolumeAnimation().To(static_cast<double>(peakValues.first));
+                        RightVolumeAnimation().To(static_cast<double>(peakValues.second));
+                        VolumeStoryboard().Begin();
+                    }
+                    catch (const hresult_error&)
+                    {
+                        // TODO: Handle error.
+                    }
                 });
 
                 MainEndpointNameTextBlock().Text(mainAudioEndpoint->Name());
@@ -1199,8 +1197,9 @@ namespace winrt::Croak::implementation
 
             Xaml::FontIcon icon{};
             icon.Glyph(L"\ue977");
+            // #5FDFFF
             icon.Foreground(
-                Xaml::SolidColorBrush(Xaml::Application::Current().Resources().TryLookup(box_value(L"SystemAccentColorLight1")).as<Windows::UI::Color>())
+                Xaml::SolidColorBrush(Xaml::Application::Current().Resources().TryLookup(box_value(L"WindowsLogoColor")).as<Windows::UI::Color>())
             );
             Xaml::Viewbox iconViewbox{};
             iconViewbox.HorizontalAlignment(Xaml::HorizontalAlignment::Stretch);
@@ -1234,6 +1233,7 @@ namespace winrt::Croak::implementation
         view.Id(guid(audioSession->Id()));
         view.Muted(audioSession->Muted());
         view.SetState((AudioSessionState)audioSession->State());
+        view.Orientation(layout == 2 ? Xaml::Orientation::Horizontal : Xaml::Orientation::Vertical);
 
         view.VolumeChanged({ this, &MainWindow::AudioSessionView_VolumeChanged });
         view.VolumeStateChanged({ this, &MainWindow::AudioSessionView_VolumeStateChanged });
@@ -1305,6 +1305,7 @@ namespace winrt::Croak::implementation
             hotKeyManager.RegisterHotKey(VirtualKeyModifiers::Control | VirtualKeyModifiers::Menu, VK_UP, true, VOLUME_UP_ALT);
             hotKeyManager.RegisterHotKey(VirtualKeyModifiers::Control | VirtualKeyModifiers::Menu, VK_DOWN, true, VOLUME_DOWN_ALT);
             hotKeyManager.RegisterHotKey(VirtualKeyModifiers::Control | VirtualKeyModifiers::Shift, 'M', true, MUTE_SYSTEM);
+            hotKeyManager.RegisterHotKey(VirtualKeyModifiers::Control, VK_F1, true, MOVE_WINDOW);
         }
         catch (const std::invalid_argument& ex)
         {
@@ -1409,7 +1410,7 @@ namespace winrt::Croak::implementation
                 );
 
                 std::unique_lock lock{ audioSessionsMutex };
-                for (auto iter : audioSessions)
+                for (std::pair<winrt::guid, CAudio::AudioSession*> iter : audioSessions)
                 {
                     auto muted = iter.second->Muted();
                     auto volume = iter.second->Volume();
@@ -1486,7 +1487,6 @@ namespace winrt::Croak::implementation
 #pragma endregion
 
                         AudioSessionsPanel().ItemsSource(nullptr);
-                        AudioSessionsPanelProgressRing().Visibility(Xaml::Visibility::Visible);
 
                         // Finish loading profile in non-UI thread.
                         concurrency::task<void> t = concurrency::task<void>([this]()
@@ -1505,7 +1505,7 @@ namespace winrt::Croak::implementation
 
                                 for (auto pair : audioLevels)
                                 {
-                                    for (auto iter : audioSessions)
+                                    for (std::pair<winrt::guid, CAudio::AudioSession*> iter : audioSessions)
                                     {
                                         if (iter.second->Name() == pair.Key())
                                         {
@@ -1516,7 +1516,7 @@ namespace winrt::Croak::implementation
 
                                 for (auto pair : audioStates)
                                 {
-                                    for (auto iter : audioSessions)
+                                    for (std::pair<winrt::guid, CAudio::AudioSession*> iter : audioSessions)
                                     {
                                         if (iter.second->Name() == pair.Key())
                                         {
@@ -1628,7 +1628,6 @@ namespace winrt::Croak::implementation
 
                                 // I18N: Loaded profile [profile name]
                                 WindowMessageBar().EnqueueString(L"Loaded profile " + currentAudioProfile.ProfileName());
-                                AudioSessionsPanelProgressRing().Visibility(Xaml::Visibility::Collapsed);
                             });
                         }
                         catch (const std::out_of_range& ex)
@@ -1657,7 +1656,6 @@ namespace winrt::Croak::implementation
                     // I18N: Failed to load profile [profile name]
                     WindowMessageBar().EnqueueString(L"Couldn't load profile " + profileName);
                     OutputDebugHString(error.message());
-                    AudioSessionsPanelProgressRing().Visibility(Xaml::Visibility::Collapsed);
                 }
             }
         }
@@ -1742,7 +1740,7 @@ namespace winrt::Croak::implementation
         {
             std::unique_lock lock{ audioSessionsMutex };
 
-            for (auto iter : audioSessions)
+            for (std::pair<winrt::guid, CAudio::AudioSession*> iter : audioSessions)
             {
                 iter.second->VolumeChanged(audioSessionVolumeChanged[iter.first]);
                 iter.second->StateChanged(audioSessionsStateChanged[iter.first]);
@@ -1830,86 +1828,6 @@ namespace winrt::Croak::implementation
         {
             auto&& pair = audioSessions.at(view.Id())->GetChannelsPeak();
             view.SetPeak(pair.first, pair.second);
-        }
-    }
-
-    void MainWindow::HotKeyFired(const uint32_t& id, const Windows::Foundation::IInspectable&)
-    {
-        constexpr float stepping = 0.01f;
-        constexpr float largeStepping = 0.07f;
-
-        switch (id)
-        {
-            case VOLUME_DOWN:
-            {
-                try
-                {
-                    mainAudioEndpoint->SetVolume(mainAudioEndpoint->Volume() - stepping > 0.f ? mainAudioEndpoint->Volume() - stepping : 0.f);
-                }
-                catch (...)
-                {
-                }
-
-                break;
-            }
-            case VOLUME_UP:
-            {
-                try
-                {
-                    mainAudioEndpoint->SetVolume(mainAudioEndpoint->Volume() + stepping < 1.f ? mainAudioEndpoint->Volume() + stepping : 1.f);
-                }
-                catch (...)
-                {
-                }
-
-                break;
-            }
-            case VOLUME_UP_ALT:
-            {
-                try
-                {
-                    mainAudioEndpoint->SetVolume(mainAudioEndpoint->Volume() + largeStepping < 1.f ? mainAudioEndpoint->Volume() + largeStepping : 1.f);
-                }
-                catch (...)
-                {
-                }
-
-                break;
-            }
-            case VOLUME_DOWN_ALT:
-            {
-                try
-                {
-                    mainAudioEndpoint->SetVolume(mainAudioEndpoint->Volume() - largeStepping > 0.f ? mainAudioEndpoint->Volume() - largeStepping : 0.f);
-                }
-                catch (...)
-                {
-                }
-
-                break;
-            }
-            case MUTE_SYSTEM:
-            {
-                try
-                {
-                    mainAudioEndpoint->SetMute(!mainAudioEndpoint->Muted());
-
-                    DispatcherQueue().TryEnqueue([this]()
-                    {
-                        MuteToggleButtonFontIcon().Glyph(mainAudioEndpoint->Muted() ? L"\ue74f" : L"\ue767");
-                        MuteToggleButton().IsChecked(Foundation::IReference(mainAudioEndpoint->Muted()));
-                    });
-                }
-                catch (...)
-                {
-                }
-
-                break;
-            }
-            default:
-            {
-                DebugLog(std::format("Hot key not recognized. Id: {0}", id));
-            }
         }
     }
 
@@ -2110,4 +2028,92 @@ namespace winrt::Croak::implementation
             ReloadAudioSessions();
         });
     }
+
+    void MainWindow::HotKeyFired(const uint32_t& id, const Windows::Foundation::IInspectable&)
+    {
+        constexpr float stepping = 0.01f;
+        constexpr float largeStepping = 0.07f;
+
+        try
+        {
+            switch (id)
+            {
+                case VOLUME_DOWN:
+                {
+                    mainAudioEndpoint->SetVolume(mainAudioEndpoint->Volume() - stepping > 0.f ? mainAudioEndpoint->Volume() - stepping : 0.f);
+                    break;
+                }
+                case VOLUME_UP:
+                {
+                    mainAudioEndpoint->SetVolume(mainAudioEndpoint->Volume() + stepping < 1.f ? mainAudioEndpoint->Volume() + stepping : 1.f);
+                    break;
+                }
+                case VOLUME_UP_ALT:
+                {
+                    mainAudioEndpoint->SetVolume(mainAudioEndpoint->Volume() + largeStepping < 1.f ? mainAudioEndpoint->Volume() + largeStepping : 1.f);
+                    break;
+                }
+                case VOLUME_DOWN_ALT:
+                {
+                    mainAudioEndpoint->SetVolume(mainAudioEndpoint->Volume() - largeStepping > 0.f ? mainAudioEndpoint->Volume() - largeStepping : 0.f);
+                    break;
+                }
+                case MUTE_SYSTEM:
+                {
+                    mainAudioEndpoint->SetMute(!mainAudioEndpoint->Muted());
+
+                    DispatcherQueue().TryEnqueue([this]()
+                    {
+                        MuteToggleButtonFontIcon().Glyph(mainAudioEndpoint->Muted() ? L"\ue74f" : L"\ue767");
+                        MuteToggleButton().IsChecked(Foundation::IReference(mainAudioEndpoint->Muted()));
+                    });
+                    break;
+                }
+                case MOVE_WINDOW:
+                {
+                    POINT p{};
+                    if (GetCursorPos(&p))
+                    {
+                        UI::DisplayArea currentDisplay = UI::DisplayArea::GetFromPoint(Graphics::PointInt32(p.x, p.y), UI::DisplayAreaFallback::None);
+                        auto windowPos = Graphics::PointInt32(displayRect.X, displayRect.Y);
+                        UI::DisplayArea windowDisplay = UI::DisplayArea::GetFromPoint(windowPos, UI::DisplayAreaFallback::None);
+
+                        Graphics::PointInt32 newPos
+                        { 
+                            currentDisplay.WorkArea().X + (windowPos.X - windowDisplay.WorkArea().X),
+                            currentDisplay.WorkArea().Y + (windowPos.Y - windowDisplay.WorkArea().Y)
+                        };
+
+                        if (UI::DisplayArea::GetFromPoint(newPos, UI::DisplayAreaFallback::None))
+                        {
+                            appWindow.Move(newPos);
+                            if (!appWindow.IsVisible())
+                            {
+                                appWindow.Show();
+                            }
+
+                            auto nativeWindow{ this->try_as<::IWindowNative>() };
+                            if (nativeWindow)
+                            {
+                                HWND handle = nullptr;
+                                nativeWindow->get_WindowHandle(&handle);
+                                SwitchToThisWindow(handle, true);
+
+                                //SetWindowLongPtr(handle, 0, )
+                            }
+                        }
+                    }
+                    break;
+                }
+                default:
+                {
+                    DebugLog(std::format("Hot key not recognized. Id: {0}", id));
+                }
+            }
+        }
+        catch (...)
+        {
+        }
+    }
+
 }

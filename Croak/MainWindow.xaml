@@ -44,7 +44,12 @@
         </Grid.Resources>
 
         <Image 
-            x:Name="BackgroundImage" Grid.RowSpan="2" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            x:Name="BackgroundImage" 
+            x:Load="False"
+            Grid.RowSpan="2" 
+            Stretch="UniformToFill" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Center"/>
 
         <Grid x:Name="WindowGrid">
             <Grid.RowDefinitions>
@@ -99,7 +104,7 @@
                             Placement="BottomEdgeAlignedLeft"
                             ScrollViewer.VerticalScrollBarVisibility="Visible">
                             <Grid 
-                                x:Name="SettingsButtonFlyoutGrid" 
+                                x:Name="SettingsButtonFlyoutGrid"
                                 Margin="-16,-17" 
                                 CornerRadius="{StaticResource ControlCornerRadius}">
                                 <Grid.Background>
@@ -186,7 +191,7 @@
                                             <FontIcon Glyph="&#xe74f;"/>
                                         </Button>
 
-                                        <Button x:Uid="MainWindowShowHiddenSessionsButton" x:Name="ShowHiddenSessionsButton" Click="ShowHiddenSessionsButton_Click">
+                                        <Button x:Name="ShowHiddenSessionsButton" Click="ShowHiddenSessionsButton_Click">
                                             <FontIcon Glyph="&#xe7b3;"/>
                                         </Button>
 
@@ -249,20 +254,17 @@
                                         <s:IconToggleButton 
                                             x:Uid="MainWindowDisableAnimationsButton"
                                             x:Name="DisableAnimationsIconToggleButton"
-                                            OffContent="Disable animations" 
                                             Glyph="&#xf4a5;" 
                                             Click="DisableAnimationsIconButton_Click" />
 
                                         <s:IconToggleButton 
                                             x:Uid="MainWindowDisableHotKeysButton"
-                                            OffContent="Disable hot keys" 
                                             Glyph="&#xe765;" 
                                             Click="DisableHotKeysIconButton_Click"/>
 
                                         <s:IconToggleButton 
                                             x:Uid="MainWindowShowAppBarButton"
                                             x:Name="ShowAppBarIconToggleButton"
-                                            OffContent="Show app menu bar"
                                             Glyph="&#xede3;" 
                                             Click="ShowAppBarIconButton_Click"/>
 
@@ -341,7 +343,7 @@
                     TextWrapping="Wrap"
                     MaxLines="2"
                     VerticalAlignment="Center"
-                    Margin="0,2,0,2">
+                    Margin="0,2,0,4">
                     <TextBlock.Transitions>
                         <TransitionCollection>
                             <RepositionThemeTransition/>
@@ -538,7 +540,7 @@
                                         <Setter Property="AllowDrop" Value="False" />
                                         <Setter Property="HorizontalAlignment" Value="Stretch"/>
                                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Stretch"/>
                                     </Style>
                                 </GridView.Resources>
                             </GridView>
@@ -547,12 +549,11 @@
 
                     <s:MessageBar
                         x:Name="WindowMessageBar"
+                        x:Load="False"
                         Grid.Row="0" 
                         VerticalAlignment="Top"
                         Visibility="Collapsed"
                         Margin="5,3"/>
-
-                    <ProgressRing x:Name="AudioSessionsPanelProgressRing" Height="30" Width="30" VerticalAlignment="Center" HorizontalAlignment="Center" IsHitTestVisible="False" IsIndeterminate="True" Visibility="Collapsed" />
                 </Grid>
             </Grid>
 
@@ -594,7 +595,7 @@
             </s:SplashScreen>
 
             <TeachingTip
-                x:Name="SettingsButtonTeachingTip" 
+                Name="SettingsButtonTeachingTip"
                 PlacementMargin="-3"
                 PreferredPlacement="Auto"
                 IsLightDismissEnabled="False">

@@ -31,7 +31,7 @@
         CornerRadius="{x:Bind CornerRadius, Mode=OneWay}"
         BorderThickness="{x:Bind BorderThickness}"
         BorderBrush="{x:Bind BorderBrush}"
-        Height="290"
+        MaxHeight="290"
         MinWidth="80"
         SizeChanged="Grid_SizeChanged"
         PointerEntered="RootGrid_PointerEntered"
@@ -98,7 +98,7 @@
                     <VisualState.Setters>
                         <Setter Target="VerticalLayoutGrid.Visibility" Value="Collapsed" />
                         <Setter Target="HorizontalLayoutGrid.Visibility" Value="Visible" />
-                        <Setter Target="RootGrid.Height" Value="90"/>
+                        <Setter Target="RootGrid.Height" Value="70"/>
                         <Setter Target="RootGrid.MinWidth" Value="280"/>
                     </VisualState.Setters>
                 </VisualState>
@@ -143,7 +143,6 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-
             <Border
                 x:Name="VolumePeakBorderLeft"
                 Background="{StaticResource AudioMeterBackground}"
@@ -183,7 +182,6 @@
                     </RectangleGeometry>
                 </Border.Clip>
             </Border>
-
 
             <TextBlock
                 x:Name="HeaderTextBlock"
@@ -302,12 +300,27 @@
 
             </Grid.Resources>
 
-            <TextBlock 
-                Text="{x:Bind Header, Mode=OneWay}" 
-                Grid.Row="0" 
-                Grid.ColumnSpan="3" 
-                Opacity=".7"
-                Margin="5,5,0,0"/>
+            <Grid Grid.ColumnSpan="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <ContentPresenter
+                    x:Name="AudioSessionAppLogo1"
+                    Grid.Row="0"
+                    Visibility="Visible"
+                    MaxHeight="35"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Margin="0,2,0,3"/>
+
+                <TextBlock 
+                    Text="{x:Bind Header, Mode=OneWay}" 
+                    Grid.Column="1" 
+                    Opacity=".7"
+                    Margin="5,5,0,0"/>
+            </Grid>
 
             <Button
                 x:Name="MuteToggleButton1"

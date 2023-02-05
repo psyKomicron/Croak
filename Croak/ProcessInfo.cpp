@@ -57,8 +57,7 @@ namespace Croak::System
                 {
                     ZeroMemory(lpData, fileVersionInfoSize);
 
-                    // TODO: Numeric narrowing
-                    if (GetFileVersionInfo(executableName, 0, fileVersionInfoSize, lpData))
+                    if (GetFileVersionInfo(executableName, 0UL, fileVersionInfoSize, lpData))
                     {
                         uint32_t cbTranslate = 0;
                         struct LANGANDCODEPAGE

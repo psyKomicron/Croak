@@ -86,7 +86,6 @@ namespace winrt::Croak::implementation
 
     void HotKeyView::OnKeyDown(const winrt::Microsoft::UI::Xaml::Input::KeyRoutedEventArgs&)
     {
-        OutputDebugHString(L"Key pressed.");
     }
 
     void HotKeyView::ControlToggleButton_Click(IInspectable const&, RoutedEventArgs const&)

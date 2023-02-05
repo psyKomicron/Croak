@@ -51,7 +51,7 @@
                 VerticalAlignment="Stretch" />
         </StackPanel>
 
-        <Button 
+        <ContentPresenter 
             x:Name="IconContentControl"
             Grid.Column="2" 
             VerticalAlignment="Center" 

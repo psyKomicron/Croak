@@ -57,5 +57,5 @@ inline void DebugLog(const std::string& text, const std::source_location& source
         text,
         functionName);
 
-    OutputDebugString(winrt::to_hstring(out).c_str());
+    OutputDebugStringA(out.c_str());
 }

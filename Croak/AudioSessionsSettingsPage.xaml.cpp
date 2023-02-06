@@ -1,6 +1,3 @@
-// Copyright (c) Microsoft Corporation and Contributors.
-// Licensed under the MIT License.
-
 #include "pch.h"
 #include "AudioSessionsSettingsPage.xaml.h"
 #if __has_include("AudioSessionsSettingsPage.g.cpp")
@@ -33,7 +30,7 @@ namespace winrt::Croak::implementation
 
     void AudioSessionsSettingsPage::Page_Loaded(IInspectable const&, RoutedEventArgs const& e)
     {
-        ShowInactiveAudioSessionsToggleSwitch().IsOn(unbox_value_or(ApplicationData::Current().LocalSettings().Values().TryLookup(L"ShowInactiveSessionsOnStartup"), true));
+        ShowInactiveAudioSessionsToggleSwitch().IsOn(unbox_value_or(ApplicationData::Current().LocalSettings().Values().TryLookup(L"ShowInactiveSessionsOnStartup"), false));
     }
 
     void AudioSessionsSettingsPage::DeleteInactiveSessionsToggleSwitch_Toggled(IInspectable const&, RoutedEventArgs const&)

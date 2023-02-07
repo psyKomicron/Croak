@@ -58,9 +58,6 @@
       <Filter>UI\Controls\CustomControls</Filter>
     </ClCompile>
     <ClCompile Include="HotKeyView.cpp" />
-    <ClCompile Include="OverlayWindow.cpp">
-      <Filter>UI\Windows\Win32</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -103,9 +100,6 @@
     </ClInclude>
     <ClInclude Include="resource.h" />
     <ClInclude Include="HotKeyView.h" />
-    <ClInclude Include="OverlayWindow.h">
-      <Filter>UI\Windows\Win32</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LargeTile.scale-100.png">
@@ -302,9 +296,6 @@
     <Filter Include="Assets\Images">
       <UniqueIdentifier>{998e7b27-b0e7-4ceb-9a82-a3af0b5c20fe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\Windows\Win32">
-      <UniqueIdentifier>{188a85c2-fa7e-4c65-aefa-b47e58c338c0}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Page Include="MainWindow.xaml">
@@ -385,8 +376,5 @@
     <PRIResource Include="Resources.lang-fr-fr.resw">
       <Filter>Assets\Translations</Filter>
     </PRIResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Natvis Include="$(MSBuildThisFileDirectory)..\..\natvis\wil.natvis" />
   </ItemGroup>
 </Project>

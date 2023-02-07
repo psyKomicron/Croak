@@ -187,16 +187,20 @@
                                             </DropDownButton.Flyout>
                                         </DropDownButton>
 
-                                        <Button x:Name="MuteAllButton">
+                                        <Button x:Uid="MainWindowMuteAudioButton" x:Name="MuteAllButton">
                                             <FontIcon Glyph="&#xe74f;"/>
                                         </Button>
 
-                                        <Button x:Name="ShowHiddenSessionsButton" Click="ShowHiddenSessionsButton_Click">
+                                        <Button x:Uid="MainWindowShowHiddenButton" x:Name="ShowHiddenSessionsButton" Click="ShowHiddenSessionsButton_Click">
                                             <FontIcon Glyph="&#xe7b3;"/>
                                         </Button>
 
-                                        <ToggleButton x:Name="KeepOnTopToggleButton" ToolTipService.ToolTip="Picture-in-picture" Click="KeepOnTopToggleButton_Click">
+                                        <ToggleButton x:Name="PipToggleButton" ToolTipService.ToolTip="Picture-in-picture" Click="PipToggleButton_Click">
                                             <FontIcon Glyph="&#xee49;" />
+                                        </ToggleButton>
+
+                                        <ToggleButton x:Name="OverlayModeToggleButton" Click="OverlayModeToggleButton_Click">
+                                            <FontIcon Glyph="&#xe78b;" />
                                         </ToggleButton>
                                     </StackPanel>
 
@@ -549,7 +553,6 @@
 
                     <s:MessageBar
                         x:Name="WindowMessageBar"
-                        x:Load="False"
                         Grid.Row="0" 
                         VerticalAlignment="Top"
                         Visibility="Collapsed"

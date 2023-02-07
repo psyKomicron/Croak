@@ -30,7 +30,7 @@ namespace winrt::Croak::implementation
 
     void AudioSessionsSettingsPage::Page_Loaded(IInspectable const&, RoutedEventArgs const& e)
     {
-        ShowInactiveAudioSessionsToggleSwitch().IsOn(unbox_value_or(ApplicationData::Current().LocalSettings().Values().TryLookup(L"ShowInactiveSessionsOnStartup"), false));
+        ShowInactiveAudioSessionsToggleSwitch().IsOn(unbox_value_or(ApplicationData::Current().LocalSettings().Values().TryLookup(L"ShowInactiveSessionsOnStartup"), true));
     }
 
     void AudioSessionsSettingsPage::DeleteInactiveSessionsToggleSwitch_Toggled(IInspectable const&, RoutedEventArgs const&)

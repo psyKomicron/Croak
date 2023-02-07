@@ -195,6 +195,9 @@
   <data name="MainWindowLayoutMenuFlyoutItemVertical.Text" xml:space="preserve">
     <value>Vertical</value>
   </data>
+  <data name="MainWindowMuteAudioButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Mute/unmute</value>
+  </data>
   <data name="MainWindowNewContentHyperlinkButton.Content" xml:space="preserve">
     <value>See what's new</value>
   </data>
@@ -215,6 +218,9 @@
   </data>
   <data name="MainWindowShowAppBarButton.Content" xml:space="preserve">
     <value>Show menu</value>
+  </data>
+  <data name="MainWindowShowHiddenButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Show hidden sessions</value>
   </data>
   <data name="MainWindowShowHiddenSessionsButton.Content" xml:space="preserve">
     <value>Show hidden sessions</value>
@@ -249,8 +255,35 @@
   <data name="SettingsOtherLinksTextBlock.Text" xml:space="preserve">
     <value>Other links</value>
   </data>
+  <data name="SettingsPageAudioProfileButton.Content" xml:space="preserve">
+    <value>Audio profiles</value>
+  </data>
+  <data name="SettingsPageAudioSessionsButton.Content" xml:space="preserve">
+    <value>Audio sessions</value>
+  </data>
+  <data name="SettingsPageCustomTitleBarTextBlock.Text" xml:space="preserve">
+    <value>Custom title bar</value>
+  </data>
   <data name="SettingsPageDisplayName" xml:space="preserve">
     <value>Settings</value>
+  </data>
+  <data name="SettingsPageHideWindowTextBlock.Text" xml:space="preserve">
+    <value>Hide window in compact mode</value>
+  </data>
+  <data name="SettingsPageHotKeysButton.Content" xml:space="preserve">
+    <value>Hot keys</value>
+  </data>
+  <data name="SettingsPageLaunchOnStartUpTextBlock.Text" xml:space="preserve">
+    <value>Launch app on startup</value>
+  </data>
+  <data name="SettingsPagePowerEfficiencyTextBlock.Text" xml:space="preserve">
+    <value>Power efficiency</value>
+  </data>
+  <data name="SettingsPageStartupProfileTextBlock.Text" xml:space="preserve">
+    <value>Startup profile</value>
+  </data>
+  <data name="SettingsPageTransparencyEffectsTextBlock.Text" xml:space="preserve">
+    <value>Transparency effects</value>
   </data>
   <data name="SystemAudioSessionName" xml:space="preserve">
     <value>System</value>

@@ -33,7 +33,6 @@ namespace winrt::Croak::implementation
         AddToStartupToggleSwitch().IsOn(startupTask.State() == ApplicationModel::StartupTaskState::Enabled);
 
         TransparencyEffectsToggleButton().IsOn(unbox_value_or(Storage::ApplicationData::Current().LocalSettings().Values().TryLookup(L"TransparencyAllowed"), true));
-        CustomTitleBarToggleButton().IsOn(unbox_value_or(Storage::ApplicationData::Current().LocalSettings().Values().TryLookup(L"UseCustomTitleBar"), true));
         PowerEfficiencyToggleButton().IsOn(unbox_value_or(Storage::ApplicationData::Current().LocalSettings().Values().TryLookup(L"PowerEfficiencyEnabled"), true));
         StartupProfileToggleSwitch().IsOn(unbox_value_or(Storage::ApplicationData::Current().LocalSettings().Values().TryLookup(L"LoadLastProfile"), true));
         HideWindowToggleSwitch().IsOn(unbox_value_or(Storage::ApplicationData::Current().LocalSettings().Values().TryLookup(L"HideWindowOnCompactMode"), false));
@@ -75,11 +74,6 @@ namespace winrt::Croak::implementation
         Storage::ApplicationData::Current().LocalSettings().Values().Insert(L"TransparencyAllowed", Foundation::IReference(TransparencyEffectsToggleButton().IsOn()));
     }
 
-    void SettingsPage::CustomTitleBarToggleButton_Toggled(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
-    {
-        Storage::ApplicationData::Current().LocalSettings().Values().Insert(L"UseCustomTitleBar", Foundation::IReference(CustomTitleBarToggleButton().IsOn()));
-    }
-
     Foundation::IAsyncAction SettingsPage::AddToStartupToggleSwitch_Toggled(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
     {
         AddToStartupProgressRing().Visibility(Xaml::Visibility::Visible);
@@ -119,7 +113,7 @@ namespace winrt::Croak::implementation
         picker.as<IInitializeWithWindow>()->Initialize(mainWindowHandle);
 
         picker.FileTypeFilter().ReplaceAll({ L"*" });
-        picker.SettingsIdentifier(L"Spotlight Importer");
+        picker.SettingsIdentifier(L"Croak");
         picker.SuggestedStartLocation(Storage::Pickers::PickerLocationId::PicturesLibrary);
         picker.ViewMode(Storage::Pickers::PickerViewMode::List);
 

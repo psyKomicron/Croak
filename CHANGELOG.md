@@ -1,5 +1,21 @@
 # Change log
 
+# 1.0.6
+### Updates
+- The user can no longer choose if he wants to use a custom title bar or not.
+
+### Fixes
+- Finished translating settings page.
+
+### Todo
+- [ ] Show/hide audio sessions.
+- [ ] Re-implement I18Ned "What's new" page.
+- [ ] Enable the user to change hot key key, not only modifiers.
+- [ ] Add more hot keys (audio session control, reload, restart, show on current screen, PiP).
+- [ ] Translate all strings.
+- [ ] Move audio controls to AudioViewer.
+
+
 ## 1.0.5
 ### Updates
 - Added overlay mode, unresizable window with no close/minimize/maximize button.
@@ -9,12 +25,12 @@
 - Fixed "Show inactive audio sessions on startup" being defaulted to false (when starting the app for the first time). It is now defaulted to true.
 
 ### Todo
-- [x] Disable/enable hot keys.
 - [ ] Show/hide audio sessions.
 - [ ] Re-implement I18Ned "What's new" page.
 - [ ] Enable the user to change hot key key, not only modifiers.
 - [ ] Add more hot keys (audio session control, reload, restart, show on current screen, PiP).
 - [ ] Translate all strings.
+
 
 
 ## 1.0.4

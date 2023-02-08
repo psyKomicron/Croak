@@ -34,10 +34,7 @@ namespace winrt::Croak::implementation
         int32_t size = SecondWindow::Current().Breadcrumbs().Size();
         int32_t index = size - 1;
         if (args.NavigationMode() != ::Navigation::NavigationMode::Back &&
-            (
-                index < size ||
-                SecondWindow::Current().Breadcrumbs().GetAt(index).ItemTypeName().Name != xaml_typename<winrt::Croak::AudioProfilesPage>().Name
-                )
+            (index < size ||SecondWindow::Current().Breadcrumbs().GetAt(index).ItemTypeName().Name != xaml_typename<winrt::Croak::AudioProfilesPage>().Name)
             )
         {
             winrt::Windows::ApplicationModel::Resources::ResourceLoader loader{};

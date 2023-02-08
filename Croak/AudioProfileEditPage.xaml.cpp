@@ -26,7 +26,7 @@ namespace winrt::Croak::implementation
         timer.IsRepeating(false);
         timer.Tick([this](IInspectable, IInspectable)
         {
-            Frame().Navigate(xaml_typename<AudioProfilesPage>(), audioProfile);
+            Frame().GoBack();
         });
     }
 
@@ -125,7 +125,6 @@ namespace winrt::Croak::implementation
         ShowMenuCheckBox().IsChecked(audioProfile.ShowMenu());
         LayoutComboBox().SelectedIndex(audioProfile.Layout());
 
-
         ::Croak::Audio::AudioController* controllerPtr = new ::Croak::Audio::AudioController(GUID());
         if (audioProfile.SystemVolume() < 0)
         {
@@ -137,17 +136,17 @@ namespace winrt::Croak::implementation
         SystemVolumeSlider().Value(static_cast<double>(audioProfile.SystemVolume()) * 100.);
 
 
-        if (audioProfile.AudioLevels().Size() > 0)
+        if (audioProfile.AudioSessionsSettings().Size() > 0)
         {
             std::vector<AudioSessionView> views{};
             views.resize(audioProfile.SessionsIndexes().Size());
 
-            for (auto&& pair : audioProfile.AudioLevels())
+            for (auto&& settings : audioProfile.AudioSessionsSettings())
             {
-                hstring sessionName = pair.Key();
-                double volume = pair.Value() * 100.;
-                bool muted = audioProfile.AudioStates().Lookup(pair.Key());
-                uint32_t index = audioProfile.SessionsIndexes().Lookup(pair.Key());
+                hstring sessionName = settings.Name();
+                double volume = settings.AudioLevel() * 100.;
+                bool muted = settings.Muted();
+                uint32_t index = audioProfile.SessionsIndexes().Lookup(settings.Name());
 
                 views[index] = CreateAudioSessionView(sessionName, volume, muted);
             }
@@ -326,18 +325,16 @@ namespace winrt::Croak::implementation
         audioProfile.ProfileName(ProfileNameEditTextBox().Text());
         audioProfile.SystemVolume(static_cast<float>(SystemVolumeSlider().Value()) / 100.f);
 
-        audioProfile.AudioLevels().Clear();
-        audioProfile.AudioStates().Clear();
+        audioProfile.AudioSessionsSettings().Clear();
         for (auto&& view : AudioSessions())
         {
             hstring header = view.Header();
             bool isMuted = view.Muted();
             float volume = static_cast<float>(view.Volume()) / 100.f;
+            audioProfile.AudioSessionsSettings().Append(AudioSessionSettings(header, isMuted, volume));
+
             uint32_t index = 0;
             AudioSessions().IndexOf(view, index);
-
-            audioProfile.AudioLevels().Insert(header, volume);
-            audioProfile.AudioStates().Insert(header, isMuted);
             audioProfile.SessionsIndexes().Insert(header, index);
         }
 

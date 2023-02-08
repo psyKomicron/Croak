@@ -195,12 +195,9 @@
 
 
         <ContentDialog 
+            x:Uid="AudioProfileEditPageExitConfirmationDialog"
             x:Name="ConfirmDialog"
-            DefaultButton="Primary" 
-            PrimaryButtonText="Save" 
-            SecondaryButtonText="Cancel">
-            <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="Any changes made to the profile will be discarded."/>
-        </ContentDialog>
+            DefaultButton="Primary" />
 
         <ContentDialog x:Name="AudioProfileCreationDialog" DefaultButton="Primary" PrimaryButtonText="Create" SecondaryButtonText="Cancel" Title="Audio session creation">
             <Grid RowSpacing="15">

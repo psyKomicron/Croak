@@ -1,3 +1,5 @@
+import "AudioSessionSettings.idl";
+
 namespace Croak
 {
     [bindable]
@@ -6,18 +8,17 @@ namespace Croak
     {
         AudioProfile();
 
-        String ProfileName{ get; set; };
-        Windows.Foundation.Collections.IMap<String, Single> AudioLevels{ get; set; };
-        Windows.Foundation.Collections.IMap<String, Boolean> AudioStates{ get; set; };
-        Windows.Foundation.Collections.IMap<String, UInt32> SessionsIndexes{ get; set; };
-        Boolean IsDefaultProfile{ get; set; };
-        Single SystemVolume{ get; set; };
-        Boolean DisableAnimations{ get; set; };
-        Boolean KeepOnTop{ get; set; };
-        Boolean ShowMenu{ get; set; };
-        UInt32 Layout{ get; set; };
-        Boolean RestoreWindowState{ get; set; };
-        Windows.Graphics.RectInt32 WindowDisplayRect{ get; set; };
+        String ProfileName;
+        Windows.Foundation.Collections.IVector<AudioSessionSettings> AudioSessionsSettings;
+        Windows.Foundation.Collections.IMap<String, UInt32> SessionsIndexes;
+        Boolean IsDefaultProfile;
+        Single SystemVolume;
+        Boolean DisableAnimations;
+        Boolean KeepOnTop;
+        Boolean ShowMenu;
+        UInt32 Layout;
+        Boolean RestoreWindowState;
+        Windows.Graphics.RectInt32 WindowDisplayRect;
 
         void Restore(Windows.Storage.ApplicationDataContainer container);
         void Save(Windows.Storage.ApplicationDataContainer container);

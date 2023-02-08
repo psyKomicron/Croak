@@ -19,26 +19,15 @@ namespace winrt::Croak::implementation
             e_propertyChanged(*this, Microsoft::UI::Xaml::Data::PropertyChangedEventArgs(L"ProfileName"));
         }
 
-        inline winrt::Windows::Foundation::Collections::IMap<hstring, float> AudioLevels()
+        inline winrt::Windows::Foundation::Collections::IVector<AudioSessionSettings> AudioSessionsSettings() const
         {
-            return audioLevels;
+            return audioSessionsSettings;
         }
 
-        inline void AudioLevels(const winrt::Windows::Foundation::Collections::IMap<hstring, float>& value)
+        inline void AudioSessionsSettings(const winrt::Windows::Foundation::Collections::IVector<AudioSessionSettings>& value)
         {
-            audioLevels = value;
-            e_propertyChanged(*this, Microsoft::UI::Xaml::Data::PropertyChangedEventArgs(L"AudioLevels"));
-        }
-
-        inline winrt::Windows::Foundation::Collections::IMap<hstring, bool> AudioStates()
-        {
-            return audioStates;
-        }
-
-        inline void AudioStates(const winrt::Windows::Foundation::Collections::IMap<hstring, bool>& value)
-        {
-            audioStates = value;
-            e_propertyChanged(*this, Microsoft::UI::Xaml::Data::PropertyChangedEventArgs(L"AudioStates"));
+            audioSessionsSettings = value;
+            e_propertyChanged(*this, Microsoft::UI::Xaml::Data::PropertyChangedEventArgs(L"AudioSessionsSettings"));
         }
 
         inline winrt::Windows::Foundation::Collections::IMap<hstring, uint32_t> SessionsIndexes() const
@@ -154,8 +143,7 @@ namespace winrt::Croak::implementation
 
     private:
         winrt::hstring profileName{};
-        winrt::Windows::Foundation::Collections::IMap<hstring, float> audioLevels{ winrt::single_threaded_map<hstring, float>() };
-        winrt::Windows::Foundation::Collections::IMap<hstring, bool> audioStates{ winrt::single_threaded_map<hstring, bool>() };
+        winrt::Windows::Foundation::Collections::IVector<AudioSessionSettings> audioSessionsSettings{ winrt::single_threaded_vector<AudioSessionSettings>() };
         winrt::Windows::Foundation::Collections::IMap<hstring, uint32_t> sessionsIndexes{ winrt::single_threaded_map<hstring, uint32_t>() };
         bool isDefaultProfile = false;
         float systemVolume = 0.0;

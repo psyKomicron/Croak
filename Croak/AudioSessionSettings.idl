@@ -1,0 +1,17 @@
+namespace Croak
+{
+    [bindable]
+    [default_interface]
+    runtimeclass AudioSessionSettings
+    {
+        AudioSessionSettings();
+        AudioSessionSettings(String name, Boolean muted, Single audioLevel);
+
+        String Name;
+        Boolean Muted;
+        Single AudioLevel;
+
+        Windows.Storage.ApplicationDataCompositeValue Save();
+        void Restore(Windows.Storage.ApplicationDataCompositeValue container);
+    }
+}

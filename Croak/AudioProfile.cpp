@@ -25,23 +25,11 @@ namespace winrt::Croak::implementation
         props.Values().Insert(L"SystemVolume", IReference(systemVolume));
         props.Values().Insert(L"Layout", IReference(layout));
 
-        ApplicationDataCompositeValue audioLevelsContainer{};
-        for (auto&& pair : audioLevels)
+        ApplicationDataContainer audioSettingsContainer = props.CreateContainer(L"AudioSessionsSettings", ApplicationDataCreateDisposition::Always);
+        for (auto&& audioSessionSettings : audioSessionsSettings)
         {
-            hstring name = pair.Key();
-            float level = pair.Value();
-            audioLevelsContainer.Insert(name, IReference(level));
+            audioSettingsContainer.Values().Insert(audioSessionSettings.Name(), audioSessionSettings.Save());
         }
-        props.Values().Insert(L"AudioLevels", audioLevelsContainer);
-
-        ApplicationDataCompositeValue audioStatesContainer{};
-        for (auto&& pair : audioStates)
-        {
-            hstring name = pair.Key();
-            bool muted = pair.Value();
-            audioStatesContainer.Insert(name, IReference(muted));
-        }
-        props.Values().Insert(L"AudioStates", audioStatesContainer);
 
         ApplicationDataCompositeValue indexes{};
         for (auto&& pair : sessionsIndexes)
@@ -63,25 +51,18 @@ namespace winrt::Croak::implementation
         systemVolume = unbox_value<float>(container.Values().Lookup(L"SystemVolume"));
         layout = unbox_value<uint32_t>(container.Values().Lookup(L"Layout"));
 
-        auto audioLevelsContainer = container.Values().Lookup(L"AudioLevels").as<ApplicationDataCompositeValue>();
-        auto audioStatesContainer = container.Values().Lookup(L"AudioStates").as<ApplicationDataCompositeValue>();
+        auto audioSessionsSettings = container.Containers().Lookup(L"AudioSessionsSettings").Values();
         auto sessionsIndexesContainer = container.Values().Lookup(L"SessionsIndexes").as<ApplicationDataCompositeValue>();
 
-        for (auto pair : audioLevelsContainer)
+        for (auto&& pair : audioSessionsSettings)
         {
             hstring name = pair.Key();
-            float level = pair.Value().as<float>();
-            audioLevels.Insert(name, level);
+            winrt::Croak::AudioSessionSettings audioSessionSettings{};
+            audioSessionSettings.Name(name);
+            audioSessionSettings.Restore(unbox_value<ApplicationDataCompositeValue>(pair.Value()));
         }
 
-        for (auto pair : audioStatesContainer)
-        {
-            hstring name = pair.Key();
-            bool muted = pair.Value().as<bool>();
-            audioStates.Insert(name, muted);
-        }
-
-        for (auto pair : sessionsIndexesContainer)
+        for (auto&& pair : sessionsIndexesContainer)
         {
             hstring name = pair.Key();
             uint32_t index = pair.Value().as<uint32_t>();

@@ -120,6 +120,15 @@
   <data name="AudioObjectsLoaded" xml:space="preserve">
     <value>Audio sessions loaded</value>
   </data>
+  <data name="AudioProfileEditPageExitConfirmationDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Exit and save changes</value>
+  </data>
+  <data name="AudioProfileEditPageExitConfirmationDialog.SecondaryButtonText" xml:space="preserve">
+    <value>Exit and discard changes</value>
+  </data>
+  <data name="AudioProfileEditPageExitConfirmationDialog.Title" xml:space="preserve">
+    <value>Changes have been made. Do you want to:</value>
+  </data>
   <data name="AudioProfilesPageDisplayName" xml:space="preserve">
     <value>Audio profiles</value>
   </data>
@@ -240,6 +249,9 @@
   <data name="NewContentPageNewContentTitleTextBlock.Text" xml:space="preserve">
     <value>What's new</value>
   </data>
+  <data name="OverlayModeEnabled" xml:space="preserve">
+    <value>Overlay mode activated</value>
+  </data>
   <data name="SecondWindowTitle" xml:space="preserve">
     <value>Croak settings</value>
   </data>
@@ -255,7 +267,7 @@
   <data name="SettingsOtherLinksTextBlock.Text" xml:space="preserve">
     <value>Other links</value>
   </data>
-  <data name="SettingsPageAudioProfileButton.Content" xml:space="preserve">
+  <data name="SettingsPageAudioProfilesTextBlock.Text" xml:space="preserve">
     <value>Audio profiles</value>
   </data>
   <data name="SettingsPageAudioSessionsButton.Content" xml:space="preserve">
@@ -276,14 +288,23 @@
   <data name="SettingsPageLaunchOnStartUpTextBlock.Text" xml:space="preserve">
     <value>Launch app on startup</value>
   </data>
+  <data name="SettingsPagePowerEfficiencySubtitleTextBlock.Text" xml:space="preserve">
+    <value>Turn off animations to save power when the user is inactive or when battery saver is enabled (on laptops).</value>
+  </data>
   <data name="SettingsPagePowerEfficiencyTextBlock.Text" xml:space="preserve">
     <value>Power efficiency</value>
+  </data>
+  <data name="SettingsPageStartupProfileSubtitleTextBlock.Text" xml:space="preserve">
+    <value>Load the last used profile on app start up.</value>
   </data>
   <data name="SettingsPageStartupProfileTextBlock.Text" xml:space="preserve">
     <value>Startup profile</value>
   </data>
   <data name="SettingsPageTransparencyEffectsTextBlock.Text" xml:space="preserve">
     <value>Transparency effects</value>
+  </data>
+  <data name="SettingsPageTransparencyTextBlock.Text" xml:space="preserve">
+    <value>Transparency effect type</value>
   </data>
   <data name="SystemAudioSessionName" xml:space="preserve">
     <value>System</value>

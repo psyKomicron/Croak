@@ -120,6 +120,15 @@
   <data name="AudioObjectsLoaded" xml:space="preserve">
     <value>Audio sessions loaded</value>
   </data>
+  <data name="AudioProfileEditPageExitConfirmationDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Quitter et sauvegarder les modifications</value>
+  </data>
+  <data name="AudioProfileEditPageExitConfirmationDialog.SecondaryButtonText" xml:space="preserve">
+    <value>Quitter et annuler les modifications</value>
+  </data>
+  <data name="AudioProfileEditPageExitConfirmationDialog.Title" xml:space="preserve">
+    <value>Des modifications ont été apportés, voulez vous:</value>
+  </data>
   <data name="AudioProfilesPageDisplayName" xml:space="preserve">
     <value>Profiles audio</value>
   </data>
@@ -240,6 +249,9 @@
   <data name="NewContentPageNewContentTitleTextBlock.Text" xml:space="preserve">
     <value>Nouveautées</value>
   </data>
+  <data name="OverlayModeEnabled" xml:space="preserve">
+    <value>Mode overlay activé</value>
+  </data>
   <data name="SecondWindowTitle" xml:space="preserve">
     <value>Paramètres (Croak)</value>
   </data>
@@ -255,10 +267,10 @@
   <data name="SettingsOtherLinksTextBlock.Text" xml:space="preserve">
     <value>Autres liens</value>
   </data>
-  <data name="SettingsPageAudioProfileButton.Content" xml:space="preserve">
+  <data name="SettingsPageAudioProfilesTextBlock.Text" xml:space="preserve">
     <value>Profiles audio</value>
   </data>
-  <data name="SettingsPageAudioSessionsButton.Content" xml:space="preserve">
+  <data name="SettingsPageAudioSessionsTextBlock.Text" xml:space="preserve">
     <value>Sessions audio</value>
   </data>
   <data name="SettingsPageCustomTitleBarTextBlock.Text" xml:space="preserve">
@@ -276,14 +288,23 @@
   <data name="SettingsPageLaunchOnStartUpTextBlock.Text" xml:space="preserve">
     <value>Démarrer l'application avec le système</value>
   </data>
+  <data name="SettingsPagePowerEfficiencySubtitleTextBlock.Text" xml:space="preserve">
+    <value>Désactive les animations lorsque l'utilisateur est absent ou que l'économisateur de batterie est activé</value>
+  </data>
   <data name="SettingsPagePowerEfficiencyTextBlock.Text" xml:space="preserve">
     <value>Efficacité énergitique</value>
+  </data>
+  <data name="SettingsPageStartupProfileSubtitleTextBlock.Text" xml:space="preserve">
+    <value>Restorer le dernier profile utilisé au démarrage</value>
   </data>
   <data name="SettingsPageStartupProfileTextBlock.Text" xml:space="preserve">
     <value>Profile par defaut</value>
   </data>
   <data name="SettingsPageTransparencyEffectsTextBlock.Text" xml:space="preserve">
     <value>Effets de transparence</value>
+  </data>
+  <data name="SettingsPageTransparencyTextBlock.Text" xml:space="preserve">
+    <value>Type d'effets de transparence</value>
   </data>
   <data name="SystemAudioSessionName" xml:space="preserve">
     <value>Système</value>

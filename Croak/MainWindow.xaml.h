@@ -120,7 +120,7 @@ namespace winrt::Croak::implementation
         void LoadHotKeys();
         void LoadSettings();
         void SaveSettings();
-        void LoadProfile(const hstring& profileName);
+        void LoadAudioProfile(const hstring& profileName);
         void ReloadAudioSessions();
         std::map<winrt::guid, ::Croak::Audio::AudioSession*> MapAudioSessions(std::vector<::Croak::Audio::AudioSession*>* vect);
         void CleanUpResources(const bool& forReload);

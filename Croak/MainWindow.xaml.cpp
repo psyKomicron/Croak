@@ -421,7 +421,7 @@ namespace winrt::Croak::implementation
             hstring profileName = unbox_value_or(Storage::ApplicationData::Current().LocalSettings().Values().TryLookup(L"AudioProfile"), L"");
             if (!profileName.empty())
             {
-                LoadProfile(profileName);
+                LoadAudioProfile(profileName);
             }
         }
 
@@ -793,7 +793,7 @@ namespace winrt::Croak::implementation
                     MoreFlyoutStackpanel().Visibility(Xaml::Visibility::Visible);
                     ProfilesGrid().Visibility(Xaml::Visibility::Collapsed);
                     SettingsButtonFlyout().Hide();
-                    LoadProfile(sender.as<FrameworkElement>().Tag().as<hstring>());
+                    LoadAudioProfile(sender.as<FrameworkElement>().Tag().as<hstring>());
                 });
 
                 ProfilesStackpanel().Children().Append(item);
@@ -905,7 +905,8 @@ namespace winrt::Croak::implementation
 
             appWindow.Move(Graphics::PointInt32(5, display.WorkArea().Height - RootGrid().ActualHeight() - 20));*/
 
-            WindowMessageBar().EnqueueString(L"Overlay mode enabled, press Alt + F1 to show the window"); // I18N
+            Storage::ResourceLoader loader{};
+            WindowMessageBar().EnqueueString(loader.GetString(L"OverlayModeEnabled")); // I18N
         }
         else 
         {
@@ -979,8 +980,7 @@ namespace winrt::Croak::implementation
                 }
             });
 
-            if (unbox_value_or(Storage::ApplicationData::Current().LocalSettings().Values().TryLookup(L"UseCustomTitleBar"), true) &&
-                appWindow.TitleBar().IsCustomizationSupported())
+            if (appWindow.TitleBar().IsCustomizationSupported())
             {
                 usingCustomTitleBar = true;
 
@@ -1460,12 +1460,11 @@ namespace winrt::Croak::implementation
                 std::unique_lock lock{ audioSessionsMutex };
                 for (std::pair<winrt::guid, CAudio::AudioSession*> iter : audioSessions)
                 {
+                    auto name = iter.second->Name();
                     auto muted = iter.second->Muted();
                     auto volume = iter.second->Volume();
-                    auto name = iter.second->Name();
 
-                    currentAudioProfile.AudioLevels().Insert(name, volume);
-                    currentAudioProfile.AudioStates().Insert(name, muted);
+                    currentAudioProfile.AudioSessionsSettings().Append(AudioSessionSettings(name, muted, volume));
                 }
 
                 // If the user has a profile, the AudioProfile container has to exist, so no TryLookup and container creation.
@@ -1474,7 +1473,7 @@ namespace winrt::Croak::implementation
         }
     }
 
-    void MainWindow::LoadProfile(const hstring& profileName)
+    void MainWindow::LoadAudioProfile(const hstring& profileName)
     {
         Storage::ApplicationDataContainer audioProfilesContainer = Storage::ApplicationData::Current().LocalSettings().Containers().TryLookup(L"AudioProfiles");
         if (audioProfilesContainer)
@@ -1541,34 +1540,22 @@ namespace winrt::Croak::implementation
                         {
                             try
                             {
-                                auto audioLevels = currentAudioProfile.AudioLevels();
-                                auto audioStates = currentAudioProfile.AudioStates();
-
-                                // Set audio sessions volume.
-                                std::unique_lock lock{ audioSessionsMutex }; // Taking the lock will also lock sessions from being added to the display.
-
                                 // Set system volume.
                                 float systemVolume = currentAudioProfile.SystemVolume();
                                 mainAudioEndpoint->SetVolume(systemVolume);
 
-                                for (auto pair : audioLevels)
-                                {
-                                    for (std::pair<winrt::guid, CAudio::AudioSession*> iter : audioSessions)
-                                    {
-                                        if (iter.second->Name() == pair.Key())
-                                        {
-                                            iter.second->SetVolume(pair.Value());
-                                        }
-                                    }
-                                }
+                                // Set audio sessions volume.
+                                std::unique_lock lock{ audioSessionsMutex }; // Taking the lock will also lock sessions from being added to the display.
 
-                                for (auto pair : audioStates)
+                                auto audioSessionsSettings = currentAudioProfile.AudioSessionsSettings();
+                                for (auto&& audioSessionSettings : audioSessionsSettings)
                                 {
                                     for (std::pair<winrt::guid, CAudio::AudioSession*> iter : audioSessions)
                                     {
-                                        if (iter.second->Name() == pair.Key())
+                                        if (iter.second->Name() == audioSessionSettings.Name())
                                         {
-                                            iter.second->Muted(pair.Value());
+                                            iter.second->SetVolume(audioSessionSettings.AudioLevel());
+                                            iter.second->SetMute(audioSessionSettings.Muted());
                                         }
                                     }
                                 }
@@ -1674,28 +1661,28 @@ namespace winrt::Croak::implementation
                                     // HACK: Can we use INotifyPropertyChanged to raise that the vector has changed ?
                                     AudioSessionsPanel().ItemsSource(audioSessionViews);
 
-                                // I18N: Loaded profile [profile name]
-                                WindowMessageBar().EnqueueString(L"Loaded profile " + currentAudioProfile.ProfileName());
-                            });
-                        }
-                        catch (const std::out_of_range& ex)
-                        {
-                            // TODO: Log exception to EventViewer to enable app analysis.
-                            OutputDebugHString(to_hstring(ex.what()));
-                            DispatcherQueue().TryEnqueue([this]()
+                                    // I18N: Loaded profile [profile name]
+                                    WindowMessageBar().EnqueueString(L"Loaded profile " + currentAudioProfile.ProfileName());
+                                });
+                            }
+                            catch (const std::out_of_range& ex)
                             {
-                                WindowMessageBar().EnqueueString(L"Couldn't load profile " + currentAudioProfile.ProfileName());
-                            });
-                        }
-                        catch (const hresult_error& err)
-                        {
-                            // I18N: Failed to load profile [profile name]
-                            OutputDebugHString(err.message());
-                            DispatcherQueue().TryEnqueue([this]()
+                                // TODO: Log exception to EventViewer to enable app analysis.
+                                OutputDebugHString(to_hstring(ex.what()));
+                                DispatcherQueue().TryEnqueue([this]()
+                                {
+                                    WindowMessageBar().EnqueueString(L"Couldn't load profile " + currentAudioProfile.ProfileName());
+                                });
+                            }
+                            catch (const hresult_error& err)
                             {
-                                WindowMessageBar().EnqueueString(L"Couldn't load profile " + currentAudioProfile.ProfileName());
-                            });
-                        }
+                                // I18N: Failed to load profile [profile name]
+                                OutputDebugHString(err.message());
+                                DispatcherQueue().TryEnqueue([this]()
+                                {
+                                    WindowMessageBar().EnqueueString(L"Couldn't load profile " + currentAudioProfile.ProfileName());
+                                });
+                            }
                         });
                     }
                 }

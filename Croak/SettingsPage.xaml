@@ -9,8 +9,9 @@
     Loaded="Page_Loaded">
 
     <ScrollViewer>
-        <Grid RowSpacing="60" Margin="0,0,5,60">
+        <Grid Margin="0,0,5,50">
             <Grid.RowDefinitions>
+                <RowDefinition Height="0"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
@@ -25,10 +26,12 @@
                 </Style>
             </Grid.Resources>
 
-            <ListView SelectionMode="None">
+            <local:MessageBar x:Name="UserMessageBar" Visibility="Collapsed" VerticalAlignment="Top" Margin="10,0"/>
+
+            <ListView SelectionMode="None" Grid.Row="1">
                 <ListView.Resources>
                     <Style TargetType="ListViewItem" BasedOn="{StaticResource DefaultListViewItemStyle}">
-                        <Setter Property="Margin" Value="0,2"/>
+                        <Setter Property="Margin" Value="0,3"/>
                         <Setter Property="HorizontalAlignment" Value="Stretch" />
                     </Style>
                 </ListView.Resources>
@@ -43,16 +46,22 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <Viewbox Height="20" Width="20">
-                                <FontIcon Glyph="&#xf4a5;"/>
-                            </Viewbox>
+                            <FontIcon Glyph="&#xf4a5;" FontSize="20"/>
 
-                            <TextBlock Text="Transparency effects" VerticalAlignment="Center" Margin="15,0,0,0" Grid.Column="1"/>
+                            <TextBlock
+                                x:Uid="SettingsPageTransparencyEffectsTextBlock"
+                                Text="Transparency effects" 
+                                VerticalAlignment="Center" 
+                                Margin="15,0,0,0" 
+                                Grid.Column="1"/>
 
                             <TextBlock Style="{StaticResource ErrorTextBlockStyle}" Grid.Column="2"/>
 
                             <ToggleSwitch 
-                                x:Name="TransparencyEffectsToggleButton" Grid.Column="3" Style="{StaticResource FlippedToggleSwitchStyle}" Toggled="TransparencyEffectsToggleButton_Toggled" />
+                                x:Name="TransparencyEffectsToggleButton" 
+                                Grid.Column="3" 
+                                Style="{StaticResource FlippedToggleSwitchStyle}" 
+                                Toggled="TransparencyEffectsToggleButton_Toggled" />
                         </Grid>
                     </Expander.Header>
 
@@ -66,7 +75,8 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <TextBlock VerticalAlignment="Center">Transparency effect type</TextBlock>
+                        <TextBlock x:Uid="SettingsPageTransparencyTextBlock" VerticalAlignment="Center" />
+
                         <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="5">
                             <ComboBox SelectedIndex="0" MinWidth="100">
                                 <ComboBoxItem Content="Acrylic"/>
@@ -76,6 +86,7 @@
                         </StackPanel>
 
                         <TextBlock Text="Choose a photo as app background" VerticalAlignment="Center" Grid.Row="1"/>
+
                         <Button Content="Browse" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" Click="BrowseButton_Click"/>
                     </Grid>
                 </Expander>
@@ -88,28 +99,16 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <Viewbox Height="20" Width="20">
-                        <FontIcon Glyph="&#xe737;"/>
-                    </Viewbox>
-                    <TextBlock Text="Custom title bar" VerticalAlignment="Center" Margin="15,0,0,0" Grid.Column="1"/>
-                    <TextBlock Style="{StaticResource ErrorTextBlockStyle}" Grid.Column="2"/>
-                    <ToggleSwitch 
-                        x:Name="CustomTitleBarToggleButton" Grid.Column="3" Style="{StaticResource FlippedToggleSwitchStyle}" Toggled="CustomTitleBarToggleButton_Toggled" />
-                </Grid>
+                    <FontIcon Glyph="&#xec4a;" FontSize="20"/>
 
-                <Grid Style="{StaticResource GridSettingStyle}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+                    <TextBlock 
+                        x:Uid="SettingsPageLaunchOnStartUpTextBlock" 
+                        VerticalAlignment="Center" 
+                        Margin="15,0,0,0" 
+                        Grid.Column="1"/>
 
-                    <Viewbox Height="20" Width="20">
-                        <FontIcon Glyph="&#xec4a;"/>
-                    </Viewbox>
-                    <TextBlock Text="Launch app on startup" VerticalAlignment="Center" Margin="15,0,0,0" Grid.Column="1"/>
                     <ProgressRing x:Name="AddToStartupProgressRing" Height="12" Width="12" IsIndeterminate="true" Visibility="Collapsed"/>
+
                     <ToggleSwitch 
                         x:Name="AddToStartupToggleSwitch" Grid.Column="2" Style="{ThemeResource FlippedToggleSwitchStyle}" Toggled="AddToStartupToggleSwitch_Toggled"/>
                 </Grid>
@@ -121,10 +120,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <Viewbox Height="20" Width="20" Grid.RowSpan="2">
-                        <FontIcon Glyph="&#xe8be;"/>
-                    </Viewbox>
-
+                    <FontIcon Glyph="&#xe8be;" FontSize="20" Grid.RowSpan="2" />
 
                     <Grid Margin="15,3,0,3" Grid.Column="1" RowSpacing="3" VerticalAlignment="Center" Padding="0,3,0,4">
                         <Grid.RowDefinitions>
@@ -132,16 +128,15 @@
                             <RowDefinition />
                         </Grid.RowDefinitions>
 
-                        <TextBlock Text="Power efficiency" Grid.Row="0" />
+                        <TextBlock x:Uid="SettingsPagePowerEfficiencyTextBlock" Grid.Row="0" />
 
                         <TextBlock 
+                            x:Uid="SettingsPagePowerEfficiencySubtitleTextBlock"
                             Style="{ThemeResource CaptionTextBlockStyle}" 
                             FontSize="12" 
                             Opacity="0.7"
                             Grid.Row="1" 
-                            Grid.Column="1">
-                            When power efficiency is turned on, audio animations will be turned off if the user is inactive or "Better battery" mode is active (on laptops). Animations will be turned back on automatically.
-                        </TextBlock>
+                            Grid.Column="1" />
                     </Grid>
 
                     <ToggleSwitch 
@@ -159,10 +154,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <Viewbox Height="20" Width="20" Grid.RowSpan="2">
-                        <FontIcon Glyph="&#xe81c;"/>
-                    </Viewbox>
-
+                    <FontIcon Glyph="&#xe81c;" FontSize="20" Grid.RowSpan="2"/>
 
                     <Grid Margin="15,3,0,3" Grid.Column="1" RowSpacing="3" VerticalAlignment="Center" Padding="0,3,0,4">
                         <Grid.RowDefinitions>
@@ -170,16 +162,15 @@
                             <RowDefinition />
                         </Grid.RowDefinitions>
 
-                        <TextBlock Text="Startup profile" Grid.Row="0" />
+                        <TextBlock x:Uid="SettingsPageStartupProfileTextBlock" Text="Startup profile" Grid.Row="0" />
 
                         <TextBlock 
+                            x:Uid="SettingsPageStartupProfileSubtitleTextBlock"
                             Style="{ThemeResource CaptionTextBlockStyle}" 
                             FontSize="12" 
                             Opacity="0.7"
                             Grid.Row="1" 
-                            Grid.Column="1">
-                            Load the last used profile on app start up.
-                        </TextBlock>
+                            Grid.Column="1"/>
                     </Grid>
 
                     <ToggleSwitch 
@@ -197,12 +188,19 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <Viewbox Height="20" Width="20">
-                        <FontIcon Glyph="&#xe737;"/>
-                    </Viewbox>
-                    <TextBlock Text="Hide window in compact mode" VerticalAlignment="Center" Margin="15,0,0,0" Grid.Column="1"/>
+                    <FontIcon Glyph="&#xe737;" FontSize="20"/>
+
+                    <TextBlock
+                        x:Uid="SettingsPageHideWindowTextBlock"
+                        VerticalAlignment="Center" 
+                        Margin="15,0,0,0" 
+                        Grid.Column="1"/>
+
                     <ToggleSwitch 
-                        x:Name="HideWindowToggleSwitch" Grid.Column="2" Style="{StaticResource FlippedToggleSwitchStyle}" Toggled="HideWindowToggleSwitch_Toggled" />
+                        x:Name="HideWindowToggleSwitch" 
+                        Grid.Column="2" 
+                        Style="{StaticResource FlippedToggleSwitchStyle}" 
+                        Toggled="HideWindowToggleSwitch_Toggled" />
                 </Grid>
 
                 <ListViewHeaderItem Margin="0,10,0,0"/>
@@ -214,11 +212,9 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Viewbox Height="20" Width="20">
-                            <FontIcon Glyph="&#xe8d6;"/>
-                        </Viewbox>
+                        <FontIcon Glyph="&#xe8d6;" FontSize="20" />
 
-                        <TextBlock Text="Audio sessions" VerticalAlignment="Center" Grid.Column="1"/>
+                        <TextBlock x:Uid="SettingsPageAudioSessionsTextBlock" VerticalAlignment="Center" Grid.Column="1"/>
                     </Grid>
                 </Button>
 
@@ -229,11 +225,9 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Viewbox Height="20" Width="20">
-                            <FontIcon Glyph="&#xe748;"/>
-                        </Viewbox>
+                        <FontIcon Glyph="&#xe748;" FontSize="20" />
 
-                        <TextBlock Text="Audio profiles" VerticalAlignment="Center" Grid.Column="1"/>
+                        <TextBlock x:Uid="SettingsPageAudioProfilesTextBlock" VerticalAlignment="Center" Grid.Column="1"/>
                     </Grid>
                 </Button>
 
@@ -244,9 +238,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Viewbox Height="20" Width="20">
-                            <FontIcon Glyph="&#xeda7;"/>
-                        </Viewbox>
+                        <FontIcon Glyph="&#xeda7;" FontSize="20" />
 
                         <TextBlock Text="Hot keys" VerticalAlignment="Center" Grid.Column="1"/>
                     </Grid>
@@ -259,9 +251,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Viewbox Height="20" Width="20">
-                            <FontIcon Glyph="&#xeda7;"/>
-                        </Viewbox>
+                        <FontIcon Glyph="&#xe737;" FontSize="20" />
 
                         <TextBlock Text="Overlay" VerticalAlignment="Center" Grid.Column="1"/>
                     </Grid>
@@ -269,8 +259,7 @@
 
             </ListView>
 
-
-            <Grid x:Name="AboutGrid" ColumnSpacing="30" Margin="30,0,0,0" VerticalAlignment="Top" Grid.Row="1">
+            <Grid x:Name="AboutGrid" ColumnSpacing="30" Margin="30,60,0,0" VerticalAlignment="Top" Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
@@ -321,8 +310,6 @@
                     </HyperlinkButton>
                 </Grid>
             </Grid>
-
-            <local:MessageBar x:Name="UserMessageBar" Visibility="Collapsed" VerticalAlignment="Top" Margin="10,4"/>
         </Grid>
     </ScrollViewer>
 </Page>

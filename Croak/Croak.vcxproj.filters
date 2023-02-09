@@ -12,6 +12,9 @@
     <Midl Include="AudioProfile.idl">
       <Filter>ViewModels</Filter>
     </Midl>
+    <Midl Include="AudioSessionSettings.idl">
+      <Filter>ViewModels</Filter>
+    </Midl>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -342,6 +345,9 @@
     </Page>
     <Page Include="OverlaySettingsPage.xaml">
       <Filter>UI\Pages</Filter>
+    </Page>
+    <Page Include="AudioViewer.xaml">
+      <Filter>UI\Controls</Filter>
     </Page>
   </ItemGroup>
   <ItemGroup>

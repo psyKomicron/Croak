@@ -163,6 +163,10 @@
       <SubType>Code</SubType>
     </ClInclude>
     <ClInclude Include="AudioSession.h" />
+    <ClInclude Include="AudioSessionSettings.h">
+      <DependentUpon>AudioSessionSettings.idl</DependentUpon>
+      <SubType>Code</SubType>
+    </ClInclude>
     <ClInclude Include="AudioSessionsSettingsPage.xaml.h">
       <DependentUpon>AudioSessionsSettingsPage.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -170,6 +174,10 @@
     <ClInclude Include="AudioSessionStates.h" />
     <ClInclude Include="AudioSessionView.xaml.h">
       <DependentUpon>AudioSessionView.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </ClInclude>
+    <ClInclude Include="AudioViewer.xaml.h">
+      <DependentUpon>AudioViewer.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClInclude>
     <ClInclude Include="ComSmartPtrTypeDefs.h" />
@@ -269,6 +277,9 @@
     <Page Include="AudioSessionView.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="AudioViewer.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="HotkeysPage.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -314,12 +325,20 @@
       <SubType>Code</SubType>
     </ClCompile>
     <ClCompile Include="AudioSession.cpp" />
+    <ClCompile Include="AudioSessionSettings.cpp">
+      <DependentUpon>AudioSessionSettings.idl</DependentUpon>
+      <SubType>Code</SubType>
+    </ClCompile>
     <ClCompile Include="AudioSessionsSettingsPage.xaml.cpp">
       <DependentUpon>AudioSessionsSettingsPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClCompile>
     <ClCompile Include="AudioSessionView.xaml.cpp">
       <DependentUpon>AudioSessionView.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </ClCompile>
+    <ClCompile Include="AudioViewer.xaml.cpp">
+      <DependentUpon>AudioViewer.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClCompile>
     <ClCompile Include="DefaultAudioEndpoint.cpp" />
@@ -415,12 +434,19 @@
       <DependentUpon>AudioProfilesPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Midl>
+    <Midl Include="AudioSessionSettings.idl">
+      <SubType>Designer</SubType>
+    </Midl>
     <Midl Include="AudioSessionsSettingsPage.idl">
       <DependentUpon>AudioSessionsSettingsPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Midl>
     <Midl Include="AudioSessionView.idl">
       <DependentUpon>AudioSessionView.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Midl>
+    <Midl Include="AudioViewer.idl">
+      <DependentUpon>AudioViewer.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Midl>
     <Midl Include="HotkeysPage.idl">
@@ -572,6 +598,7 @@
     <Import Project="..\packages\Microsoft.Windows.SDK.BuildTools.10.0.22621.755\build\Microsoft.Windows.SDK.BuildTools.targets" Condition="Exists('..\packages\Microsoft.Windows.SDK.BuildTools.10.0.22621.755\build\Microsoft.Windows.SDK.BuildTools.targets')" />
     <Import Project="..\packages\Microsoft.Windows.CppWinRT.2.0.221121.5\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.221121.5\build\native\Microsoft.Windows.CppWinRT.targets')" />
     <Import Project="..\packages\Microsoft.WindowsAppSDK.1.2.230118.102\build\native\Microsoft.WindowsAppSDK.targets" Condition="Exists('..\packages\Microsoft.WindowsAppSDK.1.2.230118.102\build\native\Microsoft.WindowsAppSDK.targets')" />
+    <Import Project="..\packages\Microsoft.Windows.ImplementationLibrary.1.0.220914.1\build\native\Microsoft.Windows.ImplementationLibrary.targets" Condition="Exists('..\packages\Microsoft.Windows.ImplementationLibrary.1.0.220914.1\build\native\Microsoft.Windows.ImplementationLibrary.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -583,5 +610,6 @@
     <Error Condition="!Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.221121.5\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.CppWinRT.2.0.221121.5\build\native\Microsoft.Windows.CppWinRT.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.WindowsAppSDK.1.2.230118.102\build\native\Microsoft.WindowsAppSDK.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.WindowsAppSDK.1.2.230118.102\build\native\Microsoft.WindowsAppSDK.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.WindowsAppSDK.1.2.230118.102\build\native\Microsoft.WindowsAppSDK.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.WindowsAppSDK.1.2.230118.102\build\native\Microsoft.WindowsAppSDK.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Windows.ImplementationLibrary.1.0.220914.1\build\native\Microsoft.Windows.ImplementationLibrary.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.ImplementationLibrary.1.0.220914.1\build\native\Microsoft.Windows.ImplementationLibrary.targets'))" />
   </Target>
 </Project>

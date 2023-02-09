@@ -270,7 +270,7 @@
   <data name="SettingsPageAudioProfilesTextBlock.Text" xml:space="preserve">
     <value>Audio profiles</value>
   </data>
-  <data name="SettingsPageAudioSessionsButton.Content" xml:space="preserve">
+  <data name="SettingsPageAudioSessionsTextBlock.Text" xml:space="preserve">
     <value>Audio sessions</value>
   </data>
   <data name="SettingsPageCustomTitleBarTextBlock.Text" xml:space="preserve">

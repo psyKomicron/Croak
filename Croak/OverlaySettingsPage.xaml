@@ -25,7 +25,10 @@
                 BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                 CornerRadius="{StaticResource OverlayCornerRadius}"
                 PointerPressed="Canvas_PointerPressed"
-                PointerReleased="Canvas_PointerPressed"/>
+                PointerReleased="Canvas_PointerReleased"
+                PointerEntered="DisplayCanvas_PointerEntered"
+                PointerExited="DisplayCanvas_PointerExited"
+                PointerMoved="DisplayCanvas_PointerMoved"/>
         </Viewbox>
 
         <Viewbox VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
@@ -34,8 +37,8 @@
                 Margin="20,0,20,0"
                 Width="1920"
                 Height="1080"
-                PointerPressed="Canvas_PointerPressed"
-                PointerReleased="Canvas_PointerPressed"
+                PointerReleased="Canvas_PointerReleased"
+                PointerExited="DisplayCanvas_PointerExited"
                 PointerMoved="DisplayCanvas_PointerMoved">
                 
                 <Border 
@@ -44,8 +47,7 @@
                     Background="{ThemeResource SystemAccentColorDark1}" 
                     Height="120" 
                     Width="90"
-                    IsHitTestVisible="False"
-                    PointerPressed="Border_PointerPressed"/>
+                    IsHitTestVisible="False"/>
                 
             </Canvas>
         </Viewbox>

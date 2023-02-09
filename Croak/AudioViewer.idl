@@ -1,0 +1,12 @@
+// Copyright (c) Microsoft Corporation and Contributors.
+// Licensed under the MIT License.
+
+namespace Croak
+{
+    [default_interface]
+    runtimeclass AudioViewer : Microsoft.UI.Xaml.Controls.UserControl
+    {
+        AudioViewer();
+        Int32 MyProperty;
+    }
+}

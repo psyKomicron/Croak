@@ -360,12 +360,18 @@ namespace winrt::Croak::implementation
             audioSessionsPeakTimer.Start();
         }
 #endif
-        if (unbox_value_or(Storage::ApplicationData::Current().LocalSettings().Values().TryLookup(L"HideWindowOnCompactMode"), false) &&
-            e.WindowActivationState() == Xaml::WindowActivationState::Deactivated &&
+
+        if (e.WindowActivationState() == Xaml::WindowActivationState::Deactivated && 
             OverlayModeToggleButton().IsChecked().GetBoolean())
         {
-            //appWindow.Hide();
-            appWindow.Presenter().as<UI::OverlappedPresenter>().Minimize();
+            if (unbox_value_or(Storage::ApplicationData::Current().LocalSettings().Values().TryLookup(L"HideWindowInOverlayMode"), false))
+            {
+                appWindow.Hide();
+            }
+            else
+            {
+                appWindow.Presenter().as<UI::OverlappedPresenter>().Minimize();
+            }
         }
     }
 
@@ -877,33 +883,21 @@ namespace winrt::Croak::implementation
         // TODO: Enable overlay mode.
         if (OverlayModeToggleButton().IsChecked().GetBoolean())
         {
-            auto presenter = UI::OverlappedPresenter::CreateForContextMenu();
+            UI::OverlappedPresenter presenter = UI::OverlappedPresenter::CreateForContextMenu();
             appWindow.SetPresenter(presenter);
             RightPaddingColumn().Width(Xaml::GridLengthHelper::FromPixels(0));  
 
             // Shrink window
-            /*auto&& display = UI::DisplayArea::GetFromPoint(Graphics::PointInt32(), UI::DisplayAreaFallback::Primary);
-            double height = RootGrid().ActualHeight() - AudioSessionsScrollViewer().ActualHeight();
-            if (audioSessionViews.Size() > 0)
+            Graphics::RectInt32 rect{};
+            Storage::ApplicationDataCompositeValue composite = unbox_value_or<Storage::ApplicationDataCompositeValue>(Storage::ApplicationData::Current().LocalSettings().Values().TryLookup(L"OverlayDisplay"), nullptr);
+            if (composite)
             {
-                height += audioSessionViews.Size() * (layout == 2 ? 90 : 193);
+                rect.X = unbox_value_or(composite.Lookup(L"X"), appWindow.Position().X);
+                rect.Y = unbox_value_or(composite.Lookup(L"Y"), appWindow.Position().Y);
+                rect.Width = unbox_value_or(composite.Lookup(L"Width"), appWindow.Size().Width);
+                rect.Height = unbox_value_or(composite.Lookup(L"Height"), appWindow.Size().Height);
+                appWindow.MoveAndResize(rect);
             }
-            else
-            {
-                height += 90;
-            }
-
-
-            appWindow.MoveAndResize(
-                Graphics::RectInt32(
-                    10,
-                    display.WorkArea().Height - height - 20,
-                    appWindow.Size().Width,
-                    height
-                )
-            );
-
-            appWindow.Move(Graphics::PointInt32(5, display.WorkArea().Height - RootGrid().ActualHeight() - 20));*/
 
             Storage::ResourceLoader loader{};
             WindowMessageBar().EnqueueString(loader.GetString(L"OverlayModeEnabled")); // I18N
@@ -1355,12 +1349,14 @@ namespace winrt::Croak::implementation
 
         try
         {
-            hotKeyManager.RegisterHotKey(VirtualKeyModifiers::Windows | VirtualKeyModifiers::Control, VK_DOWN, true, VOLUME_DOWN);
-            hotKeyManager.RegisterHotKey(VirtualKeyModifiers::Windows | VirtualKeyModifiers::Control, VK_UP, true, VOLUME_UP);
-            hotKeyManager.RegisterHotKey(VirtualKeyModifiers::Control | VirtualKeyModifiers::Menu, VK_UP, true, VOLUME_UP_ALT);
-            hotKeyManager.RegisterHotKey(VirtualKeyModifiers::Control | VirtualKeyModifiers::Menu, VK_DOWN, true, VOLUME_DOWN_ALT);
-            hotKeyManager.RegisterHotKey(VirtualKeyModifiers::Control | VirtualKeyModifiers::Shift, 'M', true, MUTE_SYSTEM);
-            hotKeyManager.RegisterHotKey(VirtualKeyModifiers::Control, VK_F1, true, MOVE_WINDOW);
+            hotKeyManager.RegisterHotKey(Windows::System::VirtualKeyModifiers::Windows | Windows::System::VirtualKeyModifiers::Control, VK_DOWN, true, VOLUME_DOWN);
+            hotKeyManager.RegisterHotKey(Windows::System::VirtualKeyModifiers::Windows | Windows::System::VirtualKeyModifiers::Control, VK_UP, true, VOLUME_UP);
+            hotKeyManager.RegisterHotKey(Windows::System::VirtualKeyModifiers::Control | Windows::System::VirtualKeyModifiers::Menu, VK_UP, true, VOLUME_UP_ALT);
+            hotKeyManager.RegisterHotKey(Windows::System::VirtualKeyModifiers::Control | Windows::System::VirtualKeyModifiers::Menu, VK_DOWN, true, VOLUME_DOWN_ALT);
+            hotKeyManager.RegisterHotKey(Windows::System::VirtualKeyModifiers::Control | Windows::System::VirtualKeyModifiers::Shift, 'M', true, MUTE_SYSTEM);
+
+            hotKeyManager.RegisterHotKey(Windows::System::VirtualKeyModifiers::Menu, VK_SPACE, true, MOVE_WINDOW);
+            hotKeyManager.RegisterHotKey(Windows::System::VirtualKeyModifiers::Menu, 'A', true, MOVE_WINDOW);
         }
         catch (const std::invalid_argument& ex)
         {
@@ -1811,6 +1807,7 @@ namespace winrt::Croak::implementation
         }
     }
 
+    // TODO: Rename to DrawSizeIndicators
     void MainWindow::SetSizeIndicators()
     {
         if (layout != 2)
@@ -1825,7 +1822,7 @@ namespace winrt::Croak::implementation
             while ((position * sessionHeight) < gridHeight)
             {
                 winrt::Microsoft::UI::Xaml::Shapes::Rectangle rect{};
-                rect.Width(10);
+                rect.Width(6);
                 rect.Height(1);
                 auto&& brush = Xaml::SolidColorBrush(UI::Colors::DimGray());
                 brush.Opacity(0.5);
@@ -1844,7 +1841,7 @@ namespace winrt::Croak::implementation
             {
                 winrt::Microsoft::UI::Xaml::Shapes::Rectangle rect{};
                 rect.Width(1);
-                rect.Height(10);
+                rect.Height(6);
                 auto&& brush = Xaml::SolidColorBrush(UI::Colors::DimGray());
                 brush.Opacity(0.5);
                 rect.Fill(brush);

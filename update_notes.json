@@ -1,0 +1,39 @@
+{
+    "en-US": {
+        "news": [
+            {
+                "title": "Overlay",
+                "text": "Overlay mode has been introduced. You can activate it in the menu, next to the Picture-in-picture button."
+            },
+            {
+                "title": "Indicators",
+                "text": "Tiny indicators have been added to show how many audio sessions the window can host with its current size."
+            },
+            {
+                "title": "Language",
+                "text": "More menus have been translated, and translations are being worked on."
+            }
+        ],
+        "changes": [
+            "Inactive audio sessions will now be shown on startup by default."
+        ],
+        "bugs": [
+            "On some computers, pluggin/unplugging an audio jack will crash the app. The issue seems to be coming from the audio driver application.",
+            "Audio sessions will need to be reloaded manually after the computer has been put to sleep or hibernation."
+        ]
+    },
+    "fr-FR": {
+        "news": [
+            {
+                "title": "Les traductions sont en cours...",
+                "text": "😉"
+            }
+        ],
+        "changes": [
+
+        ],
+        "bugs": [
+
+        ]
+    }
+}

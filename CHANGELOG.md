@@ -9,12 +9,12 @@
 
 
 ### Bugs
+- Audio session volume icon is not green when the audio session is active in vertical layout.
 - Audio sessions will need to be reloaded manually after the computer has been put to sleep or hibernation.
 - On some computers, pluggin/unplugging an audio jack will crash the app. The issue seems to be coming from the audio driver application.
 
 ### Todo
 - [ ] Show/hide audio sessions.
-- [X] Re-implement I18Ned "What's new" page.
 - [ ] Enable the user to change hot key key, not only modifiers.
 - [ ] Add more hot keys (audio session control, reload, restart, show on current screen, PiP).
     - [ ] Reload.

@@ -31,7 +31,7 @@
             <ListView SelectionMode="None" Grid.Row="1">
                 <ListView.Resources>
                     <Style TargetType="ListViewItem" BasedOn="{StaticResource DefaultListViewItemStyle}">
-                        <Setter Property="Margin" Value="0,3"/>
+                        <Setter Property="Margin" Value="0,2"/>
                         <Setter Property="HorizontalAlignment" Value="Stretch" />
                     </Style>
                 </ListView.Resources>
@@ -251,7 +251,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <FontIcon Glyph="&#xe737;" FontSize="20" />
+                        <FontIcon Glyph="&#xe7f4;" FontSize="20" />
 
                         <TextBlock Text="Overlay" VerticalAlignment="Center" Grid.Column="1"/>
                     </Grid>

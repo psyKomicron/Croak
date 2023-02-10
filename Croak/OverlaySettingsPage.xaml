@@ -8,28 +8,12 @@
     mc:Ignorable="d"
     Loaded="Page_Loaded">
 
-    <Grid Padding="7">
+    <Grid Padding="7" RowSpacing="4">
         <Grid.RowDefinitions>
             <RowDefinition Height="3*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
-
-        <Viewbox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsHitTestVisible="True">
-            <Border
-                x:Name="CanvasBorder"
-                BorderThickness="1"
-                Margin="20,0,20,0"
-                Width="1920"
-                Height="1080"
-                Background="{ThemeResource SolidBackgroundFillColorSecondary}"
-                BorderBrush="{ThemeResource ControlElevationBorderBrush}"
-                CornerRadius="{StaticResource OverlayCornerRadius}"
-                PointerPressed="Canvas_PointerPressed"
-                PointerReleased="Canvas_PointerReleased"
-                PointerEntered="DisplayCanvas_PointerEntered"
-                PointerExited="DisplayCanvas_PointerExited"
-                PointerMoved="DisplayCanvas_PointerMoved"/>
-        </Viewbox>
 
         <Viewbox VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <Canvas 
@@ -37,19 +21,109 @@
                 Margin="20,0,20,0"
                 Width="1920"
                 Height="1080"
+                Background="{ThemeResource SolidBackgroundFillColorSecondary}"
+                PointerPressed="Canvas_PointerPressed"
                 PointerReleased="Canvas_PointerReleased"
+                PointerEntered="DisplayCanvas_PointerEntered"
                 PointerExited="DisplayCanvas_PointerExited"
                 PointerMoved="DisplayCanvas_PointerMoved">
-                
+
                 <Border 
                     x:Name="ScreenBorder"
                     CornerRadius="{StaticResource OverlayCornerRadius}" 
                     Background="{ThemeResource SystemAccentColorDark1}" 
                     Height="120" 
                     Width="90"
-                    IsHitTestVisible="False"/>
-                
+                    IsHitTestVisible="True"
+                    SizeChanged="ScreenBorder_SizeChanged">
+                    <Border.ContextFlyout>
+                        <CommandBarFlyout>
+                            <CommandBarFlyout.PrimaryCommands>
+                                <AppBarButton ToolTipService.ToolTip="Center" Click="CenterWindowButton_Click">
+                                    <AppBarButton.Icon>
+                                        <FontIcon Glyph="&#xec14;" />
+                                    </AppBarButton.Icon>
+                                </AppBarButton>
+
+                                <AppBarButton ToolTipService.ToolTip="Top center" Click="TopCenterWindowButton_Click">
+                                    <AppBarButton.Icon>
+                                        <FontIcon Glyph="&#xe90e;" Rotation="180" Translation="20,20,0"/>
+                                    </AppBarButton.Icon>
+                                </AppBarButton>
+
+                                <AppBarButton ToolTipService.ToolTip="Bottom center" Click="BottomCenterButton_Click">
+                                    <AppBarButton.Icon>
+                                        <FontIcon Glyph="&#xe90e;" />
+                                    </AppBarButton.Icon>
+                                </AppBarButton>
+
+                                <AppBarButton ToolTipService.ToolTip="Center left" Click="CenterLeftWindowButton_Click">
+                                    <AppBarButton.Icon>
+                                        <FontIcon Glyph="&#xe90c;" />
+                                    </AppBarButton.Icon>
+                                </AppBarButton>
+
+                                <AppBarButton ToolTipService.ToolTip="Center right" Click="CenterRightWindowButton_Click">
+                                    <AppBarButton.Icon>
+                                        <FontIcon Glyph="&#xe90d;" />
+                                    </AppBarButton.Icon>
+                                </AppBarButton>
+                                
+                            </CommandBarFlyout.PrimaryCommands>
+                        </CommandBarFlyout>
+                    </Border.ContextFlyout>
+
+                    <Viewbox MaxHeight="80" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <StackPanel Spacing="4" Orientation="Horizontal">
+                            <local:NumberBlock x:Name="WidthNumberBlock" Decimals="0" Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}" />
+                            <TextBlock Text="x" Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"/>
+                            <local:NumberBlock x:Name="HeightNumberBlock" Decimals="0" Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"/>
+                        </StackPanel>
+                    </Viewbox>
+                </Border>
+
             </Canvas>
         </Viewbox>
+
+        <Button Content="Apply" MinWidth="100" HorizontalAlignment="Right" Grid.Row="1" Margin="0,0,0,20" Click="ApplyChangesButton_Click"/>
+
+        <Grid Grid.Row="2">
+            <ListView SelectionMode="None" Grid.Row="1">
+                <ListView.Resources>
+                    <Style TargetType="ListViewItem" BasedOn="{StaticResource DefaultListViewItemStyle}">
+                        <Setter Property="Margin" Value="0,3"/>
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                    </Style>
+                </ListView.Resources>
+
+                <Grid Style="{StaticResource GridSettingStyle}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <FontIcon Glyph="&#xed1a;" FontSize="20"/>
+
+                    <Grid Grid.Column="1" Margin="15,3,0,3" RowSpacing="3" VerticalAlignment="Center" Padding="0,3,0,4">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Hide window in overlay mode" />
+                        <TextBlock 
+                            Grid.Row="1" 
+                            Text="Choose wether you want the window to be shown in the task bar or not. Hidden means it will not be shown in the taskbar." 
+                            TextWrapping="Wrap" 
+                            Style="{ThemeResource CaptionTextBlockStyle}" 
+                            FontSize="12" 
+                            Opacity="0.7"/>
+                    </Grid>
+
+                    <ToggleSwitch 
+                        x:Name="HideWindowToggleSwitch" Grid.Column="2" Style="{ThemeResource FlippedToggleSwitchStyle}" Toggled="HideWindowToggleSwitch_Toggled"/>
+                </Grid>
+            </ListView>
+        </Grid>
     </Grid>
 </Page>

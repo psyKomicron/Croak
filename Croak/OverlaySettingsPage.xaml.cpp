@@ -9,6 +9,7 @@
 namespace Foundation = winrt::Windows::Foundation;
 namespace Input = winrt::Microsoft::UI::Input;
 namespace UI = winrt::Windows::UI;
+namespace Storage = winrt::Windows::Storage;
 namespace Xaml
 {
     using namespace winrt::Microsoft::UI::Xaml;
@@ -38,12 +39,14 @@ namespace winrt::Croak::implementation
         double borderWidth = DisplayCanvas().ActualWidth() * (width / static_cast<double>(displayWidth));
         ScreenBorder().Width(borderWidth);
         ScreenBorder().Height(borderHeight);
+
+        HideWindowToggleSwitch().IsOn(unbox_value_or(Storage::ApplicationData::Current().LocalSettings().Values().TryLookup(L"HideWindowInOverlayMode"), false));
     }
 
     void OverlaySettingsPage::Canvas_PointerPressed(Foundation::IInspectable const& sender, Xaml::PointerRoutedEventArgs const& e)
     {
         pointerCaptured = true;
-        CanvasBorder().BorderBrush(Xaml::Media::SolidColorBrush(winrt::Windows::UI::Colors::White()));
+        //CanvasBorder().BorderBrush(Xaml::Media::SolidColorBrush(winrt::Windows::UI::Colors::White()));
     }
 
     void OverlaySettingsPage::Canvas_PointerReleased(Foundation::IInspectable const&, Xaml::PointerRoutedEventArgs const& e)
@@ -53,7 +56,7 @@ namespace winrt::Croak::implementation
             pointerCaptured = false;
             moving = false;
 
-            CanvasBorder().BorderBrush(Xaml::Media::SolidColorBrush(winrt::Windows::UI::Colors::Transparent()));
+            //CanvasBorder().BorderBrush(Xaml::Media::SolidColorBrush(winrt::Windows::UI::Colors::Transparent()));
         }
     }
 
@@ -72,12 +75,12 @@ namespace winrt::Croak::implementation
                 if (cursorShape == Input::InputSystemCursorShape::SizeWestEast)
                 {
                     double newSize = point.X - oldPoint.X;
-                    ScreenBorder().Width(newSize > 20 ? newSize : 20);
+                    ScreenBorder().Width(newSize > 145 ? newSize : 145);
                 }
                 else if (cursorShape == Input::InputSystemCursorShape::SizeNorthSouth)
                 {
                     double newSize = point.Y - oldPoint.Y;
-                    ScreenBorder().Height(newSize > 20 ? newSize : 20);
+                    ScreenBorder().Height(newSize > 100 ? newSize : 100);
                 }
             }
             else
@@ -131,31 +134,94 @@ namespace winrt::Croak::implementation
         DisplayCanvas().ReleasePointerCapture(capturedPointer);
     }
 
-    void OverlaySettingsPage::Border_PointerPressed(Foundation::IInspectable const&, Xaml::PointerRoutedEventArgs const&)
+    void OverlaySettingsPage::ScreenBorder_SizeChanged(Foundation::IInspectable const&, Xaml::SizeChangedEventArgs const&)
     {
+        WidthNumberBlock().Double(ScreenBorder().ActualWidth());
+        HeightNumberBlock().Double(ScreenBorder().ActualHeight());
     }
 
-    void OverlaySettingsPage::ScreenBorder_PointerEntered(Foundation::IInspectable const&, Xaml::PointerRoutedEventArgs const& e)
+    void OverlaySettingsPage::CenterRightWindowButton_Click(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
     {
-        /*if (!pointerCaptured)
-        {
-            capturedPointer = e.Pointer();
-            ScreenBorder().CapturePointer(capturedPointer);
-        }*/
+        double borderWidth = ScreenBorder().ActualWidth();
+        double borderHeight = ScreenBorder().ActualHeight();
+        double canvasWidth = DisplayCanvas().ActualWidth();
+        double canvasHeight = DisplayCanvas().ActualHeight();
+        double x = canvasWidth - 10 - borderWidth;
+        double y = (canvasHeight / 2) - (borderHeight / 2);
+
+        Xaml::Canvas::SetLeft(ScreenBorder(), x);
+        Xaml::Canvas::SetTop(ScreenBorder(), y);
     }
 
-    void OverlaySettingsPage::ScreenBorder_PointerExited(Foundation::IInspectable const&, Xaml::PointerRoutedEventArgs const& e)
+    void OverlaySettingsPage::CenterLeftWindowButton_Click(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
     {
-        /*if (!pointerCaptured)
-        {
-            ScreenBorder().ReleasePointerCapture(capturedPointer);
-        }
+        double borderHeight = ScreenBorder().ActualHeight();
+        double canvasHeight = DisplayCanvas().ActualHeight();
+        double x = 10;
+        double y = (canvasHeight / 2) - (borderHeight / 2);
 
-        ProtectedCursor(Input::InputSystemCursor::Create(Input::InputSystemCursorShape::Arrow));*/
+        Xaml::Canvas::SetLeft(ScreenBorder(), x);
+        Xaml::Canvas::SetTop(ScreenBorder(), y);
     }
 
-    void OverlaySettingsPage::ScreenBorder_PointerMoved(Foundation::IInspectable const&, Xaml::PointerRoutedEventArgs const& e)
+    void OverlaySettingsPage::BottomCenterButton_Click(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
     {
+        double borderWidth = ScreenBorder().ActualWidth();
+        double borderHeight = ScreenBorder().ActualHeight();
+        double canvasWidth = DisplayCanvas().ActualWidth();
+        double canvasHeight = DisplayCanvas().ActualHeight();
+        double x = (canvasWidth / 2) - (borderWidth / 2);
+        double y = (canvasHeight - 10) - borderHeight;
+
+        Xaml::Canvas::SetLeft(ScreenBorder(), x);
+        Xaml::Canvas::SetTop(ScreenBorder(), y);
+    }
+
+    void OverlaySettingsPage::TopCenterWindowButton_Click(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
+    {
+        double borderWidth = ScreenBorder().ActualWidth();
+        double canvasWidth = DisplayCanvas().ActualWidth();
+        double x = (canvasWidth / 2) - (borderWidth / 2);
+        double y = 10;
+
+        Xaml::Canvas::SetLeft(ScreenBorder(), x);
+        Xaml::Canvas::SetTop(ScreenBorder(), y);
+    }
+
+    void OverlaySettingsPage::CenterWindowButton_Click(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
+    {
+        double borderWidth = ScreenBorder().ActualWidth();
+        double borderHeight = ScreenBorder().ActualHeight();
+        double canvasWidth = DisplayCanvas().ActualWidth();
+        double canvasHeight = DisplayCanvas().ActualHeight();
+        double x = (canvasWidth / 2) - (borderWidth / 2);
+        double y = (canvasHeight / 2) - (borderHeight / 2);
+
+        Xaml::Canvas::SetLeft(ScreenBorder(), x);
+        Xaml::Canvas::SetTop(ScreenBorder(), y);
+    }
+
+    void OverlaySettingsPage::ApplyChangesButton_Click(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
+    {
+        Storage::ApplicationDataContainer settingsDataContainer = Storage::ApplicationData::Current().LocalSettings();
+
+        int32_t x = static_cast<int32_t>(Xaml::Canvas::GetLeft(ScreenBorder()));
+        int32_t y = static_cast<int32_t>(Xaml::Canvas::GetTop(ScreenBorder()));
+        int32_t width = static_cast<int32_t>(ScreenBorder().ActualWidth());
+        int32_t heigth = static_cast<int32_t>(ScreenBorder().ActualHeight());
+
+        Storage::ApplicationDataCompositeValue composite{};
+        composite.Insert(L"X", box_value(x));
+        composite.Insert(L"Y", box_value(y));
+        composite.Insert(L"Width", box_value(width));
+        composite.Insert(L"Height", box_value(heigth));
+
+        settingsDataContainer.Values().Insert(L"OverlayDisplay", composite);
+    }
+
+    void OverlaySettingsPage::HideWindowToggleSwitch_Toggled(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
+    {
+        Storage::ApplicationData::Current().LocalSettings().Values().Insert(L"HideWindowInOverlayMode", box_value(HideWindowToggleSwitch().IsOn()));
     }
 
 
@@ -164,14 +230,12 @@ namespace winrt::Croak::implementation
         bool inRange = false;
 
         Foundation::Point point = pointerPoint.Position();
-        double x = point.X;
-        double y = point.Y;
         double width = ScreenBorder().ActualWidth();
         double height = ScreenBorder().ActualHeight();
         double borderX = Xaml::Canvas::GetLeft(ScreenBorder());
         double borderY = Xaml::Canvas::GetTop(ScreenBorder());
-
-        DebugLog(std::format("\n\tx = {0}\n\ty = {1}\n\twidth = {4}\n\theight = {5}\n\tbounds X = {2}\n\tbounds Y = {3}", x, y, (borderX + width), (borderY + height), width, height));
+        double x = point.X - borderX;
+        double y = point.Y - borderY;
 
         if (x < 0 || y < 0 || x > (borderX + width) || y > (borderY + height))
         {

@@ -60,7 +60,9 @@
     <ClCompile Include="NumberBlock.cpp">
       <Filter>UI\Controls\CustomControls</Filter>
     </ClCompile>
-    <ClCompile Include="HotKeyView.cpp" />
+    <ClCompile Include="HotKeyView.cpp">
+      <Filter>Workers\Audio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -102,7 +104,9 @@
       <Filter>SmartPtrs</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="HotKeyView.h" />
+    <ClInclude Include="HotKeyView.h">
+      <Filter>Workers\Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LargeTile.scale-100.png">
@@ -371,6 +375,9 @@
     </None>
     <None Include="cpp.hint" />
     <None Include="..\CHANGELOG.md" />
+    <None Include="..\update_notes.json">
+      <Filter>Assets</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Croak.rc" />
@@ -382,5 +389,8 @@
     <PRIResource Include="Resources.lang-fr-fr.resw">
       <Filter>Assets\Translations</Filter>
     </PRIResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="$(MSBuildThisFileDirectory)..\..\natvis\wil.natvis" />
   </ItemGroup>
 </Project>

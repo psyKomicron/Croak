@@ -36,7 +36,7 @@ namespace winrt::Croak::implementation
     {
         // Fetch update notes, localized.
         hstring text;
-        Uri appUri{ L"ms-appx:///notes.json" };
+        Uri appUri{ L"ms-appx:///update_notes.json" };
         StorageFile file = co_await StorageFile::GetFileFromApplicationUriAsync(appUri);
         try
         {

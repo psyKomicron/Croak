@@ -8,6 +8,7 @@ namespace Croak
         MainWindow(String args);
 
         static MainWindow Current{ get; };
+
         IObservableVector<AudioSessionView> AudioSessions{ get; };
         Windows.Graphics.RectInt32 DisplayRect{ get; };
     }

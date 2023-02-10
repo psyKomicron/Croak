@@ -525,7 +525,7 @@
                         <Grid>
                             <Canvas
                                 x:Name="RootCanvas"
-                                Background="Transparent" />
+                                Background="Transparent"/>
                             
                             <GridView
                                 x:Name="AudioSessionsPanel"

@@ -69,6 +69,16 @@ namespace winrt::Croak::implementation
             UpdateText();
         }
 
+        inline int32_t Decimals() const
+        {
+            return decimals;
+        }
+
+        inline void Decimals(const int32_t& value)
+        {
+            decimals = static_cast<uint32_t>(value);
+        }
+
     private:
         static winrt::Microsoft::UI::Xaml::DependencyProperty _contentProperty;
 

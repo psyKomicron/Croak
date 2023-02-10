@@ -12,5 +12,6 @@ namespace Croak
         Single Single;
         Int32 Int;
         UInt32 UInt;
+        Int32 Decimals;
     }
 }

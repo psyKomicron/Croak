@@ -31,7 +31,7 @@
 - [ ] Move audio controls to AudioViewer.
 
 
-#
+
 ## **1.0.6**
 ### Updates
 - The user can no longer choose if he wants to use a custom title bar or not.
@@ -67,7 +67,7 @@
 - [ ] Move audio controls to AudioViewer.
 
 
-#
+
 ## **1.0.5**
 ### Updates
 - Added overlay mode, unresizable window with no close/minimize/maximize button.
@@ -87,7 +87,8 @@
 - [ ] Add more hot keys (audio session control, reload, restart, show on current screen, PiP).
 - [ ] Translate all strings.
 
-#
+
+
 ## **1.0.4**
 ### Updates
 - Added overlay mode, unresizable window with no close/minimize/maximize button.

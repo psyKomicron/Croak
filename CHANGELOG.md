@@ -1,19 +1,19 @@
 # Change log
 
-## **1.2.0**
+# 1.2.0
 *Version bump from 1.0.x to 1.2.x is caused by GitHub branch name being called 1.1.x and package version not following that.*
-### Updates
+## Updates
 
 
-### Fixes
+## Fixes
 
 
-### Bugs
+## Bugs
 - Audio session volume icon is not green when the audio session is active in vertical layout.
 - Audio sessions will need to be reloaded manually after the computer has been put to sleep or hibernation.
 - On some computers, pluggin/unplugging an audio jack will crash the app. The issue seems to be coming from the audio driver application.
 
-### Todo
+## Todo
 - [ ] Show/hide audio sessions.
 - [ ] Enable the user to change hot key key, not only modifiers.
 - [ ] Add more hot keys (audio session control, reload, restart, show on current screen, PiP).
@@ -32,8 +32,8 @@
 
 
 
-## **1.0.6**
-### Updates
+# 1.0.6
+## Updates
 - The user can no longer choose if he wants to use a custom title bar or not.
 - Changed `MOVE_WINDOW` hot key from `Ctrl + F1` to `Alt + A`.
 - Overlay window position and size can be set from settings (new overlay settings page).
@@ -41,14 +41,14 @@
 - Updated NumberBlock to set the number of decimals desired.
 - Re-added `update_notes.json` for i18ed update notes.
 
-### Fixes
+## Fixes
 - Finished translating settings page.
 
-### Bugs
+## Bugs
 - Audio sessions will need to be reloaded manually after the computer has been put to sleep or hibernation.
 - On some computers, pluggin/unplugging an audio jack will crash the app. The issue seems to be coming from the audio driver application.
 
-### Todo
+## Todo
 - [ ] Show/hide audio sessions.
 - [X] Re-implement I18Ned "What's new" page.
 - [ ] Enable the user to change hot key key, not only modifiers.
@@ -68,19 +68,19 @@
 
 
 
-## **1.0.5**
-### Updates
+# 1.0.5
+## Updates
 - Added overlay mode, unresizable window with no close/minimize/maximize button.
 - Added indicators to show how many audio sessions the window can currently host (on the right and on the top).
 
-### Fixes
+## Fixes
 - Fixed "Show inactive audio sessions on startup" being defaulted to false (when starting the app for the first time). It is now defaulted to true.
 
-### Bugs
+## Bugs
 - Audio sessions will need to be reloaded manually after the computer has been put to sleep or hibernation.
 - On some computers, pluggin/unplugging an audio jack will crash the app. The issue seems to be coming from the audio driver application.
 
-### Todo
+## Todo
 - [ ] Show/hide audio sessions.
 - [ ] Re-implement I18Ned "What's new" page.
 - [ ] Enable the user to change hot key key, not only modifiers.
@@ -89,21 +89,21 @@
 
 
 
-## **1.0.4**
-### Updates
+# 1.0.4
+## Updates
 - Added overlay mode, unresizable window with no close/minimize/maximize button.
 - Updated hot keys so that their modifier can be modified by the user. The user will be able to edit the key in future updates.
 - Adding new translations to all menus, starting with the main window.
 - Translations added to other menus.
 - Added indicators to show how many audio sessions the window can currently host (on the right and on the top).
 
-### Fixes
+## Fixes
 
-### Bugs
+## Bugs
 - Audio sessions will need to be reloaded manually after the computer has been put to sleep or hibernation.
 - On some computers, pluggin/unplugging an audio jack will crash the app. The issue seems to be coming from the audio driver application.
 
-### Todo
+## Todo
 - [x] Disable/enable hot keys.
 - [ ] Show/hide audio sessions.
 - [ ] Re-implement I18Ned "What's new" page.

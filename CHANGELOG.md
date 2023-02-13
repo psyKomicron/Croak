@@ -3,7 +3,7 @@
 # 1.2.0
 *Version bump from 1.0.x to 1.2.x is caused by GitHub branch name being called 1.1.x and package version not following that.*
 ## Updates
-
+- Moving all audio related logic from MainWindow to AudioViewer (no regression allowed).
 
 ## Fixes
 

@@ -56,7 +56,7 @@ namespace winrt::Croak::implementation
 
     void AudioSessionView::Orientation(const Xaml::Orientation& value)
     {
-        isVertical = value == Xaml::Orientation::Vertical;
+        isVertical = (value == Xaml::Orientation::Vertical);
         Xaml::VisualStateManager::GoToState(*this, isVertical ? L"VerticalLayout" : L"HorizontalLayout", false);
     }
 
@@ -177,22 +177,25 @@ namespace winrt::Croak::implementation
                 active = true;
                 VolumeFontIcon().Foreground(Xaml::SolidColorBrush(Windows::UI::Colors::LimeGreen()));
                 VolumeFontIcon().Opacity(1);
+
+                VolumeFontIcon2().Foreground(Xaml::SolidColorBrush(Windows::UI::Colors::LimeGreen()));
+                VolumeFontIcon2().Opacity(1);
                 break;
 
             case AudioSessionState::Expired:
             case AudioSessionState::Inactive:
             default:
                 active = false;
-                /*VolumeFontIcon().Foreground(
-                     RootGrid().ActualTheme() == ElementTheme::Dark ?
-                        ::Media::SolidColorBrush(Windows::UI::Colors::WhiteSmoke()) :
-                        ::Media::SolidColorBrush(Windows::UI::Colors::DarkGray())
-                );*/
 
                 VolumeFontIcon().Foreground(
                     Xaml::Application::Current().Resources().Lookup(box_value(L"TextFillColorPrimaryBrush")).as<Xaml::Brush>()
                 );
                 VolumeFontIcon().Opacity(0.6);
+
+                VolumeFontIcon2().Foreground(
+                    Xaml::Application::Current().Resources().Lookup(box_value(L"TextFillColorPrimaryBrush")).as<Xaml::Brush>()
+                );
+                VolumeFontIcon2().Opacity(0.6);
                 break;
         }
     }
@@ -235,6 +238,8 @@ namespace winrt::Croak::implementation
         {
             Xaml::VisualStateManager::GoToState(*this, L"UsingLogo", true);
         }
+
+        Xaml::VisualStateManager::GoToState(*this, isVertical ? L"VerticalLayout" : L"HorizontalLayout", false);
     }
 
     void AudioSessionView::Slider_ValueChanged(IInspectable const&, Xaml::RangeBaseValueChangedEventArgs const& e)

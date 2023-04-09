@@ -21,7 +21,7 @@
                 Margin="20,0,20,0"
                 Width="1920"
                 Height="1080"
-                Background="{ThemeResource SolidBackgroundFillColorSecondary}"
+                Background="{ThemeResource SolidBackgroundFillColorBaseAlt}"
                 PointerPressed="Canvas_PointerPressed"
                 PointerReleased="Canvas_PointerReleased"
                 PointerEntered="DisplayCanvas_PointerEntered"

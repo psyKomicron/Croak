@@ -9,7 +9,11 @@
 namespace Foundation = winrt::Windows::Foundation;
 namespace Input = winrt::Microsoft::UI::Input;
 namespace UI = winrt::Windows::UI;
-namespace Storage = winrt::Windows::Storage;
+namespace Storage
+{
+    using namespace winrt::Windows::Storage;
+    using namespace winrt::Windows::ApplicationModel::Resources;
+}
 namespace Xaml
 {
     using namespace winrt::Microsoft::UI::Xaml;
@@ -25,6 +29,28 @@ namespace winrt::Croak::implementation
     {
         InitializeComponent();
     }
+
+    void OverlaySettingsPage::OnNavigatedTo(const winrt::Microsoft::UI::Xaml::Navigation::NavigationEventArgs& args)
+    {
+        if (args.NavigationMode() == Xaml::Navigation::NavigationMode::New)
+        {
+            if (SecondWindow::Current().Breadcrumbs().Size() > 0)
+            {
+                auto atEnd = SecondWindow::Current().Breadcrumbs().GetAt(SecondWindow::Current().Breadcrumbs().Size() - 1);
+                if (atEnd.ItemTypeName() != xaml_typename<winrt::Croak::OverlaySettingsPage>())
+                {
+                    Storage::ResourceLoader resLoader{};
+                    SecondWindow::Current().Breadcrumbs().Append(NavigationBreadcrumbBarItem(resLoader.GetString(L"OverlaySettingsPageName"), xaml_typename<winrt::Croak::OverlaySettingsPage>()));
+                }
+            }
+            else
+            {
+                Storage::ResourceLoader resLoader{};
+                SecondWindow::Current().Breadcrumbs().Append(NavigationBreadcrumbBarItem(resLoader.GetString(L"OverlaySettingsPageName"), xaml_typename< winrt::Croak::OverlaySettingsPage >()));
+            }
+        }
+    }
+
 
     void OverlaySettingsPage::Page_Loaded(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
     {

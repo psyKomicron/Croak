@@ -20,12 +20,14 @@ namespace winrt::Croak::implementation
         void CloseButton_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
         void UserControl_Loaded(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
         void TimerProgressBar_SizeChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::SizeChangedEventArgs const& e);
+        void MessageControl_Loading(winrt::Microsoft::UI::Xaml::FrameworkElement const& sender, winrt::Windows::Foundation::IInspectable const& args);
 
     private:
         std::mutex messageQueueMutex{};
         std::queue<winrt::Windows::Foundation::IInspectable> messageQueue{};
         winrt::Microsoft::UI::Dispatching::DispatcherQueueTimer timer = nullptr;
 
+        void InitializeAnimations();
         void DisplayMessage();
 
         void DispatcherQueueTimer_Tick(winrt::Microsoft::UI::Dispatching::DispatcherQueueTimer, winrt::Windows::Foundation::IInspectable);

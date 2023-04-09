@@ -1,4 +1,4 @@
-import "AudioSessionView.idl";
+import "AudioViewer.idl";
 
 namespace Croak
 {
@@ -9,7 +9,7 @@ namespace Croak
 
         static MainWindow Current{ get; };
 
-        IObservableVector<AudioSessionView> AudioSessions{ get; };
         Windows.Graphics.RectInt32 DisplayRect{ get; };
+        AudioViewer AudioViewer{ get; };
     }
 }

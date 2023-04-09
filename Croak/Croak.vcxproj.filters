@@ -4,16 +4,19 @@
     <Midl Include="App.idl" />
     <Midl Include="MainWindow.idl" />
     <Midl Include="HotkeyViewModel.idl">
-      <Filter>ViewModels</Filter>
+      <Filter>Models</Filter>
     </Midl>
     <Midl Include="NavigationBreadcrumbBarItem.idl">
-      <Filter>ViewModels</Filter>
+      <Filter>Models</Filter>
     </Midl>
     <Midl Include="AudioProfile.idl">
-      <Filter>ViewModels</Filter>
+      <Filter>Models</Filter>
     </Midl>
     <Midl Include="AudioSessionSettings.idl">
-      <Filter>ViewModels</Filter>
+      <Filter>Models</Filter>
+    </Midl>
+    <Midl Include="UserProfile.idl">
+      <Filter>Models</Filter>
     </Midl>
   </ItemGroup>
   <ItemGroup>

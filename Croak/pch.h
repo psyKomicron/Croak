@@ -11,23 +11,25 @@
 #include <comip.h>
 #include <dispatcherqueue.h>
 #include <endpointvolume.h>
+#include <functional>
 #include <hstring.h>
 #include <math.h>
 #include <mmdeviceapi.h>
 #include <mutex>
+#include <objbase.h>
 #include <Psapi.h>
+#include <ppl.h>
+#include <ppltasks.h>
+#include <regex>
 #include <restrictederrorinfo.h>
 #include <rpc.h>
 #include <Shobjidl.h>
 #include <Shlobj.h>
 #include <unknwn.h>
-#include <windows.h>
-#include <objbase.h>
 #include <strsafe.h>
 #include <Shlwapi.h>
 #include <filesystem>
-#include <regex>
-#include <functional>
+#include <windows.h>
 
 
 #ifdef _DEBUG

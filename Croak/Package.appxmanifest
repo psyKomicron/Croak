@@ -10,7 +10,7 @@
   <Identity
     Name="751c2636-5688-4a5f-9a67-e04d5b64d3d3"
     Publisher="CN=psyKomicron"
-    Version="1.2.0.0" />
+    Version="1.2.1.0" />
 
   <Properties>
     <DisplayName>Croak</DisplayName>

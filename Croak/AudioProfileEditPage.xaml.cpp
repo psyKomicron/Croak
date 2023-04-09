@@ -46,7 +46,6 @@ namespace winrt::Croak::implementation
             {
                 audioProfile = AudioProfile();
                 audioProfile.ProfileName(tempName.value());
-                audioProfile.SystemVolume(-1.f);
 
                 //winrt::Windows::ApplicationModel::Resources::ResourceLoader loader{};
                 SecondWindow::Current().Breadcrumbs().Append(
@@ -93,6 +92,7 @@ namespace winrt::Croak::implementation
         uint32_t layout = LayoutComboBox().SelectedIndex();
 
         // Check equality.
+#if 0
         if (
             systemVolume != audioProfile.SystemVolume() || isDefaultProfile != audioProfile.IsDefaultProfile() || profileName != audioProfile.ProfileName() ||
             !audioLevelsEqual || !audioStatesEqual ||
@@ -115,26 +115,27 @@ namespace winrt::Croak::implementation
                 Frame().Navigate(sourcePageType, parameter, navigationTransitionInfo);
             }
         }
+#endif // 0
+
     }
 
     void AudioProfileEditPage::Page_Loading(FrameworkElement const&, IInspectable const&)
     {
+        //KeepOnTopCheckBox().IsChecked(audioProfile.KeepOnTop());
         ProfileNameEditTextBox().Text(audioProfile.ProfileName());
         DisableAnimationsCheckBox().IsChecked(audioProfile.DisableAnimations());
-        KeepOnTopCheckBox().IsChecked(audioProfile.KeepOnTop());
         ShowMenuCheckBox().IsChecked(audioProfile.ShowMenu());
-        LayoutComboBox().SelectedIndex(audioProfile.Layout());
+        LayoutComboBox().SelectedIndex(static_cast<int32_t>(audioProfile.Layout()));
 
         ::Croak::Audio::AudioController* controllerPtr = new ::Croak::Audio::AudioController(GUID());
-        if (audioProfile.SystemVolume() < 0)
+        if (audioProfile.DefaultAudioEndpointSettings().AudioLevel() < 0)
         {
-            ::Croak::Audio::DefaultAudioEndpoint* mainAudioEndpointPtr = controllerPtr->GetMainAudioEndpoint();
-            float value = mainAudioEndpointPtr->Volume();
-            audioProfile.SystemVolume(value);
-            mainAudioEndpointPtr->Release();
+            winrt::com_ptr<::Croak::Audio::DefaultAudioEndpoint> endpoint{};
+            endpoint.attach(controllerPtr->GetMainAudioEndpoint());
+            float value = endpoint->Volume();
+            audioProfile.DefaultAudioEndpointSettings().AudioLevel(value);
         }
-        SystemVolumeSlider().Value(static_cast<double>(audioProfile.SystemVolume()) * 100.);
-
+        SystemVolumeSlider().Value(static_cast<double>(audioProfile.DefaultAudioEndpointSettings().AudioLevel()) * 100.);
 
         if (audioProfile.AudioSessionsSettings().Size() > 0)
         {
@@ -159,12 +160,12 @@ namespace winrt::Croak::implementation
             std::vector<::Croak::Audio::AudioSession*>* audioSessionsPtr = controllerPtr->GetSessions();
             for (size_t i = 0; i < audioSessionsPtr->size(); i++)
             {
+                winrt::com_ptr<::Croak::Audio::AudioSession> audioSession{};
+                audioSession.attach(audioSessionsPtr->at(i));
                 // Create view.
                 audioSessions.Append(
-                    CreateAudioSessionView(hstring(audioSessionsPtr->at(i)->Name()), audioSessionsPtr->at(i)->Volume() * 100., audioSessionsPtr->at(i)->Muted())
+                    CreateAudioSessionView(hstring(audioSession->Name()), audioSession->Volume() * 100., audioSession->Muted())
                 );
-
-                audioSessionsPtr->at(i)->Release(); // Directly release the AudioSession and release COM resources.
             }
             delete audioSessionsPtr;
         }
@@ -323,7 +324,7 @@ namespace winrt::Croak::implementation
         VisualStateManager::GoToState(*this, L"ProfileSaved", true);
 
         audioProfile.ProfileName(ProfileNameEditTextBox().Text());
-        audioProfile.SystemVolume(static_cast<float>(SystemVolumeSlider().Value()) / 100.f);
+        audioProfile.DefaultAudioEndpointSettings().AudioLevel(static_cast<float>(SystemVolumeSlider().Value()) / 100.f);
 
         audioProfile.AudioSessionsSettings().Clear();
         for (auto&& view : AudioSessions())
@@ -338,10 +339,10 @@ namespace winrt::Croak::implementation
             audioProfile.SessionsIndexes().Insert(header, index);
         }
 
+        //audioProfile.KeepOnTop(KeepOnTopCheckBox().IsChecked().GetBoolean());
         audioProfile.DisableAnimations(DisableAnimationsCheckBox().IsChecked().GetBoolean());
-        audioProfile.KeepOnTop(KeepOnTopCheckBox().IsChecked().GetBoolean());
         audioProfile.ShowMenu(ShowMenuCheckBox().IsChecked().GetBoolean());
-        audioProfile.Layout(LayoutComboBox().SelectedIndex());
+        audioProfile.Layout(static_cast<AudioSessionLayout>(LayoutComboBox().SelectedIndex()));
 
         timer.Start();
 
@@ -351,7 +352,6 @@ namespace winrt::Croak::implementation
         {
             audioProfilesContainer = ApplicationData::Current().LocalSettings().CreateContainer(L"AudioProfiles", ApplicationDataCreateDisposition::Always);
         }
-
         audioProfile.Save(audioProfilesContainer);
     }
 

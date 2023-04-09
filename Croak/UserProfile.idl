@@ -1,0 +1,23 @@
+import "AudioProfile.idl";
+
+namespace Croak
+{
+    [bindable]
+    [default_interface]
+    runtimeclass UserProfile 
+    {
+        UserProfile();
+
+        AudioProfile AudioProfile;
+        Boolean Frozen;
+        String ProfileName;
+        Boolean IsAlwaysOnTop;
+        Boolean RestoreWindowState;
+        Windows.Graphics.RectInt32 WindowDisplayRect;
+        Boolean HotKeysEnabled;
+        Microsoft.UI.Windowing.OverlappedPresenterState PresenterState;
+
+        void Restore(Windows.Storage.ApplicationDataContainer container);
+        void Save(Windows.Storage.ApplicationDataContainer container);
+    }
+}

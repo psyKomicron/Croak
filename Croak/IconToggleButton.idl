@@ -16,8 +16,8 @@ namespace Croak
         IInspectable Content;
         String Glyph;
         Boolean IsOn;
-        String OnIcon;
-        String OffIcon;
+        IInspectable OnIcon;
+        IInspectable OffIcon;
         Boolean Compact;
 
         event Windows.Foundation.TypedEventHandler<IconToggleButton, Microsoft.UI.Xaml.RoutedEventArgs> Click;

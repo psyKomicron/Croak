@@ -138,6 +138,9 @@
   <data name="AudioSessionViewLockMenuFlyoutItem.Text" xml:space="preserve">
     <value>Verrouiller</value>
   </data>
+  <data name="DefaultProfileName" xml:space="preserve">
+    <value>Profile par défaut</value>
+  </data>
   <data name="ErrorAppFailedRestart" xml:space="preserve">
     <value>L'application n'a pas pu être redémarrée</value>
   </data>
@@ -148,10 +151,10 @@
     <value>Oh oh... Une erreur est survenue, essayez de redémarrer l'application</value>
   </data>
   <data name="ErrorLoadingAudioObjects" xml:space="preserve">
-    <value>Un problème est survenu, pas d'audio</value>
+    <value>Un problème est survenu, pas possible de charger les périphériques audio</value>
   </data>
   <data name="ErrorUuidCreateFailed" xml:space="preserve">
-    <value />
+    <value>Error UUID creation failed (en francais)</value>
   </data>
   <data name="HotKeyName.1" xml:space="preserve">
     <value>Augmenter le volume système</value>
@@ -169,7 +172,10 @@
     <value>Couper le son</value>
   </data>
   <data name="HotKeyName.6" xml:space="preserve">
-    <value>Bring to screen</value>
+    <value>Bring to foreground/Show window</value>
+  </data>
+  <data name="HotKeyName.7" xml:space="preserve">
+    <value>Bring to foreground/Show window (Alt)</value>
   </data>
   <data name="HotKeysPageDisplayName" xml:space="preserve">
     <value>Hot keys</value>
@@ -182,6 +188,9 @@
   </data>
   <data name="InfoHotKeysEnabled" xml:space="preserve">
     <value>Hot keys activées</value>
+  </data>
+  <data name="LoadProfileFailed" xml:space="preserve">
+    <value>Pas possible de charger le profile</value>
   </data>
   <data name="MainWindowDisableAnimationsButton.Content" xml:space="preserve">
     <value>Désactiver les animations</value>
@@ -250,7 +259,10 @@
     <value>Nouveautées</value>
   </data>
   <data name="OverlayModeEnabled" xml:space="preserve">
-    <value>Mode overlay activé</value>
+    <value>Mode overlay activé, appuyez sur Alt + A pour montrer l'application</value>
+  </data>
+  <data name="OverlaySettingsPageName" xml:space="preserve">
+    <value>Mode superposé</value>
   </data>
   <data name="SecondWindowTitle" xml:space="preserve">
     <value>Paramètres (Croak)</value>

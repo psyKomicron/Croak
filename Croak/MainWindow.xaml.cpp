@@ -7,7 +7,6 @@
 #include <ppl.h>
 #include <ppltasks.h>
 #include "SecondWindow.xaml.h"
-#include "IconHelper.h"
 #include "HotKey.h"
 #include "HotKeyManager.h"
 #include "DebugOutput.h"
@@ -1150,10 +1149,8 @@ namespace winrt::Croak::implementation
                         auto vect = audioSessionsVector.release();
                         delete vect;
                     }
-
                     throw;
                 }
-
 
                 // Create and setup peak meters timers
                 audioSessionsPeakTimer = DispatcherQueue().CreateTimer();
@@ -1173,7 +1170,7 @@ namespace winrt::Croak::implementation
 
                     try
                     {
-                        std::pair<float, float> peakValues = mainAudioEndpoint->GetPeaks();
+                        std::pair<float, float> peakValues = mainAudioEndpoint->GetStereoPeaks();
                         LeftVolumeAnimation().To(static_cast<double>(peakValues.first));
                         RightVolumeAnimation().To(static_cast<double>(peakValues.second));
                         VolumeStoryboard().Begin();
@@ -1861,7 +1858,7 @@ namespace winrt::Croak::implementation
 
         for (auto const& view : audioSessionViews)
         {
-            auto&& pair = audioSessions.at(view.Id())->GetChannelsPeak();
+            auto&& pair = audioSessions.at(view.Id())->GetStereoPeaks();
             view.SetPeak(pair.first, pair.second);
         }
     }

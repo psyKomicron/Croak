@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "IconHelper.h"
+#include "IconExtractor.h"
 
 #include <ocidl.h>
 #include <libloaderapi.h>
@@ -10,7 +10,7 @@ using namespace std;
 
 namespace Croak::Imaging
 {
-	HICON IconHelper::LoadIconFromPath(const wstring_view& resourcePath)
+	HICON IconExtractor::LoadIconFromPath(const wstring_view& resourcePath)
 	{
 		check_bool(!resourcePath.empty());
 
@@ -69,7 +69,7 @@ namespace Croak::Imaging
 		}
 		else
 		{
-			// firefox.exe
+			// i.e. firefox.exe
 			HICON largeIcon[1]{};
 			if (ExtractIconEx(resourcePath.data(), 0, largeIcon, nullptr, 1) == 1)
 			{
@@ -80,7 +80,7 @@ namespace Croak::Imaging
 		return nullptr;
 	}
 
-	IStream* IconHelper::ExtractStreamFromHICON(const HICON& hIcon)
+	IStream* IconExtractor::ExtractStreamFromHICON(const HICON& hIcon)
 	{
 		// Create factory.
 		com_ptr<IWICImagingFactory> wicImagingFactory{};
@@ -99,7 +99,7 @@ namespace Croak::Imaging
 		return bitmapStream;
 	}
 
-	IWICBitmapSource* IconHelper::ExtractHICONBitmapSource(const HICON& hIcon)
+	IWICBitmapSource* IconExtractor::ExtractHICONBitmapSource(const HICON& hIcon)
 	{
 		// Create factory.
 		com_ptr<IWICImagingFactory> wicImagingFactory{};
@@ -116,8 +116,7 @@ namespace Croak::Imaging
 		return wicBitmap;
 	}
 
-
-	void IconHelper::WriteHICONToFile(const HICON& hIcon, const std::filesystem::path& filePath)
+	void IconExtractor::WriteHICONToFile(const HICON& hIcon, const std::filesystem::path& filePath)
 	{
 		// Create factory.
 		com_ptr<IWICImagingFactory> wicImagingFactory{};
@@ -155,20 +154,18 @@ namespace Croak::Imaging
 		check_hresult(outFileStream->Commit(STGC_DANGEROUSLYCOMMITMERELYTODISKCACHE));
 	}
 
-	void IconHelper::SaveImage(IWICImagingFactory* imagingFactory, IWICBitmapSource* bitmapSource, const GUID& containerFormatGUID, IStream* hIconStream)
+	void IconExtractor::SaveImage(IWICImagingFactory* imagingFactory, IWICBitmapSource* bitmapSource, const GUID& containerFormatGUID, IStream* hIconStream)
 	{
 		IStreamPtr bitmapSourceStream = GetBitmapSourceStream(imagingFactory, bitmapSource, containerFormatGUID);
-
 		check_hresult(
 			hIconStream->Seek(LARGE_INTEGER{ 0 }, STREAM_SEEK_SET, nullptr)
 		);
-
 		check_hresult(
 			bitmapSourceStream->CopyTo(hIconStream, ULARGE_INTEGER{ UINT_MAX }, nullptr, nullptr)
 		);
 	}
 
-	IStream* IconHelper::GetBitmapSourceStream(IWICImagingFactory* imagingFactory, IWICBitmapSource* bitmapSource, const GUID& containerFormatGUID)
+	IStream* IconExtractor::GetBitmapSourceStream(IWICImagingFactory* imagingFactory, IWICBitmapSource* bitmapSource, const GUID& containerFormatGUID)
 	{
 		IStream* bitmapStream = nullptr;
 		check_hresult(CreateStreamOnHGlobal(nullptr, true, &bitmapStream));
@@ -189,11 +186,10 @@ namespace Croak::Imaging
 
 		LARGE_INTEGER largeInt{};
 		bitmapStream->Seek(largeInt, STREAM_SEEK_SET, nullptr);
-
 		return bitmapStream;
 	}
 
-	void IconHelper::AddFrameToWICBitmap(IWICImagingFactory* imagingFactory, IWICBitmapSource* bitmapSource, IWICBitmapEncoder* bitmapEncoder)
+	void IconExtractor::AddFrameToWICBitmap(IWICImagingFactory* imagingFactory, IWICBitmapSource* bitmapSource, IWICBitmapEncoder* bitmapEncoder)
 	{
 		com_ptr<IWICBitmapFrameEncode> bitmapFrameEncode{};
 		com_ptr<IPropertyBag2> encoderOptions{};
@@ -213,7 +209,7 @@ namespace Croak::Imaging
 			// Options to enable the v5 header support for 32bppBGRA.
 			PROPBAG2 v5HeaderOption{};
 
-			std::wstring str = L"EnableV5Header32bppBGRA";
+			const std::wstring str = L"EnableV5Header32bppBGRA";
 			v5HeaderOption.pstrName = (LPOLESTR)str.c_str();
 
 			check_hresult(encoderOptions->Write(1, &v5HeaderOption, &varValue));
@@ -234,7 +230,7 @@ namespace Croak::Imaging
 		check_hresult(bitmapFrameEncode->Commit());
 	}
 
-	IWICBitmapSource* IconHelper::ConvertBitmapPixelFormat(IWICImagingFactory* imagingFactory, IWICBitmapSource* bitmapSource, const WICPixelFormatGUID& sourcePixelFormat, const WICBitmapDitherType& bitmapDitherType)
+	IWICBitmapSource* IconExtractor::ConvertBitmapPixelFormat(IWICImagingFactory* imagingFactory, IWICBitmapSource* bitmapSource, const WICPixelFormatGUID& sourcePixelFormat, const WICBitmapDitherType& bitmapDitherType)
 	{
 		com_ptr<IWICFormatConverter> wicFormatConverter{};
 		check_hresult(imagingFactory->CreateFormatConverter(wicFormatConverter.put()));

@@ -3,7 +3,7 @@
 
 #include <appmodel.h>
 #include <winrt/Windows.Data.Xml.Dom.h>
-#include "IconHelper.h"
+#include "IconExtractor.h"
 #include "DebugOutput.h"
 
 using namespace std;

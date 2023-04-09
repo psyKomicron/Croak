@@ -6,7 +6,7 @@
 
 #include <math.h>
 #include <limits>
-#include "IconHelper.h"
+#include "IconExtractor.h"
 #include "DebugOutput.h"
 
 namespace Foundation = winrt::Windows::Foundation;
@@ -334,8 +334,7 @@ namespace winrt::Croak::implementation
             co_return;
         }
 
-        ::Croak::Imaging::IconHelper iconHelper{};
-
+        ::Croak::Imaging::IconExtractor iconHelper{};
         HICON hIcon = iconHelper.LoadIconFromPath(audioSessionProcessPath);
         IStreamPtr hIconStream = iconHelper.ExtractStreamFromHICON(hIcon);
 

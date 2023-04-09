@@ -3,18 +3,17 @@
 
 namespace Croak::Imaging
 {
-	class IconHelper
+	class IconExtractor
 	{
 	public:
-		IconHelper() = default;
+		IconExtractor() = default;
 
 		HICON LoadIconFromPath(const std::wstring_view& resourcePath);
 		IStream* ExtractStreamFromHICON(const HICON& hIcon);
 		IWICBitmapSource* ExtractHICONBitmapSource(const HICON& hIcon);
+		winrt::com_ptr<HICON> LoadIconFromPath2(const std::wstring_view& resPath);
 
 	private:
-		const double upscaleRatio = 1.5;
-
 		/**
 		 * @brief Writes the given HICON to a file, specified by the filePath parameter.
 		 * @param hIcon HICON representing the bitmap/image

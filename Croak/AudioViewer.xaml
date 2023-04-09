@@ -1,16 +1,247 @@
-﻿<!-- Copyright (c) Microsoft Corporation and Contributors. -->
-<!-- Licensed under the MIT License. -->
-
-<UserControl
+﻿<UserControl
     x:Class="Croak.AudioViewer"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Croak"
+    xmlns:c="using:Croak"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Background="Transparent"
+    Unloaded="UserControl_Unloaded">
 
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
-    </StackPanel>
+    <Grid x:Name="RootGrid" SizeChanged="Grid_SizeChanged">
+        <Grid.Resources>
+            <Style x:Key="GridViewHorizontalLayout" TargetType="GridView">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid 
+                                Orientation="Horizontal" 
+                                VerticalAlignment="Center" 
+                                HorizontalAlignment="Center"/>
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="GridViewVerticalLayout" TargetType="GridView">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <ItemsStackPanel 
+                                HorizontalAlignment="Stretch" 
+                                VerticalAlignment="Center" 
+                                GroupPadding="5"/>
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Grid.Resources>
+        <Grid.ContextFlyout>
+            <TextCommandBarFlyout>
+                <AppBarButton Content="Show/hide" Icon="ViewAll" Click="AppBarButton_Click"/>
+            </TextCommandBarFlyout>
+        </Grid.ContextFlyout>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="5,0,5,3" ColumnSpacing="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="MuteToggleButtonColumn" Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition x:Name="SystemVolumeSliderTextColumn" Width="26"/>
+            </Grid.ColumnDefinitions>
+            <Grid.Resources>
+                <Storyboard x:Name="VolumeStoryboard">
+                    <DoubleAnimation 
+                        x:Name="LeftVolumeAnimation"
+                        Storyboard.TargetName="BorderLeftClippingCompositeTransform"
+                        Storyboard.TargetProperty="ScaleX"
+                        To="0"
+                        Duration="{StaticResource AudioMeterAnimationDuration}">
+
+                        <DoubleAnimation.EasingFunction>
+                            <QuadraticEase EasingMode="EaseOut"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+
+                    <DoubleAnimation 
+                        x:Name="RightVolumeAnimation"
+                        Storyboard.TargetName="BorderRightClippingCompositeTransform"
+                        Storyboard.TargetProperty="ScaleX"
+                        To="0"
+                        Duration="{StaticResource AudioMeterAnimationDuration}">
+
+                        <DoubleAnimation.EasingFunction>
+                            <QuadraticEase EasingMode="EaseOut"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                </Storyboard>
+            </Grid.Resources>
+
+            <ToggleButton
+                x:Uid="MainWindowMuteToggleButton"
+                x:Name="MuteToggleButton"
+                Style="{StaticResource MuteToggleButtonStyle}"
+                Click="MuteToggleButton_Click">
+
+                <FontIcon x:Name="MuteToggleButtonFontIcon" Glyph="&#xe767;" FontSize="{StaticResource FontIconHeight}"/>
+            </ToggleButton>
+
+            <Border 
+                x:Name="SystemVolumeActivityBorderLeft"
+                Grid.Column="1"
+                Background="{StaticResource AudioMeterReversedBackground}"
+                Opacity="{ThemeResource PeakBorderOpacity}"
+                CornerRadius="5,5,0,0"
+                Height="7"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Stretch"
+                Translation="0,-5,0"
+                SizeChanged="SystemVolumeActivityBorder_SizeChanged">
+
+                <Border.Clip>
+                    <RectangleGeometry x:Name="SystemVolumeActivityBorderClippingLeft">
+                        <RectangleGeometry.Transform>
+                            <CompositeTransform x:Name="BorderLeftClippingCompositeTransform" ScaleX="0"/>
+                        </RectangleGeometry.Transform>
+                    </RectangleGeometry>
+                </Border.Clip>
+            </Border>
+
+            <Border 
+                x:Name="SystemVolumeActivityBorderRight"
+                Grid.Column="1"
+                Background="{StaticResource AudioMeterReversedBackground}"
+                Opacity="{ThemeResource PeakBorderOpacity}"
+                CornerRadius="0,0,5,5"
+                Height="7"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Stretch"
+                Translation="0,6,0">
+
+                <Border.Clip>
+                    <RectangleGeometry x:Name="SystemVolumeActivityBorderClippingRight">
+                        <RectangleGeometry.Transform>
+                            <CompositeTransform x:Name="BorderRightClippingCompositeTransform" ScaleX="0"/>
+                        </RectangleGeometry.Transform>
+                    </RectangleGeometry>
+                </Border.Clip>
+            </Border>
+
+            <Slider 
+                x:Uid="MainWindowSystemVolumeSlider"
+                x:Name="SystemVolumeSlider"
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                ValueChanged="SystemVolumeSlider_ValueChanged">
+                <Slider.Transitions>
+                    <TransitionCollection>
+                        <RepositionThemeTransition IsStaggeringEnabled="False"/>
+                    </TransitionCollection>
+                </Slider.Transitions>
+            </Slider>
+
+            <c:NumberBlock
+                x:Name="SystemVolumeNumberBlock"
+                Grid.Column="2"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"/>
+        </Grid>
+
+        <Border
+            Grid.Row="1"
+            Background="{ThemeResource SubtleFillColorSecondaryBrush}"/>
+        
+        <Grid
+            x:Name="AppBarGrid"
+            Grid.Row="1"
+            ColumnSpacing="10"
+            Padding="5,4"
+            MaxWidth="250"
+            HorizontalAlignment="Stretch"
+            Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.Resources>
+                <Style TargetType="Button" BasedOn="{StaticResource IconButtonStyle}"/>
+                <Style TargetType="FontIcon">
+                    <Setter Property="FontSize" Value="16"/>
+                </Style>
+            </Grid.Resources>
+
+            <Button>
+                <FontIcon Glyph="&#xe72c;"/>
+            </Button>
+
+            <Button Grid.Column="1">
+                <FontIcon Glyph="&#xe74f;"/>
+            </Button>
+
+            <Button Grid.Column="2">
+                <FontIcon Glyph="&#xe7b3;"/>
+            </Button>
+
+            <Button Grid.Column="3">
+                <FontIcon Glyph="&#xf4a5;"/>
+            </Button>
+        </Grid>
+
+        <Border Height="1" Background="{ThemeResource SystemControlForegroundBaseLowBrush}" Grid.Row="2"/>
+
+        <Grid x:Name="AudioSessionsGrid" Grid.Row="3" Margin="0,5,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <ScrollViewer 
+                x:Name="AudioSessionsScrollViewer"
+                Padding="3,0,0,0" 
+                Grid.Row="1"
+                HorizontalScrollBarVisibility="Disabled">
+
+                <Grid>
+                    <Canvas
+                        x:Name="IndicatorsCanvas"
+                        Background="Transparent"/>
+
+                    <GridView
+                        x:Name="AudioSessionsGridView"
+                        Style="{StaticResource GridViewHorizontalLayout}"
+                        ItemsSource="{x:Bind AudioSessions}"
+                        Margin="0,0,0,-7"
+                        SelectionMode="None"
+                        CanReorderItems="True"
+                        ReorderMode="Enabled"
+                        AllowDrop="True"
+                        Grid.Row="1"
+                        Loading="AudioSessionsPanel_Loading"
+                        Loaded="OnLoaded">
+                        <GridView.Resources>
+                            <Style TargetType="GridViewItem" BasedOn="{StaticResource DefaultGridViewItemStyle}">
+                                <Setter Property="AllowDrop" Value="False" />
+                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </GridView.Resources>
+                    </GridView>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
 </UserControl>

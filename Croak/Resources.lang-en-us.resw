@@ -138,6 +138,9 @@
   <data name="AudioSessionViewLockMenuFlyoutItem.Text" xml:space="preserve">
     <value>Lock</value>
   </data>
+  <data name="DefaultProfileName" xml:space="preserve">
+    <value>Default profile</value>
+  </data>
   <data name="ErrorAppFailedRestart" xml:space="preserve">
     <value>Failed to restart app, try again or close the window</value>
   </data>
@@ -148,10 +151,10 @@
     <value>Oh oh, something went wrong... Please restart the app and try again.</value>
   </data>
   <data name="ErrorLoadingAudioObjects" xml:space="preserve">
-    <value />
+    <value>Error loading audio objects</value>
   </data>
   <data name="ErrorUuidCreateFailed" xml:space="preserve">
-    <value />
+    <value>Error UUID creation failed</value>
   </data>
   <data name="HotKeyName.1" xml:space="preserve">
     <value>System volume up</value>
@@ -169,7 +172,10 @@
     <value>Mute volume</value>
   </data>
   <data name="HotKeyName.6" xml:space="preserve">
-    <value>Bring to screen</value>
+    <value>Bring to foreground/Show window</value>
+  </data>
+  <data name="HotKeyName.7" xml:space="preserve">
+    <value>Bring to foreground/Show window (Alt)</value>
   </data>
   <data name="HotKeysPageDisplayName" xml:space="preserve">
     <value>Hot keys</value>
@@ -182,6 +188,9 @@
   </data>
   <data name="InfoHotKeysEnabled" xml:space="preserve">
     <value>Hot keys enabled</value>
+  </data>
+  <data name="LoadProfileFailed" xml:space="preserve">
+    <value>Failed to load profile</value>
   </data>
   <data name="MainWindowDisableAnimationsButton.Content" xml:space="preserve">
     <value>Disable animations</value>
@@ -250,7 +259,10 @@
     <value>What's new</value>
   </data>
   <data name="OverlayModeEnabled" xml:space="preserve">
-    <value>Overlay mode activated</value>
+    <value>Overlay mode activated, use Alt + A to show window</value>
+  </data>
+  <data name="OverlaySettingsPageName" xml:space="preserve">
+    <value>Overlay</value>
   </data>
   <data name="SecondWindowTitle" xml:space="preserve">
     <value>Croak settings</value>

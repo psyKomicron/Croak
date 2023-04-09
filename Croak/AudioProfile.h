@@ -19,6 +19,17 @@ namespace winrt::Croak::implementation
             e_propertyChanged(*this, Microsoft::UI::Xaml::Data::PropertyChangedEventArgs(L"ProfileName"));
         }
 
+        inline winrt::Croak::AudioSessionSettings DefaultAudioEndpointSettings() const
+        {
+            return defaultAudioEndpointSettings;
+        }
+
+        inline void DefaultAudioEndpointSettings(const winrt::Croak::AudioSessionSettings& value)
+        {
+            defaultAudioEndpointSettings = value;
+            e_propertyChanged(*this, Microsoft::UI::Xaml::Data::PropertyChangedEventArgs(L"DefaultAudioEndpointSettings"));
+        }
+
         inline winrt::Windows::Foundation::Collections::IVector<AudioSessionSettings> AudioSessionsSettings() const
         {
             return audioSessionsSettings;
@@ -50,17 +61,6 @@ namespace winrt::Croak::implementation
         {
             isDefaultProfile = value;
             e_propertyChanged(*this, Microsoft::UI::Xaml::Data::PropertyChangedEventArgs(L"IsDefaultProfile"));
-        }
-
-        inline float SystemVolume() const
-        {
-            return systemVolume;
-        }
-
-        inline void SystemVolume(const float& value)
-        {
-            systemVolume = value;
-            e_propertyChanged(*this, Microsoft::UI::Xaml::Data::PropertyChangedEventArgs(L"SystemVolume"));
         }
 
         inline bool DisableAnimations() const
@@ -96,12 +96,12 @@ namespace winrt::Croak::implementation
             e_propertyChanged(*this, Microsoft::UI::Xaml::Data::PropertyChangedEventArgs(L"ShowMenu"));
         }
 
-        inline uint32_t Layout() const
+        inline winrt::Croak::AudioSessionLayout Layout() const
         {
             return layout;
         }
 
-        inline void Layout(const uint32_t& value)
+        inline void Layout(const winrt::Croak::AudioSessionLayout& value)
         {
             layout = value;
             e_propertyChanged(*this, Microsoft::UI::Xaml::Data::PropertyChangedEventArgs(L"Layout"));
@@ -150,7 +150,8 @@ namespace winrt::Croak::implementation
         bool disableAnimations = false;
         bool keepOnTop = false;
         bool showMenu = false;
-        uint32_t layout = 0u;
+        winrt::Croak::AudioSessionLayout layout = winrt::Croak::AudioSessionLayout::Auto;
+        winrt::Croak::AudioSessionSettings defaultAudioEndpointSettings = nullptr;
 
         winrt::event<Microsoft::UI::Xaml::Data::PropertyChangedEventHandler> e_propertyChanged;
     };

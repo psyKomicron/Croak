@@ -27,6 +27,18 @@ namespace winrt::Croak::implementation
         );
     }
 
+    void SettingsPage::OnNavigatedTo(Xaml::NavigationEventArgs const& args)
+    {
+        if (args.NavigationMode() == Xaml::NavigationMode::New || SecondWindow::Current().Breadcrumbs().Size() == 0)
+        {
+            winrt::Windows::ApplicationModel::Resources::ResourceLoader loader{};
+            SecondWindow::Current().Breadcrumbs().Append(
+                NavigationBreadcrumbBarItem{ loader.GetString(L"SettingsPageDisplayName"), xaml_typename<winrt::Croak::SettingsPage>() }
+            );
+        }
+    }
+
+
     Foundation::IAsyncAction SettingsPage::Page_Loaded(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
     {
         ApplicationModel::StartupTask startupTask = co_await ApplicationModel::StartupTask::GetAsync(L"CroakStartupTaskId");
@@ -36,17 +48,6 @@ namespace winrt::Croak::implementation
         PowerEfficiencyToggleButton().IsOn(unbox_value_or(Storage::ApplicationData::Current().LocalSettings().Values().TryLookup(L"PowerEfficiencyEnabled"), true));
         StartupProfileToggleSwitch().IsOn(unbox_value_or(Storage::ApplicationData::Current().LocalSettings().Values().TryLookup(L"LoadLastProfile"), true));
         HideWindowToggleSwitch().IsOn(unbox_value_or(Storage::ApplicationData::Current().LocalSettings().Values().TryLookup(L"HideWindowOnCompactMode"), false));
-    }
-
-    void SettingsPage::OnNavigatedTo(Xaml::NavigationEventArgs const& args)
-    {
-        if (args.NavigationMode() == Xaml::NavigationMode::New)
-        {
-            winrt::Windows::ApplicationModel::Resources::ResourceLoader loader{};
-            SecondWindow::Current().Breadcrumbs().Append(
-                NavigationBreadcrumbBarItem{ loader.GetString(L"SettingsPageDisplayName"), xaml_typename<winrt::Croak::SettingsPage>() }
-            );
-        }
     }
 
     void SettingsPage::AudioProfilesButton_Click(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)

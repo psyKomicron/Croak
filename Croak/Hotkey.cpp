@@ -22,7 +22,6 @@ namespace Croak::System::HotKeys
         if (static_cast<uint32_t>(modifiers & VirtualKeyModifiers::Menu))
         {
             this->modifiers |= MOD_ALT;
-
         }
         if (static_cast<uint32_t>(modifiers & VirtualKeyModifiers::Shift))
         {
@@ -42,7 +41,7 @@ namespace Croak::System::HotKeys
             notificationThread->join(); // Wait for the thread to exit.
             delete notificationThread; // Free the memory.
 
-            DebugLog(std::format("Successfully free resources (key id: {0})", std::to_string(hotKeyId)));
+            DebugLog(std::format("Successfully freed resources (key id: {0})", std::to_string(hotKeyId)));
         }
     }
 
@@ -93,15 +92,12 @@ namespace Croak::System::HotKeys
                 }
                 else
                 {
-                    DebugLog(std::format("Hotkey (id: {0}) > GetMessage returned 0.", std::to_string(hotKeyId)));
                     break;
                 }
             }
 
             // Unregister the HotKey when exiting the thread.
             UnregisterHotKey(nullptr, hotKeyId);
-
-            DebugLog(std::format("Hotkey (id: {0}) > thread exiting.", std::to_string(hotKeyId)));
         }
     }
 }

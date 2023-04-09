@@ -15,12 +15,12 @@ namespace winrt::Croak::implementation
         static Microsoft::UI::Xaml::DependencyProperty GlyphProperty()
         {
             return _glyphProperty;
-        };
+        }
 
         static Microsoft::UI::Xaml::DependencyProperty TextProperty()
         {
             return _textNameProperty;
-        };
+        }
 
         static Microsoft::UI::Xaml::DependencyProperty ContentProperty()
         {

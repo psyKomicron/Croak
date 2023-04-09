@@ -1,12 +1,27 @@
-// Copyright (c) Microsoft Corporation and Contributors.
-// Licensed under the MIT License.
+import "AudioSessionView.idl";
+import "App.idl";
+import "AudioProfile.idl";
+import "MessageBar.idl";
 
 namespace Croak
 {
     [default_interface]
-    runtimeclass AudioViewer : Microsoft.UI.Xaml.Controls.UserControl
+    runtimeclass AudioViewer : Microsoft.UI.Xaml.Controls.UserControl, Microsoft.UI.Xaml.Data.INotifyPropertyChanged
     {
         AudioViewer();
-        Int32 MyProperty;
+
+        IObservableVector<AudioSessionView> AudioSessions{ get; };
+        String DefaultAudioEndpointName{ get; };
+
+        void SetMessageBar(MessageBar messageBar);
+        void CloseAudioObjects();
+        void LoadAudioProfile(AudioProfile audioProfile);
+        void MuteEndpoint();
+        void PauseAnimations();
+        void SetAudioSessionLayout(AudioSessionLayout layout);
+        void StopAnimations();
+        void SwitchAudioState();
+        void ReloadAudioSessions();
+        void ShowHiddenAudioSessions();
     }
 }

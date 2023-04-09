@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:s="using:Croak"
+    xmlns:c="using:Croak"
     mc:Ignorable="d"
     Activated="Window_Activated">
 
@@ -226,11 +226,11 @@
                                         Orientation="Vertical" 
                                         Spacing="4" >
                                         <StackPanel.Resources>
-                                            <Style TargetType="s:IconButton">
+                                            <Style TargetType="c:IconButton">
                                                 <Setter Property="Padding" Value="10,7" />
                                                 <Setter Property="Margin" Value="1,0" />
                                             </Style>
-                                            <Style TargetType="s:IconToggleButton">
+                                            <Style TargetType="c:IconToggleButton">
                                                 <Setter Property="Padding" Value="10,7" />
                                                 <Setter Property="Margin" Value="1,0" />
                                             </Style>
@@ -239,8 +239,8 @@
                                             <RepositionThemeTransition/>
                                         </StackPanel.Transitions>
 
-                                        <s:IconButton Glyph="&#xe748;" Click="OpenProfilesIconButton_Click">
-                                            <s:IconButton.Content>
+                                        <c:IconButton Glyph="&#xe748;" Click="OpenProfilesIconButton_Click">
+                                            <c:IconButton.Content>
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
@@ -250,51 +250,55 @@
                                                     <TextBlock x:Uid="MainWindowOpenProfilesText" TextWrapping="Wrap" />
                                                     <FontIcon Glyph="&#xe76c;" Grid.Column="1" FontSize="14" Opacity="0.6" />
                                                 </Grid>
-                                            </s:IconButton.Content>
-                                        </s:IconButton>
+                                            </c:IconButton.Content>
+                                        </c:IconButton>
 
                                         <Border Style="{StaticResource BorderFlyoutSeparatorStyle}" />
 
-                                        <s:IconToggleButton 
+                                        <c:IconToggleButton 
                                             x:Uid="MainWindowDisableAnimationsButton"
                                             x:Name="DisableAnimationsIconToggleButton"
-                                            Glyph="&#xf4a5;" 
-                                            Click="DisableAnimationsIconButton_Click" />
+                                            OnIcon="&#xf4a5;"
+                                            Click="DisableAnimationsIconButton_Click">
+                                            <c:IconToggleButton.OffIcon>
+                                                <FontIcon Glyph="&#xf4a5;" FontSize="14" Foreground="{ThemeResource SystemAccentColor}"/>
+                                            </c:IconToggleButton.OffIcon>
+                                        </c:IconToggleButton>
 
-                                        <s:IconToggleButton 
+                                        <c:IconToggleButton 
                                             x:Uid="MainWindowDisableHotKeysButton"
                                             Glyph="&#xe765;" 
                                             Click="DisableHotKeysIconButton_Click"/>
 
-                                        <s:IconToggleButton 
+                                        <c:IconToggleButton 
                                             x:Uid="MainWindowShowAppBarButton"
                                             x:Name="ShowAppBarIconToggleButton"
                                             Glyph="&#xede3;" 
                                             Click="ShowAppBarIconButton_Click"/>
 
-                                        <s:IconButton 
+                                        <c:IconButton 
                                             x:Uid="MainWindowReloadSessionsButton"
                                             Text="Reload audio sessions" 
                                             Glyph="&#xe895;" 
                                             Click="ReloadSessionsIconButton_Click">
-                                            <s:IconButton.KeyboardAccelerators>
+                                            <c:IconButton.KeyboardAccelerators>
                                                 <KeyboardAccelerator Modifiers="Control,Shift" Key="R" />
-                                            </s:IconButton.KeyboardAccelerators>
-                                        </s:IconButton>
+                                            </c:IconButton.KeyboardAccelerators>
+                                        </c:IconButton>
 
-                                        <s:IconButton 
+                                        <c:IconButton 
                                             x:Uid="MainWindowRestartApplicationButton"
                                             Text="Restart application" 
                                             Glyph="&#xe72c;" 
                                             Click="RestartIconButton_Click">
-                                            <s:IconButton.KeyboardAccelerators>
+                                            <c:IconButton.KeyboardAccelerators>
                                                 <KeyboardAccelerator Modifiers="Control" Key="R" />
-                                            </s:IconButton.KeyboardAccelerators>
-                                        </s:IconButton>
+                                            </c:IconButton.KeyboardAccelerators>
+                                        </c:IconButton>
 
                                         <Border Style="{StaticResource BorderFlyoutSeparatorStyle}" />
 
-                                        <s:IconButton x:Uid="MainWindowSettingsButton" Text="Settings" Glyph="&#xe713;" Click="SettingsIconButton_Click"/>
+                                        <c:IconButton x:Uid="MainWindowSettingsButton" Text="Settings" Glyph="&#xe713;" Click="SettingsIconButton_Click"/>
                                     </StackPanel>
 
                                     <Grid x:Name="ProfilesGrid" Visibility="Collapsed">
@@ -341,7 +345,8 @@
                 </Button>
 
                 <TextBlock 
-                    x:Name="MainEndpointNameTextBlock" 
+                    x:Name="MainEndpointNameTextBlock"
+                    Text="{x:Bind AudioViewer.DefaultAudioEndpointName, Mode=OneWay}"
                     Grid.Column="2"
                     Style="{StaticResource CaptionTextBlockStyle}"
                     TextWrapping="Wrap"
@@ -356,225 +361,23 @@
                 </TextBlock>
             </Grid>
 
-            <Grid x:Name="ContentGrid" Grid.Row="1" Margin="0,-3,0,0" Visibility="Collapsed">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="1"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+            <c:AudioViewer x:Name="AudioViewer" Grid.Row="1" Margin="0,-3,0,0" Visibility="Collapsed"/>
 
-                <Grid Grid.Row="0" Margin="5,0,5,3" ColumnSpacing="3">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition x:Name="MuteToggleButtonColumn" Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition x:Name="SystemVolumeSliderTextColumn" Width="26"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.Resources>
-                        <Storyboard x:Name="VolumeStoryboard">
-                            <DoubleAnimation 
-                                x:Name="LeftVolumeAnimation"
-                                Storyboard.TargetName="BorderLeftClippingCompositeTransform"
-                                Storyboard.TargetProperty="ScaleX"
-                                To="0"
-                                Duration="{StaticResource AudioMeterAnimationDuration}">
-
-                                <DoubleAnimation.EasingFunction>
-                                    <QuadraticEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-
-                            <DoubleAnimation 
-                                x:Name="RightVolumeAnimation"
-                                Storyboard.TargetName="BorderRightClippingCompositeTransform"
-                                Storyboard.TargetProperty="ScaleX"
-                                To="0"
-                                Duration="{StaticResource AudioMeterAnimationDuration}">
-
-                                <DoubleAnimation.EasingFunction>
-                                    <QuadraticEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                        </Storyboard>
-                    </Grid.Resources>
-
-                    <ToggleButton
-                        x:Uid="MainWindowMuteToggleButton"
-                        x:Name="MuteToggleButton"
-                        Style="{StaticResource MuteToggleButtonStyle}"
-                        Click="MuteToggleButton_Click">
-
-                        <FontIcon x:Name="MuteToggleButtonFontIcon" Glyph="&#xe767;" FontSize="{StaticResource FontIconHeight}"/>
-                    </ToggleButton>
-
-                    <Border 
-                        x:Name="SystemVolumeActivityBorderLeft"
-                        Grid.Column="1"
-                        Background="{StaticResource AudioMeterReversedBackground}"
-                        Opacity="{ThemeResource PeakBorderOpacity}"
-                        CornerRadius="5,5,0,0"
-                        Height="7"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Stretch"
-                        Translation="0,-5,0"
-                        SizeChanged="SystemVolumeActivityBorder_SizeChanged">
-
-                        <Border.Clip>
-                            <RectangleGeometry x:Name="SystemVolumeActivityBorderClippingLeft">
-                                <RectangleGeometry.Transform>
-                                    <CompositeTransform x:Name="BorderLeftClippingCompositeTransform" ScaleX="0"/>
-                                </RectangleGeometry.Transform>
-                            </RectangleGeometry>
-                        </Border.Clip>
-                    </Border>
-
-                    <Border 
-                        x:Name="SystemVolumeActivityBorderRight"
-                        Grid.Column="1"
-                        Background="{StaticResource AudioMeterReversedBackground}"
-                        Opacity="{ThemeResource PeakBorderOpacity}"
-                        CornerRadius="0,0,5,5"
-                        Height="7"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Stretch"
-                        Translation="0,6,0">
-
-                        <Border.Clip>
-                            <RectangleGeometry x:Name="SystemVolumeActivityBorderClippingRight">
-                                <RectangleGeometry.Transform>
-                                    <CompositeTransform x:Name="BorderRightClippingCompositeTransform" ScaleX="0"/>
-                                </RectangleGeometry.Transform>
-                            </RectangleGeometry>
-                        </Border.Clip>
-                    </Border>
-
-                    <Slider 
-                        x:Uid="MainWindowSystemVolumeSlider"
-                        x:Name="SystemVolumeSlider"
-                        Grid.Column="1"
-                        VerticalAlignment="Center"
-                        ValueChanged="SystemVolumeSlider_ValueChanged">
-                        <Slider.Transitions>
-                            <TransitionCollection>
-                                <RepositionThemeTransition IsStaggeringEnabled="False"/>
-                            </TransitionCollection>
-                        </Slider.Transitions>
-                    </Slider>
-
-                    <s:NumberBlock
-                        x:Name="SystemVolumeNumberBlock"
-                        Grid.Column="2"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"/>
-                </Grid>
-
-                <Border
-                    Grid.Row="1"
-                    Background="{ThemeResource SubtleFillColorSecondaryBrush}"/>
-                <Grid
-                    x:Name="AppBarGrid"
-                    Grid.Row="1"
-                    ColumnSpacing="10"
-                    Padding="5,4"
-                    MaxWidth="250"
-                    HorizontalAlignment="Stretch"
-                    Visibility="Collapsed">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.Resources>
-                        <Style TargetType="Button" BasedOn="{StaticResource IconButtonStyle}"/>
-                        <Style TargetType="FontIcon">
-                            <Setter Property="FontSize" Value="16"/>
-                        </Style>
-                    </Grid.Resources>
-
-                    <Button>
-                        <FontIcon Glyph="&#xe72c;"/>
-                    </Button>
-
-                    <Button Grid.Column="1">
-                        <FontIcon Glyph="&#xe74f;"/>
-                    </Button>
-
-                    <Button Grid.Column="2">
-                        <FontIcon Glyph="&#xe7b3;"/>
-                    </Button>
-
-                    <Button Grid.Column="3">
-                        <FontIcon Glyph="&#xf4a5;"/>
-                    </Button>
-                </Grid>
-
-                <Border Height="1" Background="{ThemeResource SystemControlForegroundBaseLowBrush}" Grid.Row="2"/>
-
-                <Grid Grid.Row="3" Margin="0,5,0,0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <ScrollViewer 
-                        x:Name="AudioSessionsScrollViewer"
-                        Padding="3,0,0,0" 
-                        Grid.Row="1"
-                        HorizontalScrollBarVisibility="Disabled">
-
-                        <Grid>
-                            <Canvas
-                                x:Name="RootCanvas"
-                                Background="Transparent"/>
-                            
-                            <GridView
-                                x:Name="AudioSessionsPanel"
-                                Style="{StaticResource GridViewHorizontalLayout}"
-                                ItemsSource="{x:Bind AudioSessions}"
-                                Margin="0,0,0,-7"
-                                SelectionMode="None"
-                                CanReorderItems="True"
-                                ReorderMode="Enabled"
-                                AllowDrop="True"
-                                Grid.Row="1"
-                                Loading="AudioSessionsPanel_Loading"
-                                Loaded="OnLoaded">
-                                <GridView.Resources>
-                                    <Style TargetType="GridViewItem" BasedOn="{StaticResource DefaultGridViewItemStyle}">
-                                        <Setter Property="AllowDrop" Value="False" />
-                                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                        <Setter Property="VerticalAlignment" Value="Stretch"/>
-                                    </Style>
-                                </GridView.Resources>
-                            </GridView>
-                        </Grid>
-                    </ScrollViewer>
-
-                    <s:MessageBar
-                        x:Name="WindowMessageBar"
-                        Grid.Row="0" 
-                        VerticalAlignment="Top"
-                        Visibility="Collapsed"
-                        Margin="5,3"/>
-                </Grid>
-            </Grid>
-
-            <s:SplashScreen
+            <c:SplashScreen
                 x:Name="WindowSplashScreen"
                 Grid.Row="2"
                 OnScreenTimeSpan="0:0:01"
                 Dismissed="SplashScreen_Dismissed">
-                <s:SplashScreen.Background>
+                <c:SplashScreen.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" Opacity="0.6" ColorInterpolationMode="SRgbLinearInterpolation" MappingMode="RelativeToBoundingBox" SpreadMethod="Pad">
                         <LinearGradientBrush.GradientStops>
                             <GradientStop Color="{ThemeResource SolidBackgroundFillColorSecondary}" Offset="0.2"/>
                             <GradientStop Color="{ThemeResource SystemAccentColorDark1}" Offset="2.5"/>
                         </LinearGradientBrush.GradientStops>
                     </LinearGradientBrush>
-                </s:SplashScreen.Background>
+                </c:SplashScreen.Background>
 
-                <s:SplashScreen.TopContent>
+                <c:SplashScreen.TopContent>
                     <Grid VerticalAlignment="Top">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -584,18 +387,30 @@
                         <TextBlock Text="Croak" Style="{StaticResource TitleTextBlockStyle}" VerticalAlignment="Center"/>
                         <TextBlock x:Name="ApplicationVersionTextBlock" Style="{StaticResource TitleTextBlockStyle}" Grid.Column="1" VerticalAlignment="Center"/>
                     </Grid>
-                </s:SplashScreen.TopContent>
+                </c:SplashScreen.TopContent>
 
-                <s:SplashScreen.MainContent>
+                <c:SplashScreen.MainContent>
                     <Viewbox MaxHeight="80" MaxWidth="80">
                         <FontIcon Glyph="&#xf4c3;"/>
                     </Viewbox>
-                </s:SplashScreen.MainContent>
+                </c:SplashScreen.MainContent>
 
-                <s:SplashScreen.BottomContent>
+                <c:SplashScreen.BottomContent>
                     <TextBlock Text="by psykomicron 🐢" FontStretch="UltraExpanded" Opacity="0.6"/>
-                </s:SplashScreen.BottomContent>
-            </s:SplashScreen>
+                </c:SplashScreen.BottomContent>
+            </c:SplashScreen>
+
+            <c:MessageBar
+                x:Name="WindowMessageBar"
+                Grid.Row="1" 
+                Padding="3,5"
+                Margin="0,0,0,5"
+                CornerRadius="0"
+                MinWidth="80"
+                Background="{ThemeResource SystemAccentColorDark2}"
+                VerticalAlignment="Bottom"
+                HorizontalAlignment="Center"
+                Visibility="Collapsed"/>
 
             <TeachingTip
                 Name="SettingsButtonTeachingTip"

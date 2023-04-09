@@ -4,16 +4,19 @@
     <Midl Include="App.idl" />
     <Midl Include="MainWindow.idl" />
     <Midl Include="HotkeyViewModel.idl">
-      <Filter>ViewModels</Filter>
+      <Filter>Models</Filter>
     </Midl>
     <Midl Include="NavigationBreadcrumbBarItem.idl">
-      <Filter>ViewModels</Filter>
+      <Filter>Models</Filter>
     </Midl>
     <Midl Include="AudioProfile.idl">
-      <Filter>ViewModels</Filter>
+      <Filter>Models</Filter>
     </Midl>
     <Midl Include="AudioSessionSettings.idl">
-      <Filter>ViewModels</Filter>
+      <Filter>Models</Filter>
+    </Midl>
+    <Midl Include="UserProfile.idl">
+      <Filter>Models</Filter>
     </Midl>
   </ItemGroup>
   <ItemGroup>
@@ -61,7 +64,7 @@
       <Filter>UI\Controls\CustomControls</Filter>
     </ClCompile>
     <ClCompile Include="HotKeyView.cpp">
-      <Filter>Workers\Audio</Filter>
+      <Filter>Workers\System\Hotkeys</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -105,7 +108,7 @@
     </ClInclude>
     <ClInclude Include="resource.h" />
     <ClInclude Include="HotKeyView.h">
-      <Filter>Workers\Audio</Filter>
+      <Filter>Workers\System\Hotkeys</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -294,14 +297,14 @@
     <Filter Include="Workers\System\Hotkeys">
       <UniqueIdentifier>{e6ef7de2-530d-4111-be69-9794b2e5af2c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ViewModels">
-      <UniqueIdentifier>{70ae19e6-1383-423a-ba7e-6aa7734a5229}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Assets\Translations">
       <UniqueIdentifier>{201a8cbe-645b-47e0-9ef4-bcd1fffbe551}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets\Images">
       <UniqueIdentifier>{998e7b27-b0e7-4ceb-9a82-a3af0b5c20fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Models">
+      <UniqueIdentifier>{70ae19e6-1383-423a-ba7e-6aa7734a5229}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

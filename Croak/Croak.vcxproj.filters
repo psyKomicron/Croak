@@ -60,11 +60,11 @@
     <ClCompile Include="NumberBlock.cpp">
       <Filter>UI\Controls\CustomControls</Filter>
     </ClCompile>
-    <ClCompile Include="HotKeyView.cpp">
-      <Filter>Lib\Audio</Filter>
-    </ClCompile>
     <ClCompile Include="AudioMeter.cpp">
       <Filter>Lib\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="HotKeyView.cpp">
+      <Filter>Lib\System\Hotkeys</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -107,11 +107,11 @@
       <Filter>SmartPtrs</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="HotKeyView.h">
-      <Filter>Lib\Audio</Filter>
-    </ClInclude>
     <ClInclude Include="AudioMeter.h">
       <Filter>Lib\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="HotKeyView.h">
+      <Filter>Lib\System\Hotkeys</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -2,10 +2,11 @@
 
 #include "IComEventImplementation.h"
 #include "AudioInterfacesSmartPtrs.h"
+#include "AudioMeter.h"
 
 namespace Croak::Audio
 {
-    class DefaultAudioEndpoint : public IComEventImplementation, private IAudioEndpointVolumeCallback
+    class DefaultAudioEndpoint : public IComEventImplementation, public AudioMeter, private IAudioEndpointVolumeCallback
     {
     public:
         /**
@@ -63,22 +64,18 @@ namespace Croak::Audio
         IFACEMETHODIMP_(ULONG) AddRef();
         IFACEMETHODIMP_(ULONG) Release();
         IFACEMETHODIMP QueryInterface(REFIID riid, VOID** ppvInterface);
+
         /**
-         * @brief
-         * @return
+        * @brief Registers the audio session to system notifications.
+        * @return true if successful
         */
         bool Register();
         /**
-         * @brief
-         * @return
+        * @brief Unregisters the audio session to system notifications.
+        * @return true if successful
         */
         bool Unregister();
-        /**
-         * @brief Gets the current peak PCM value for the audio endpoint.
-         * @return The current peak PCM value ∈ [0, 1]
-        */
-        float GetPeak() const;
-        std::pair<float, float> GetPeaks();
+
         /**
          * @brief Sets the audio endpoint muted or unmuted.
          * @param mute true to mute, false to unmute
@@ -93,7 +90,6 @@ namespace Croak::Audio
     private:
         ::winrt::impl::atomic_ref_count refCount{ 1 };
         IAudioEndpointVolumePtr audioEndpointVolume{ nullptr };
-        IAudioMeterInformationPtr audioMeterInfo{ nullptr };
         IMMDevicePtr device{ nullptr };
         LPWSTR deviceId = nullptr;
         GUID eventContextId;

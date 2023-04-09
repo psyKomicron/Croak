@@ -1,12 +1,12 @@
 #pragma once
-
 #include "IComEventImplementation.h"
-#include "ProcessInfo.h"
 #include "AudioInterfacesSmartPtrs.h"
+#include "ProcessInfo.h"
+#include "AudioMeter.h"
 
 namespace Croak::Audio
 {
-	class AudioSession : private IAudioSessionEvents, public IComEventImplementation
+	class AudioSession : public IComEventImplementation, private IAudioSessionEvents, public AudioMeter
 	{
     public:
         AudioSession(IAudioSessionControl2* audioSessionControl, GUID eventContextId);
@@ -103,16 +103,6 @@ namespace Croak::Audio
          * @param volume Desired volume in absolute percentage (0-1)
         */
         void SetVolume(const float& volume);
-        /**
-         * @brief Gets the normalized peak PCM value for this audio session.
-         * @return float between 0 and 1
-        */
-        float GetPeak() const;
-        /**
-         * @brief Gets the normalized peak PCM values for the channels in this audio session.
-         * @return pair of float between 0 and 1
-        */
-        std::pair<float, float> GetChannelsPeak() const;
 
         // IUnknown
         IFACEMETHODIMP_(ULONG) AddRef();
@@ -120,8 +110,8 @@ namespace Croak::Audio
         IFACEMETHODIMP QueryInterface(REFIID riid, VOID** ppvInterface);
 
     private:
+        ::winrt::impl::atomic_ref_count refCount{ 1 };
         IAudioSessionControl2Ptr audioSessionControl{ nullptr };
-        IAudioMeterInformationPtr audioMeter{ nullptr };
         ISimpleAudioVolumePtr simpleAudioVolume{ nullptr };
         GUID eventContextId;
         GUID groupingParam;
@@ -130,10 +120,8 @@ namespace Croak::Audio
         bool isSystemSoundSession = false;
         bool muted;
         DWORD processPID = 0;
-        ::winrt::impl::atomic_ref_count refCount{ 1 };
         std::wstring sessionName{};
         std::unique_ptr<System::ProcessInfo> processInfo{ nullptr };
-        bool isSessionActive = false;
 
         winrt::event<winrt::Windows::Foundation::TypedEventHandler<winrt::guid, float>> e_volumeChanged {};
         winrt::event<winrt::Windows::Foundation::TypedEventHandler<winrt::guid, uint32_t>> e_stateChanged {};

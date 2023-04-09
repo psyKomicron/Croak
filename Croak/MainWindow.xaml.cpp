@@ -5,7 +5,6 @@
 #endif
 
 #include "SecondWindow.xaml.h"
-#include "IconHelper.h"
 #include "HotKey.h"
 #include "HotKeyManager.h"
 #include "DebugOutput.h"

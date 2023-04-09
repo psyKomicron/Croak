@@ -15,11 +15,11 @@ namespace Croak::Audio
 		eventContextId{ eventContextId },
 		device{ pDevice }
 	{
+		isActive = true;
+
 		check_hresult(device->Activate(__uuidof(IAudioEndpointVolume), CLSCTX_ALL, NULL, (void**)&audioEndpointVolume));
 		check_hresult(device->GetId(&deviceId));
-
-
-		if (FAILED(device->Activate(__uuidof(IAudioMeterInformation), CLSCTX_ALL, NULL, (void**)&audioMeterInfo)))
+		if (FAILED(device->Activate(__uuidof(IAudioMeterInformation), CLSCTX_ALL, NULL, (void**)&audioInformationMeter)))
 		{
 			OutputDebugHString(L"Main audio endpoint failed to get audio meter information, peak values will be blank.");
 		}
@@ -52,7 +52,6 @@ namespace Croak::Audio
 	void DefaultAudioEndpoint::Volume(const float& value)
 	{
 		if (value < 0.) return;
-
 		winrt::check_hresult(audioEndpointVolume->SetMasterVolumeLevelScalar(value, &eventContextId));
 	}
 
@@ -77,21 +76,6 @@ namespace Croak::Audio
 		return mute & 1;
 	}
 
-
-	float DefaultAudioEndpoint::GetPeak() const
-	{
-		float peak = 0.f;
-		audioMeterInfo->GetPeakValue(&peak);
-		return peak;
-	}
-
-	std::pair<float, float> DefaultAudioEndpoint::GetPeaks()
-	{
-		float channelsPeakValues[2]{ 0 };
-		// TODO: Make sure we are giving the correct amount of channels.
-		check_hresult(audioMeterInfo->GetChannelsPeakValues(2, channelsPeakValues));
-		return std::pair<float, float>(channelsPeakValues[0], channelsPeakValues[1]);
-	}
 
 	bool DefaultAudioEndpoint::Register()
 	{

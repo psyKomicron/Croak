@@ -5,7 +5,7 @@
 #include <appmodel.h>
 #include "AudioSessionStates.h"
 #include "ManifestApplicationNode.h"
-#include "IconHelper.h"
+#include "IconExtractor.h"
 #include "DebugOutput.h"
 
 using namespace winrt;
@@ -43,25 +43,26 @@ namespace Croak::Audio
         if (processPID > 0 && !isSystemSoundSession)
         {
             processInfo = unique_ptr<System::ProcessInfo>(new System::ProcessInfo(processPID));
-
-            sessionName = !processInfo->Name().empty() ? processInfo->Name() : processInfo->Manifest().DisplayName();
+            sessionName = !processInfo->Name().empty() ? std::wstring(processInfo->Name()) : processInfo->Manifest().DisplayName();
         }
-
 
         AudioSessionState state{};
         if (SUCCEEDED(audioSessionControl->GetState(&state)))
         {
-            isSessionActive = state == AudioSessionState::AudioSessionStateActive;
+            isActive = (state == AudioSessionState::AudioSessionStateActive);
         }
 
         check_hresult(audioSessionControl->QueryInterface(_uuidof(ISimpleAudioVolume), (void**)&simpleAudioVolume));
         if (FAILED(simpleAudioVolume->GetMute((BOOL*)&muted)))
         {
-            OutputDebugWString(L"Audio session '" + sessionName + L"' > Failed to get session state. Default (unmuted) assumed.");
+            // TODO: LOGS
+            OutputDebugWString(std::format(L"Audio session '{}' > Failed to get session state. Default (unmuted) assumed.", sessionName));
         }
-        if (FAILED(audioSessionControl->QueryInterface(__uuidof(IAudioMeterInformation), (void**)&audioMeter)))
+
+        if (FAILED(audioSessionControl->QueryInterface(__uuidof(IAudioMeterInformation), (void**)&audioInformationMeter)))
         {
-            OutputDebugWString(L"Audio session '" + sessionName + L"' > Failed to get audio meter info. Peak values will be blank.");
+            // TODO: LOGS
+            OutputDebugWString(std::format(L"Audio session '{}' > Failed to get audio meter info. Peak values will be blank.", sessionName));
         }
     }
 
@@ -151,36 +152,6 @@ namespace Croak::Audio
         check_hresult(simpleAudioVolume->SetMasterVolume(volume, nullptr));
     }
 
-    float AudioSession::GetPeak() const
-    {
-        float peak = 0.f;
-        audioMeter->GetPeakValue(&peak);
-        return peak;
-    }
-
-    pair<float, float> Audio::AudioSession::GetChannelsPeak() const
-    {
-        // TODO: Channel count
-        if (isSessionActive)
-        {
-            pair<float, float> peaks{};
-
-            UINT meteringChannelCount = 0;
-            if (SUCCEEDED(audioMeter->GetMeteringChannelCount(&meteringChannelCount)) && meteringChannelCount == 2)
-            {
-                float channelsPeak[2]{ 0 };
-                check_hresult(audioMeter->GetChannelsPeakValues(2, channelsPeak));
-                peaks.first = channelsPeak[0];
-                peaks.second = channelsPeak[1];
-            }
-            return peaks;
-        }
-        else
-        {
-            return { 0.f, 0.f };
-        }
-    }
-
     bool AudioSession::Register()
     {
         if (!isRegistered)
@@ -266,7 +237,7 @@ namespace Croak::Audio
 
     STDMETHODIMP AudioSession::OnStateChanged(::AudioSessionState NewState)
     {
-        isSessionActive = NewState == AudioSessionState::AudioSessionStateActive;
+        isActive = NewState == AudioSessionState::AudioSessionStateActive;
         e_stateChanged(id, static_cast<uint32_t>(NewState)); // Cast to uint32_t to cross ABI without more code.
         return S_OK;
     }

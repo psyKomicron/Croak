@@ -262,6 +262,10 @@
       <DependentUpon>SplashScreen.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClInclude>
+    <ClInclude Include="UserProfile.h">
+      <DependentUpon>UserProfile.idl</DependentUpon>
+      <SubType>Code</SubType>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml" />
@@ -417,6 +421,10 @@
       <DependentUpon>SplashScreen.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClCompile>
+    <ClCompile Include="UserProfile.cpp">
+      <DependentUpon>UserProfile.idl</DependentUpon>
+      <SubType>Code</SubType>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="App.idl">
@@ -514,6 +522,9 @@
     <Midl Include="SplashScreen.idl">
       <DependentUpon>SplashScreen.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Midl>
+    <Midl Include="UserProfile.idl">
+      <SubType>Designer</SubType>
     </Midl>
   </ItemGroup>
   <ItemGroup>

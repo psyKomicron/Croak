@@ -6,27 +6,28 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    Background="{StaticResource MessageBarDefaultBackgroundBrush}"
+    BorderBrush="{ThemeResource AccentControlElevationBorderBrush}"
+    CornerRadius="{StaticResource ControlCornerRadius}"
+    BackgroundSizing="OuterBorderEdge"
+    VerticalAlignment="Top"
+    HorizontalAlignment="Stretch"
     Loaded="UserControl_Loaded"
-    HorizontalAlignment="Stretch">
+    Loading="MessageControl_Loading">
 
     <Grid
         x:Name="RootGrid"
         Padding="5"
         ColumnSpacing="5"
-        CornerRadius="{StaticResource ControlCornerRadius}"
-        BorderBrush="{ThemeResource AccentControlElevationBorderBrush}"
+        VerticalAlignment="Stretch"
+        HorizontalAlignment="Stretch"
+        CornerRadius="{x:Bind CornerRadius, Mode=OneWay}"
+        BorderBrush="{x:Bind BorderBrush, Mode=OneWay}"
+        Background="{x:Bind Background, Mode=OneWay}"
         MinHeight="55">
         <Grid.RenderTransform>
             <CompositeTransform />
         </Grid.RenderTransform>
-        <Grid.Background>
-            <AcrylicBrush
-                FallbackColor="{ThemeResource SolidBackgroundFillColorTertiary}"
-                TintColor="{ThemeResource SystemAccentColorDark3}"
-                TintOpacity="0.55"
-                TintLuminosityOpacity="0.5"
-                Opacity="1"/>
-        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
@@ -40,13 +41,11 @@
                         <Setter Target="MessageControl.Visibility" Value="Visible" />
                     </VisualState.Setters>
 
-                    <Storyboard>
+                    <Storyboard x:Name="VisibleStateStoryboard">
                         <DoubleAnimationUsingKeyFrames 
+                            x:Name="AppearAnimation"
                             Storyboard.TargetName="RootGrid" 
-                            Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)">
-
-                            <DiscreteDoubleKeyFrame KeyTime="0" Value="0" />
-                            <SplineDoubleKeyFrame KeyTime="0:0:0.167" Value="1" KeySpline="0.0, 0.0, 0.0, 1.0" />
+                            Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)">
                         </DoubleAnimationUsingKeyFrames>
 
                         <DoubleAnimation
@@ -63,14 +62,12 @@
                 </VisualState>
 
                 <VisualState x:Name="Collapsed">
-                    <Storyboard>
+                    <Storyboard x:Name="CollapsedStateStoryboard">
                         <DoubleAnimationUsingKeyFrames 
+                            x:Name="DisappearAnimation"
                             Storyboard.TargetName="RootGrid" 
-                            Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)">
-
-                            <DiscreteDoubleKeyFrame KeyTime="0" Value="1" />
-                            <SplineDoubleKeyFrame KeyTime="0:0:0.167" Value="0" KeySpline="1.0, 1.0, 0.0, 1.0" />
-                        </DoubleAnimationUsingKeyFrames>
+                            Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)">
+                        </DoubleAnimationUsingKeyFrames>    
 
                         <DoubleAnimation
                             Storyboard.TargetName="RootGrid"

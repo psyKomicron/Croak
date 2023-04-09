@@ -1,16 +1,22 @@
-// Copyright (c) Microsoft Corporation and Contributors.
-// Licensed under the MIT License.
-
 #include "pch.h"
 #include "MessageBar.xaml.h"
 #if __has_include("MessageBar.g.cpp")
 #include "MessageBar.g.cpp"
 #endif
 
-using namespace winrt;
-using namespace Microsoft::UI::Xaml;
-using namespace winrt::Windows::Foundation;
+#include "DebugOutput.h"
 
+using namespace winrt;
+namespace Foundation = winrt::Windows::Foundation;
+namespace Xaml
+{
+    using namespace winrt::Microsoft::UI::Xaml;
+    using namespace winrt::Microsoft::UI::Xaml::Input;
+    using namespace winrt::Microsoft::UI::Xaml::Controls;
+    using namespace winrt::Microsoft::UI::Xaml::Media;
+    using namespace winrt::Microsoft::UI::Xaml::Media::Imaging;
+    using namespace winrt::Microsoft::UI::Xaml::Controls::Primitives;
+}
 
 namespace winrt::Croak::implementation
 {
@@ -19,7 +25,7 @@ namespace winrt::Croak::implementation
         InitializeComponent();
 
         timer = DispatcherQueue().CreateTimer();
-        auto duration = (Application::Current().Resources().Lookup(box_value(L"MessageBarIntervalSeconds")).as<int32_t>() * 1000) + 150;
+        auto duration = (Xaml::Application::Current().Resources().Lookup(box_value(L"MessageBarIntervalSeconds")).as<int32_t>() * 1000) + 150;
         timer.Interval(
             std::chrono::milliseconds(duration)
         );
@@ -45,22 +51,89 @@ namespace winrt::Croak::implementation
         EnqueueMessage(box_value(message));
     }
 
-    void MessageBar::CloseButton_Click(winrt::Windows::Foundation::IInspectable const&, RoutedEventArgs const&)
+    void MessageBar::CloseButton_Click(winrt::Windows::Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
     {
         timer.Stop();
         TimerProgressBarStoryboard().Stop();
     }
 
-    void MessageBar::UserControl_Loaded(winrt::Windows::Foundation::IInspectable const&, RoutedEventArgs const&)
+    void MessageBar::MessageControl_Loading(Xaml::FrameworkElement const&, Foundation::IInspectable const&)
     {
+    }
+
+    void MessageBar::UserControl_Loaded(winrt::Windows::Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
+    {
+        InitializeAnimations();
         TimerProgressBar_SizeChanged(nullptr, nullptr);
+
+        // If the HorizontalAlignment is not stretched, add corner radius.
+        if (HorizontalAlignment() != Xaml::HorizontalAlignment::Stretch)
+        {
+            Xaml::CornerRadius cornerRadius = Xaml::Application::Current().Resources().Lookup(winrt::box_value(L"ControlCornerRadius")).as<Xaml::CornerRadius>();
+            CornerRadius(cornerRadius);
+        }
     }
 
-    void MessageBar::TimerProgressBar_SizeChanged(winrt::Windows::Foundation::IInspectable const&, SizeChangedEventArgs const&)
+    void MessageBar::TimerProgressBar_SizeChanged(winrt::Windows::Foundation::IInspectable const&, Xaml::SizeChangedEventArgs const&)
     {
-        TimerProgressBarClipping().Rect(Rect(0.f, 0.f, static_cast<float>(BackgroundTimerBorder().ActualWidth()), static_cast<float>(BackgroundTimerBorder().ActualHeight())));
+        TimerProgressBarClipping().Rect(
+            Foundation::Rect(0.f, 0.f, static_cast<float>(BackgroundTimerBorder().ActualWidth()), static_cast<float>(BackgroundTimerBorder().ActualHeight())));
     }
 
+
+    void MessageBar::InitializeAnimations()
+    {
+        //auto parent = Xaml::VisualTreeHelper::GetParent(*this).as<Xaml::FrameworkElement>();
+        //double parentWidth = parent.ActualWidth();
+        //double parentHeight = parent.ActualHeight();
+        //double width = ActualWidth();
+        double height = ActualHeight();
+        if (height == 0 || isnan(height)) DEBUG_BREAK();
+
+        Xaml::Animation::DiscreteDoubleKeyFrame appearDiscreteDoubleKeyFrame{}, disappearDiscreteDoubleKeyFrame{};
+        Xaml::Animation::SplineDoubleKeyFrame appearSplineDoubleKeyFrame{}, disappearSplineDoubleKeyFrame{};
+        // Set collapsed->visible animation values
+        appearDiscreteDoubleKeyFrame.KeyTime(Xaml::Animation::KeyTime(std::chrono::milliseconds(0)));
+        appearSplineDoubleKeyFrame.KeyTime(Xaml::Animation::KeyTime(std::chrono::milliseconds(333)));
+        Xaml::Animation::KeySpline keySpline{};
+        keySpline.ControlPoint1(Foundation::Point(0.f, 0.f));
+        keySpline.ControlPoint2(Foundation::Point(0.f, 1.f));
+        appearSplineDoubleKeyFrame.KeySpline(keySpline);
+        // Set visible->collapsed animation values
+        disappearDiscreteDoubleKeyFrame.KeyTime(Xaml::Animation::KeyTime(std::chrono::milliseconds(0)));
+        disappearSplineDoubleKeyFrame.KeyTime(Xaml::Animation::KeyTime(std::chrono::milliseconds(333)));
+        keySpline = Xaml::Animation::KeySpline();
+        keySpline.ControlPoint1(Foundation::Point(1.f, 1.f));
+        keySpline.ControlPoint2(Foundation::Point(0.f, 1.f));
+
+        if (VerticalAlignment() == Xaml::VerticalAlignment::Bottom)
+        {
+            // Appear animation
+            appearDiscreteDoubleKeyFrame.Value(height + Margin().Bottom);
+            appearSplineDoubleKeyFrame.Value(0);
+            // Disappear animation
+            disappearDiscreteDoubleKeyFrame.Value(0);
+            disappearSplineDoubleKeyFrame.Value(height + Margin().Bottom);
+        }
+        else
+        {
+            // Appear animation
+            appearDiscreteDoubleKeyFrame.Value((-1 * height) - Margin().Top);
+            appearSplineDoubleKeyFrame.Value(0);
+            // Disappear animation
+            disappearDiscreteDoubleKeyFrame.Value(0);
+            disappearSplineDoubleKeyFrame.Value((-1 * height) - Margin().Top);
+        }
+
+        VisibleStateStoryboard().Stop();
+        CollapsedStateStoryboard().Stop();
+        AppearAnimation().KeyFrames().Append(appearDiscreteDoubleKeyFrame);
+        AppearAnimation().KeyFrames().Append(appearSplineDoubleKeyFrame);
+        DisappearAnimation().KeyFrames().Append(disappearDiscreteDoubleKeyFrame);
+        DisappearAnimation().KeyFrames().Append(disappearSplineDoubleKeyFrame);
+        VisibleStateStoryboard().Resume();
+        CollapsedStateStoryboard().Resume();
+    }
 
     void MessageBar::DisplayMessage()
     {
@@ -79,7 +152,7 @@ namespace winrt::Croak::implementation
             {
                 timer.Stop();
                 // Hide the control.
-                VisualStateManager::GoToState(*this, L"Collapsed", true);
+                Xaml::VisualStateManager::GoToState(*this, L"Collapsed", true);
             }
         }
 
@@ -101,11 +174,9 @@ namespace winrt::Croak::implementation
                         msCount = 1000;
                     }
 
-                    timer.Interval(
-                        std::chrono::milliseconds(msCount + 150)
-                    );
+                    timer.Interval(std::chrono::milliseconds(msCount + 150)); // Add a small delay to smooth out.
                     TimerProgressBarAnimation().Duration(
-                        DurationHelper::FromTimeSpan(std::chrono::milliseconds(msCount))
+                        Xaml::DurationHelper::FromTimeSpan(std::chrono::milliseconds(msCount))
                     );
                 }
             }
@@ -115,14 +186,14 @@ namespace winrt::Croak::implementation
                     std::chrono::milliseconds(4150)
                 );
                 TimerProgressBarAnimation().Duration(
-                    DurationHelper::FromTimeSpan(std::chrono::milliseconds(4000))
+                    Xaml::DurationHelper::FromTimeSpan(std::chrono::milliseconds(4000))
                 );
             }
 
-            if (Visibility() == Visibility::Collapsed)
+            if (Visibility() == Xaml::Visibility::Collapsed)
             {
                 // Show the control.
-                VisualStateManager::GoToState(*this, L"Visible", true);
+                Xaml::VisualStateManager::GoToState(*this, L"Visible", true);
             }
 
             MainContentPresenter().Content(box_value(message));

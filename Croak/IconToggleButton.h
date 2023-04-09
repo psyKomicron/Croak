@@ -50,10 +50,10 @@ namespace winrt::Croak::implementation
         inline void Glyph(const winrt::hstring& value);
         inline bool IsOn();
         inline void IsOn(const bool& value);
-        inline winrt::hstring OnIcon();
-        inline void OnIcon(const winrt::hstring& value);
-        inline winrt::hstring OffIcon();
-        inline void OffIcon(const winrt::hstring& value);
+        inline winrt::Windows::Foundation::IInspectable OnIcon();
+        inline void OnIcon(const winrt::Windows::Foundation::IInspectable& value);
+        inline winrt::Windows::Foundation::IInspectable OffIcon();
+        inline void OffIcon(const winrt::Windows::Foundation::IInspectable& value);
         inline bool Compact();
         inline void Compact(const bool& value);
 

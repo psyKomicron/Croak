@@ -59,3 +59,9 @@ inline void DebugLog(const std::string& text, const std::source_location& source
 
     OutputDebugStringA(out.c_str());
 }
+
+template<class TString>
+inline void DebugLog2(const TString& text, const std::source_location& sourceLocation = std::source_location::current())
+{
+
+}

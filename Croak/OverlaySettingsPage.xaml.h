@@ -9,6 +9,8 @@ namespace winrt::Croak::implementation
     public:
         OverlaySettingsPage();
 
+        void OnNavigatedTo(const winrt::Microsoft::UI::Xaml::Navigation::NavigationEventArgs& args);
+
         void Canvas_PointerPressed(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Input::PointerRoutedEventArgs const& e);
         void DisplayCanvas_PointerMoved(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Input::PointerRoutedEventArgs const& e);
         void Page_Loaded(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);

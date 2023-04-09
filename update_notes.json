@@ -3,7 +3,7 @@
         "news": [
             {
                 "title": "Overlay",
-                "text": "Overlay mode has been introduced. You can activate it in the menu, next to the Picture-in-picture button."
+                "text": "Overlay mode has been introduced. You can activate it in the menu, next to the Picture-in-picture button. A new hot key has been added to show and hide the window (in normal,compact or overlay mode): Alt + A."
             },
             {
                 "title": "Indicators",
@@ -19,7 +19,8 @@
         ],
         "bugs": [
             "On some computers, pluggin/unplugging an audio jack will crash the app. The issue seems to be coming from the audio driver application.",
-            "Audio sessions will need to be reloaded manually after the computer has been put to sleep or hibernation."
+            "Audio sessions will need to be reloaded manually after the computer has been put to sleep or hibernation.",
+            "Some applications will be named 'ms-resource:AppStoreName', this is a bug that will be adressed."
         ]
     },
     "fr-FR": {

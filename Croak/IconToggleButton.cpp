@@ -29,19 +29,19 @@ namespace winrt::Croak::implementation
         L"Glyph",
         xaml_typename<hstring>(),
         xaml_typename<Croak::IconToggleButton>(),
-        Xaml::PropertyMetadata(box_value(L""))
+        Xaml::PropertyMetadata(nullptr)
     );
     Xaml::DependencyProperty IconToggleButton::_onIconProperty = Xaml::DependencyProperty::Register(
         L"OnIcon",
-        xaml_typename<hstring>(),
+        xaml_typename<Foundation::IInspectable>(),
         xaml_typename<Croak::IconToggleButton>(),
-        Xaml::PropertyMetadata(box_value(L""))
+        Xaml::PropertyMetadata(nullptr)
     );
     Xaml::DependencyProperty IconToggleButton::_offIconProperty = Xaml::DependencyProperty::Register(
         L"OffIcon",
-        xaml_typename<hstring>(),
+        xaml_typename<Foundation::IInspectable>(),
         xaml_typename<Croak::IconToggleButton>(),
-        Xaml::PropertyMetadata(box_value(L""))
+        Xaml::PropertyMetadata(nullptr)
     );
 
     IconToggleButton::IconToggleButton()
@@ -53,11 +53,16 @@ namespace winrt::Croak::implementation
         {
             if (isOn)
             {
-                Xaml::VisualStateManager::GoToState(*this, L"On", true);
+                Xaml::VisualStateManager::GoToState(*this, L"Checked", true);
             }
             else
             {
-                Xaml::VisualStateManager::GoToState(*this, L"Off", true);
+                Xaml::VisualStateManager::GoToState(*this, L"Normal", true);
+            }
+
+            if (OnIcon() && OffIcon())
+            {
+                Xaml::VisualStateManager::GoToState(*this, isOn ? L"ShowOnIcon" : L"ShowOffIcon", true);
             }
         });
     }
@@ -90,39 +95,33 @@ namespace winrt::Croak::implementation
 
     inline void IconToggleButton::IsOn(const bool& value)
     {
-        if (isOn != value)
-        {
-            if (value)
-            {
-                Xaml::VisualStateManager::GoToState(*this, L"On", true);
-            }
-            else
-            {
-                Xaml::VisualStateManager::GoToState(*this, L"Off", true);
-            }
-        }
-
         isOn = value;
+        Xaml::VisualStateManager::GoToState(*this, value ?L"Checked" : L"Normal", true);
+
+        if (OnIcon() && OffIcon())
+        {
+            Xaml::VisualStateManager::GoToState(*this, value ? L"ShowOnIcon" : L"ShowOffIcon", true);
+        }
     }
 
-    inline winrt::hstring IconToggleButton::OnIcon()
+    inline Foundation::IInspectable IconToggleButton::OnIcon()
     {
-        return unbox_value<winrt::hstring>(GetValue(_onIconProperty));
+        return GetValue(_onIconProperty);
     }
 
-    inline void IconToggleButton::OnIcon(const winrt::hstring& value)
+    inline void IconToggleButton::OnIcon(const Foundation::IInspectable& value)
     {
-        SetValue(_onIconProperty, box_value(value));
+        SetValue(_onIconProperty, value);
     }
 
-    inline winrt::hstring IconToggleButton::OffIcon()
+    inline Foundation::IInspectable IconToggleButton::OffIcon()
     {
-        return unbox_value<hstring>(GetValue(_offIconProperty));
+        return GetValue(_offIconProperty);
     }
 
-    inline void IconToggleButton::OffIcon(const winrt::hstring& value)
+    inline void IconToggleButton::OffIcon(const Foundation::IInspectable& value)
     {
-        SetValue(_offIconProperty, box_value(value));
+        SetValue(_offIconProperty, value);
     }
 
     inline bool IconToggleButton::Compact()
@@ -134,7 +133,8 @@ namespace winrt::Croak::implementation
     {
     }
 
-
+    // Event handlers
+    
     void IconToggleButton::OnPointerEntered(const Xaml::PointerRoutedEventArgs& args)
     {
         pointerExited = false;
@@ -146,23 +146,24 @@ namespace winrt::Croak::implementation
             leftButtonPressed = point.Properties().IsLeftButtonPressed();
         }
 
-        Xaml::VisualStateManager::GoToState(*this, L"PointerOver", !leftButtonPressed);
+        Xaml::VisualStateManager::GoToState(*this, isOn ? L"PointerOverChecked" : L"PointerOver", !leftButtonPressed);
     }
 
     void IconToggleButton::OnPointerExited(const Xaml::PointerRoutedEventArgs& args)
     {
         pointerExited = true;
-        Xaml::VisualStateManager::GoToState(*this, L"Normal", true);
+        Xaml::VisualStateManager::GoToState(*this, isOn ? L"Checked" : L"Normal", true);
     }
 
     void IconToggleButton::OnPointerPressed(const Xaml::PointerRoutedEventArgs& args)
     {
         if (enabled)
         {
-            Xaml::VisualStateManager::GoToState(*this, L"PointerPressed", true);
             IsOn(!IsOn());
             e_click(*this, Xaml::RoutedEventArgs());
             args.Handled(true);
+
+            Xaml::VisualStateManager::GoToState(*this, isOn ? L"PointerPressedChecked" : L"PointerPressed", true);
         }
     }
 
@@ -170,11 +171,11 @@ namespace winrt::Croak::implementation
     {
         if (pointerExited)
         {
-            Xaml::VisualStateManager::GoToState(*this, L"Normal", true);
+            Xaml::VisualStateManager::GoToState(*this, isOn ? L"Checked" : L"Normal", true);
         }
         else
         {
-            Xaml::VisualStateManager::GoToState(*this, L"PointerOver", true);
+            Xaml::VisualStateManager::GoToState(*this, isOn ? L"PointerOverChecked" : L"PointerOver", true);
         }
     }
 }

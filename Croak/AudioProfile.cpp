@@ -23,7 +23,7 @@ namespace winrt::Croak::implementation
         props.Values().Insert(L"KeepOnTop", IReference(keepOnTop));
         props.Values().Insert(L"ShowMenu", IReference(showMenu));
         props.Values().Insert(L"SystemVolume", IReference(systemVolume));
-        props.Values().Insert(L"Layout", IReference(layout));
+        props.Values().Insert(L"Layout", IReference(static_cast<uint32_t>(layout)));
 
         ApplicationDataContainer audioSettingsContainer = props.CreateContainer(L"AudioSessionsSettings", ApplicationDataCreateDisposition::Always);
         for (auto&& audioSessionSettings : audioSessionsSettings)
@@ -49,7 +49,8 @@ namespace winrt::Croak::implementation
         keepOnTop = unbox_value<bool>(container.Values().Lookup(L"KeepOnTop"));
         showMenu = unbox_value<bool>(container.Values().Lookup(L"ShowMenu"));
         systemVolume = unbox_value<float>(container.Values().Lookup(L"SystemVolume"));
-        layout = unbox_value<uint32_t>(container.Values().Lookup(L"Layout"));
+        uint32_t boxedLayout = unbox_value<uint32_t>(container.Values().Lookup(L"Layout"));
+        layout = static_cast<AudioSessionLayout>(boxedLayout);
 
         auto audioSessionsSettings = container.Containers().Lookup(L"AudioSessionsSettings").Values();
         auto sessionsIndexesContainer = container.Values().Lookup(L"SessionsIndexes").as<ApplicationDataCompositeValue>();

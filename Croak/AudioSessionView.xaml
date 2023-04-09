@@ -31,7 +31,7 @@
         CornerRadius="{x:Bind CornerRadius, Mode=OneWay}"
         BorderThickness="{x:Bind BorderThickness}"
         BorderBrush="{x:Bind BorderBrush}"
-        MaxHeight="290"
+        Height="290"
         MinWidth="80"
         SizeChanged="Grid_SizeChanged"
         PointerEntered="RootGrid_PointerEntered"
@@ -152,7 +152,7 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 Grid.Row="1"
-                Translation="-5,0,0">
+                Translation="-6,0,0">
 
                 <Border.Clip>
                     <RectangleGeometry x:Name="BorderClippingLeft">
@@ -172,7 +172,7 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 Grid.Row="1"
-                Translation="7,0,0">
+                Translation="6.5,0,0">
 
                 <Border.Clip>
                     <RectangleGeometry x:Name="BorderClippingRight">
@@ -218,7 +218,7 @@
                 VerticalAlignment="Stretch"
                 Grid.Row="1"
                 Margin="0,0,0,0"
-                Translation="1.5,0,0"
+                Translation="0,0,0"
                 ValueChanged="Slider_ValueChanged"/>
 
             <Button
@@ -331,7 +331,7 @@
                 Click="MuteToggleButton_Click">
 
                 <FontIcon 
-                    x:Name="VolumeFontIcon1" FontSize="{StaticResource FontIconHeight}" Glyph="{x:Bind VolumeGlyph, Mode=OneWay}"/>
+                    x:Name="VolumeFontIcon2" FontSize="{StaticResource FontIconHeight}" Glyph="{x:Bind VolumeGlyph, Mode=OneWay}"/>
             </Button>
 
             <Border 

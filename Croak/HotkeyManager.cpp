@@ -14,37 +14,33 @@ namespace Croak::System::HotKeys
         // TODO: Take read-write lock.
         for (auto&& pair : hotKeys)
         {
-            delete pair.second;
+            HotKey* hotKey = pair.second;
+            delete hotKey;
         }
     }
 
     void HotKeyManager::RegisterHotKey(const VirtualKeyModifiers& modifiers, const uint32_t& virtualKey, const bool& isRepeating, const HotKeyId& agnosticId)
     {
-        // TODO:
-        // - Check arguments validity
-        // - Activate and throw properly if the key has failed to activate.
-
-        HotKey* hotKey = new HotKey(modifiers, virtualKey, isRepeating);
-
+        // TODO: Check arguments validity.
         try
         {
+            HotKey* hotKey = new HotKey(modifiers, virtualKey, isRepeating);
             hotKey->Activate(); // throws
+
+            hotKey->Fired([this, id = agnosticId](auto, auto)
+            {
+                e_hotKeyFired(id, nullptr);
+            });
+
+            hotKeys.insert({ agnosticId, hotKey});
         }
         catch (const std::invalid_argument&)
         {
-            hotKey->Enabled(false);
             throw;
         }
-
-        hotKey->Fired([this, id = agnosticId](auto, auto)
-        {
-            e_hotKeyFired(id, nullptr);
-        });
-
-        hotKeys.insert({ agnosticId, hotKey});
     }
 
-    void HotKeyManager::EditKey(const HotKeyId& hotKeyId, const VirtualKeyModifiers& modifiers, const uint32_t& virtualKey)
+    bool HotKeyManager::EditKey(const HotKeyId& hotKeyId, const VirtualKeyModifiers& modifiers, const uint32_t& virtualKey)
     {
         if (hotKeys.find(hotKeyId) != hotKeys.cend())
         {
@@ -66,10 +62,12 @@ namespace Croak::System::HotKeys
 
                 hotKeys[hotKeyId] = newHotKey;
             }
+            return true;
         }
+        return false;
     }
 
-    void HotKeyManager::EditKey(const::Croak::System::HotKeys::HotKeyId& agnosticId, const bool& state)
+    void HotKeyManager::DeactivateKey(const::Croak::System::HotKeys::HotKeyId& agnosticId, const bool& state)
     {
         if (hotKeys.find(agnosticId) != hotKeys.cend())
         {
@@ -77,19 +75,18 @@ namespace Croak::System::HotKeys
         }
     }
 
-    void HotKeyManager::ReplaceOrInsertKey(HotKey* previousKey, HotKey* newKey)
+    void HotKeyManager::ReplaceOrInsertKey(HotKey* /*previousKey*/, HotKey* /*newKey*/)
     {
+        // TODO: Implement.
     }
 
-    map<HotKeyId, HotKeyView> HotKeyManager::GetManagedKeys()
+    map<HotKeyId, HotKeyView> HotKeyManager::ViewManagedKeys()
     {
         map<HotKeyId, HotKeyView> view{};
-
         for (auto&& pair : hotKeys)
         {
             view.insert({ pair.first, HotKeyView(pair.second, pair.first) });
         }
-
         return view;
     }
 }

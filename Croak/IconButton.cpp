@@ -85,7 +85,7 @@ namespace winrt::Croak::implementation
         }
     }
 
-    void IconButton::OnPointerReleased(const Microsoft::UI::Xaml::Input::PointerRoutedEventArgs& args)
+    void IconButton::OnPointerReleased(const Microsoft::UI::Xaml::Input::PointerRoutedEventArgs&)
     {
         VisualStateManager::GoToState(*this, pointerExited ? L"Normal" : L"PointerOver", true);
     }
@@ -104,7 +104,7 @@ namespace winrt::Croak::implementation
         VisualStateManager::GoToState(*this, L"PointerOver", !leftButtonPressed);
     }
 
-    void IconButton::OnPointerExited(const Microsoft::UI::Xaml::Input::PointerRoutedEventArgs& args)
+    void IconButton::OnPointerExited(const Microsoft::UI::Xaml::Input::PointerRoutedEventArgs&)
     {
         pointerExited = true;
         VisualStateManager::GoToState(*this, L"Normal", true);

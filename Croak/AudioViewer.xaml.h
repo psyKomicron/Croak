@@ -1,5 +1,4 @@
 #pragma once
-
 #include "winrt/Microsoft.UI.Xaml.h"
 #include "winrt/Microsoft.UI.Xaml.Markup.h"
 #include "winrt/Microsoft.UI.Xaml.Controls.Primitives.h"
@@ -9,6 +8,7 @@
 #include "AudioSession.h"
 #include "DefaultAudioEndpoint.h"
 #include "AudioSessionStates.h"
+#include "HotkeyManager.h"
 
 namespace winrt::Croak::implementation
 {
@@ -39,6 +39,7 @@ namespace winrt::Croak::implementation
         void SwitchAudioState();
         void ReloadAudioSessions();
         void ShowHiddenAudioSessions();
+        //void LoadColorProfile();
 
         // Event handlers
         void OnLoaded(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
@@ -51,18 +52,24 @@ namespace winrt::Croak::implementation
         void AudioSessionView_VolumeStateChanged(winrt::Croak::AudioSessionView const& sender, bool const& args);
         void UserControl_Unloaded(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
         void AppBarButton_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
+        void AudioSessionsGridView_ItemClick(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Controls::ItemClickEventArgs const& e);
+        void AudioSessionsGridView_SelectionChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Controls::SelectionChangedEventArgs const& e);
 
     private:
-        winrt::hstring defaultAudioEndpointName = L"";
-        std::atomic_bool atomicLoaded{};
         bool animationsDisabled = false;
         winrt::Croak::AudioSessionLayout layout = winrt::Croak::AudioSessionLayout::Auto;
-        std::mutex audioSessionsMutex{};
+        std::timed_mutex audioSessionsMutex{};
         std::mutex mainAudioEndpointMutex{};
+        std::timed_mutex selectedIndicesMutex{};
+        std::vector<winrt::hstring> selectedAudioSessionsIndices{};
         ::Croak::Audio::DefaultAudioEndpoint* mainAudioEndpoint = nullptr;
         ::Croak::Audio::AudioController* audioController = nullptr;
         std::map<winrt::guid, ::Croak::Audio::AudioSession*> audioSessions{};
         winrt::Croak::AudioProfile currentAudioProfile = nullptr;
+        ::Croak::System::HotKeys::HotKeyManager hotKeyManager{};
+        // UI.
+        std::atomic_bool atomicLoaded{};
+        winrt::hstring defaultAudioEndpointName = L"";
         winrt::Croak::MessageBar messageBar = nullptr;
         winrt::event_token mainAudioEndpointVolumeChangedToken;
         winrt::event_token mainAudioEndpointStateChangedToken;
@@ -99,6 +106,8 @@ namespace winrt::Croak::implementation
         void DefaultAudioEndpointName(const winrt::hstring& value);
         void EnqueueString(const winrt::hstring& str);
         void EnqueueMessage(const winrt::Windows::Foundation::IInspectable& inspectable);
+    public:
+        void AudioSessionsGridView_PointerPressed(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Input::PointerRoutedEventArgs const& e);
     };
 }
 

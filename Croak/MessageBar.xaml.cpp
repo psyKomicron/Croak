@@ -88,7 +88,7 @@ namespace winrt::Croak::implementation
         //double parentHeight = parent.ActualHeight();
         //double width = ActualWidth();
         double height = ActualHeight();
-        if (height == 0 || isnan(height)) DEBUG_BREAK();
+        //if (height == 0 || isnan(height)) DEBUG_BREAK();
 
         Xaml::Animation::DiscreteDoubleKeyFrame appearDiscreteDoubleKeyFrame{}, disappearDiscreteDoubleKeyFrame{};
         Xaml::Animation::SplineDoubleKeyFrame appearSplineDoubleKeyFrame{}, disappearSplineDoubleKeyFrame{};

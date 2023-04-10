@@ -69,13 +69,13 @@ namespace winrt::Croak::implementation
         HideWindowToggleSwitch().IsOn(unbox_value_or(Storage::ApplicationData::Current().LocalSettings().Values().TryLookup(L"HideWindowInOverlayMode"), false));
     }
 
-    void OverlaySettingsPage::Canvas_PointerPressed(Foundation::IInspectable const& sender, Xaml::PointerRoutedEventArgs const& e)
+    void OverlaySettingsPage::Canvas_PointerPressed(Foundation::IInspectable const&, Xaml::PointerRoutedEventArgs const&)
     {
         pointerCaptured = true;
         //CanvasBorder().BorderBrush(Xaml::Media::SolidColorBrush(winrt::Windows::UI::Colors::White()));
     }
 
-    void OverlaySettingsPage::Canvas_PointerReleased(Foundation::IInspectable const&, Xaml::PointerRoutedEventArgs const& e)
+    void OverlaySettingsPage::Canvas_PointerReleased(Foundation::IInspectable const&, Xaml::PointerRoutedEventArgs const&)
     {
         if (pointerCaptured)
         {
@@ -149,13 +149,13 @@ namespace winrt::Croak::implementation
         }
     }
 
-    void OverlaySettingsPage::DisplayCanvas_PointerEntered(Foundation::IInspectable const&, Xaml::PointerRoutedEventArgs const& e)
+    void OverlaySettingsPage::DisplayCanvas_PointerEntered(Foundation::IInspectable const&, Xaml::PointerRoutedEventArgs const& /*e*/)
     {
-        capturedPointer = e.Pointer();
-        bool captured = DisplayCanvas().CapturePointer(capturedPointer);
+        /*capturedPointer = e.Pointer();
+        bool captured = DisplayCanvas().CapturePointer(capturedPointer);*/
     }
 
-    void OverlaySettingsPage::DisplayCanvas_PointerExited(Foundation::IInspectable const&, Xaml::PointerRoutedEventArgs const& e)
+    void OverlaySettingsPage::DisplayCanvas_PointerExited(Foundation::IInspectable const&, Xaml::PointerRoutedEventArgs const&)
     {
         DisplayCanvas().ReleasePointerCapture(capturedPointer);
     }

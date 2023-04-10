@@ -72,7 +72,6 @@ namespace winrt::Croak::implementation
         // Check if changes have been made
         // 1. Check audio changes.
         double systemVolume = 0.0;
-        bool isDefaultProfile = false;
         hstring profileName;
         ::Collections::IMap<hstring, float> audioLevels;
         bool audioLevelsEqual = false;

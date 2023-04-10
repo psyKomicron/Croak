@@ -172,7 +172,7 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 Grid.Row="1"
-                Translation="6.5,0,0">
+                Translation="5,0,0">
 
                 <Border.Clip>
                     <RectangleGeometry x:Name="BorderClippingRight">

@@ -129,8 +129,9 @@ namespace winrt::Croak::implementation
         return false;
     }
 
-    inline void IconToggleButton::Compact(const bool& value)
+    inline void IconToggleButton::Compact(const bool& /*value*/)
     {
+        // TODO: Implement.
     }
 
     // Event handlers
@@ -149,7 +150,7 @@ namespace winrt::Croak::implementation
         Xaml::VisualStateManager::GoToState(*this, isOn ? L"PointerOverChecked" : L"PointerOver", !leftButtonPressed);
     }
 
-    void IconToggleButton::OnPointerExited(const Xaml::PointerRoutedEventArgs& args)
+    void IconToggleButton::OnPointerExited(const Xaml::PointerRoutedEventArgs&)
     {
         pointerExited = true;
         Xaml::VisualStateManager::GoToState(*this, isOn ? L"Checked" : L"Normal", true);
@@ -167,7 +168,7 @@ namespace winrt::Croak::implementation
         }
     }
 
-    void IconToggleButton::OnPointerReleased(const Xaml::PointerRoutedEventArgs& args)
+    void IconToggleButton::OnPointerReleased(const Xaml::PointerRoutedEventArgs&)
     {
         if (pointerExited)
         {

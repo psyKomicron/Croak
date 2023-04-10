@@ -4,6 +4,7 @@
 #include "AudioController.h"
 #include "AudioSession.h"
 #include "DefaultAudioEndpoint.h"
+#include "HotkeyManager.h"
 
 using namespace winrt::Windows::System;
 
@@ -63,12 +64,11 @@ namespace winrt::Croak::implementation
 #pragma endregion
 
     private:
-        using BackdropController = winrt::Microsoft::UI::Composition::SystemBackdrops::DesktopAcrylicController;
-
         // Static fields
         static winrt::Croak::MainWindow singleton;
 
         // Logic related attributes.
+        ::Croak::System::HotKeys::HotKeyManager hotKeyManager{};
         // UI related attributes.
         bool loaded = false;
         bool compact = false;
@@ -76,7 +76,7 @@ namespace winrt::Croak::implementation
         winrt::Windows::Graphics::RectInt32 displayRect;
         winrt::Microsoft::UI::Windowing::AppWindow appWindow = nullptr;
 #pragma region Backdrop
-        BackdropController backdropController = nullptr;
+        winrt::Microsoft::UI::Composition::SystemBackdrops::DesktopAcrylicController backdropController = nullptr;
         winrt::Windows::System::DispatcherQueueController dispatcherQueueController = nullptr;
         winrt::Microsoft::UI::Composition::SystemBackdrops::SystemBackdropConfiguration systemBackdropConfiguration = nullptr;
         winrt::Microsoft::UI::Xaml::FrameworkElement::ActualThemeChanged_revoker themeChangedRevoker;

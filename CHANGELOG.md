@@ -1,10 +1,12 @@
 # *Change log*
 
-# 1.2.1
+# 1.2.2
 ## Updates
-- Added background color (in `OverlaySettingsPage`) to see the size of the screen.
+- You can now select an audio session to lower it's volume when pressing 'Volume down' hotkey. Multiple sessions can be selected.
+- HotKeyManager is no longer a singleton. Hot key view page doesn't show hot keys anymore.
 
 ## Fixes
+- Audio session and endpoint peak fixes (from `resource-management` merge).
 
 ## Bugs
 - Audio sessions will need to be reloaded manually after the computer has been put to sleep or hibernation.
@@ -31,6 +33,46 @@
 - [ ] Invalidate and release all audio objects when bug #2 occurs. This will allow the application to reload audio sessions without having to restart.
 - [ ] Implement `AudioProfileEditPage` exit confirmation dialog (changes check not done).
 - [ ] Fix overlay settings not properly working.
+- [ ] Using logging facilities to output logs -> `TODO: LOGS`
+- [ ] Allow the user to change the peak meter color profile.
+- [ ] 'Un-static' `HotKeyManager`.
+
+
+
+# 1.2.1
+## Updates
+- Added background color (in `OverlaySettingsPage`) to see the size of the screen.
+
+## Fixes
+*None*
+
+## Bugs
+- Audio sessions will need to be reloaded manually after the computer has been put to sleep or hibernation.
+- On some computers, pluggin/unplugging an audio jack will crash the app. The issue seems to be coming from the audio driver application.
+- Some I18Ned applications don't have a real name: "ms-resource:AppStoreName".
+
+## Todo
+- [ ] Show/hide audio sessions.
+- [ ] Enable the user to change hot key key, not only modifiers.
+- [ ] Add more hot keys (audio session control, reload, restart, show on current screen, PiP).
+    - [ ] Reload.
+    - [ ] Restart.
+    - [X] Show on current screen.
+    - [ ] Enable/disable PiP.
+    - [ ] Enable/disable overlay mode.
+- [ ] Translate all strings.
+    - [X] Settings page.
+    - [X] Main window menu.
+    - [ ] Audio profiles pages.
+    - [ ] Audio sessions page.
+    - [ ] Overlay page.
+- [ ] Change app logo to be the 'audio mixer' font icon.
+- [ ] Handle `ms-resources` when reading package information from app manifests.
+- [ ] Invalidate and release all audio objects when bug #2 occurs. This will allow the application to reload audio sessions without having to restart.
+- [ ] Implement `AudioProfileEditPage` exit confirmation dialog (changes check not done).
+- [ ] Fix overlay settings not properly working.
+- [ ] Using logging facilities to output logs -> `TODO: LOGS`
+
 
 
 # 1.2.0

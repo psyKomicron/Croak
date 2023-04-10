@@ -140,7 +140,7 @@ namespace winrt::Croak::implementation
         Frame().Navigate(xaml_typename<AudioSessionsSettingsPage>());
     }
 
-    void SettingsPage::HideWindowToggleSwitch_Toggled(Foundation::IInspectable const&, Xaml::RoutedEventArgs const& e)
+    void SettingsPage::HideWindowToggleSwitch_Toggled(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
     {
         Storage::ApplicationData::Current().LocalSettings().Values().Insert(L"HideWindowOnCompactMode", box_value(HideWindowToggleSwitch().IsOn()));
     }

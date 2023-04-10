@@ -112,9 +112,9 @@ namespace winrt::Croak::implementation
             return false;
         }
 
-        void RestoreWindowState(const bool& value)
+        void RestoreWindowState(const bool& /*value*/)
         {
-
+            // TODO: Implement.
         }
 
         inline winrt::Windows::Graphics::RectInt32 WindowDisplayRect() const
@@ -122,8 +122,9 @@ namespace winrt::Croak::implementation
             return {};
         }
 
-        inline void WindowDisplayRect(const winrt::Windows::Graphics::RectInt32& value)
+        inline void WindowDisplayRect(const winrt::Windows::Graphics::RectInt32& /*value*/)
         {
+            // TODO: Implement.
         }
 
 

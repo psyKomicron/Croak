@@ -7,7 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="Transparent"
-    Unloaded="UserControl_Unloaded">
+    Unloaded="UserControl_Unloaded"
+    PointerPressed="AudioSessionsGridView_PointerPressed"
+    RequiresPointer="WhenEngaged">
 
     <Grid x:Name="RootGrid" SizeChanged="Grid_SizeChanged">
         <Grid.Resources>
@@ -224,11 +226,12 @@
                         Style="{StaticResource GridViewHorizontalLayout}"
                         ItemsSource="{x:Bind AudioSessions}"
                         Margin="0,0,0,-7"
-                        SelectionMode="None"
+                        SelectionMode="Extended"
                         CanReorderItems="True"
                         ReorderMode="Enabled"
                         AllowDrop="True"
                         Grid.Row="1"
+                        SelectionChanged="AudioSessionsGridView_SelectionChanged"
                         Loading="AudioSessionsPanel_Loading"
                         Loaded="OnLoaded">
                         <GridView.Resources>

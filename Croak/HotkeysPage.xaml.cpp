@@ -27,11 +27,11 @@ namespace winrt::Croak::implementation
         HotKeysViewer().AddActiveKey({ loader.GetString(L"SystemVolumeSwitchStateHotKeyName"), true, VirtualKey::M, VirtualKeyModifiers::Control | VirtualKeyModifiers::Shift });*/
     }
 
-    void HotkeysPage::HotKeysListView_Loading(FrameworkElement const& sender, IInspectable const& args)
+    void HotkeysPage::HotKeysListView_Loading(FrameworkElement const&, IInspectable const&)
     {
-        winrt::Windows::ApplicationModel::Resources::ResourceLoader loader{};
+        /*winrt::Windows::ApplicationModel::Resources::ResourceLoader loader{};
         auto&& manager = HotKeyManager::GetHotKeyManager();
-        auto&& hotKeys = manager.GetManagedKeys();
+        auto&& hotKeys = manager.ViewManagedKeys();
 
         for (auto&& pair : hotKeys)
         {
@@ -50,15 +50,15 @@ namespace winrt::Croak::implementation
             view.VirtualModifiersChanged({ this, &HotkeysPage::HotKeyView_VirtualKeyModifiersChanged });
             view.Toggled({ this, &HotkeysPage::HotKeyView_Toggled });
             HotKeysListView().Items().Append(view);
-        }
+        }*/
     }
 
     void HotkeysPage::HotKeyView_VirtualKeyModifiersChanged(const Croak::HotKeyView& sender, const Windows::System::VirtualKeyModifiers& args)
     {
         DebugLog(std::format("{0} virtual key modifiers changed.", winrt::to_string(sender.HotKeyName())));
 
-        auto&& manager = HotKeyManager::GetHotKeyManager();
-        auto&& keyViews = manager.GetManagedKeys();
+        /*auto&& manager = HotKeyManager::GetHotKeyManager();
+        auto&& keyViews = manager.ViewManagedKeys();
         for (auto&& pair : keyViews)
         {
             uint32_t id = pair.first;
@@ -71,25 +71,25 @@ namespace winrt::Croak::implementation
                     manager.EditKey(id, sender.Modifiers(), keyView.VirtualKey());
                     UserMessageBar().EnqueueString(L"Key (" + sender.HotKeyName() + L") edited");
                 }
-                catch (const std::invalid_argument& ex)
+                catch (const std::invalid_argument&)
                 {
                     UserMessageBar().EnqueueString(L"Failed to edit key (" + sender.HotKeyName() + L")");
                 }
 
                 break;
             }
-        }
+        }*/
     }
 
-    void HotkeysPage::HotKeyView_VirtualKeyChanged(const Croak::HotKeyView& sender, const Windows::System::VirtualKey& args)
+    void HotkeysPage::HotKeyView_VirtualKeyChanged(const Croak::HotKeyView& sender, const Windows::System::VirtualKey& /*args*/)
     {
         DebugLog(std::format("{0} virtual key changed.", winrt::to_string(sender.HotKeyName())));
     }
 
     void HotkeysPage::HotKeyView_Toggled(const Croak::HotKeyView& sender, const bool& args)
     {
-        auto&& manager = HotKeyManager::GetHotKeyManager();
-        auto&& keyViews = manager.GetManagedKeys();
+        /*auto&& manager = HotKeyManager::GetHotKeyManager();
+        auto&& keyViews = manager.ViewManagedKeys();
         for (auto&& pair : keyViews)
         {
             uint32_t id = pair.first;
@@ -102,15 +102,13 @@ namespace winrt::Croak::implementation
                     manager.EditKey(id, args);
                     UserMessageBar().EnqueueString(sender.HotKeyName() + (args ? L" enabled" : L" disabled"));
                 }
-                catch (const std::invalid_argument& ex)
+                catch (const std::invalid_argument&)
                 {
                     UserMessageBar().EnqueueString(L"Failed to edit key (" + sender.HotKeyName() + L")");
-                    //sender.Modifiers(sender.Modifiers());
                 }
-
                 break;
             }
-        }
+        }*/
     }
 
     uint32_t HotkeysPage::GetMods(const Windows::System::VirtualKeyModifiers& virtualKeyModifiers)

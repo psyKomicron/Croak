@@ -52,10 +52,10 @@ namespace winrt::Croak::implementation
         uint32_t boxedLayout = unbox_value<uint32_t>(container.Values().Lookup(L"Layout"));
         layout = static_cast<AudioSessionLayout>(boxedLayout);
 
-        auto audioSessionsSettings = container.Containers().Lookup(L"AudioSessionsSettings").Values();
+        auto audioSessionsSettingsContainer = container.Containers().Lookup(L"AudioSessionsSettings").Values();
         auto sessionsIndexesContainer = container.Values().Lookup(L"SessionsIndexes").as<ApplicationDataCompositeValue>();
 
-        for (auto&& pair : audioSessionsSettings)
+        for (auto&& pair : audioSessionsSettingsContainer)
         {
             hstring name = pair.Key();
             winrt::Croak::AudioSessionSettings audioSessionSettings{};

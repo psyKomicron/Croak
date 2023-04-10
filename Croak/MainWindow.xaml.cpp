@@ -6,7 +6,6 @@
 
 #include "SecondWindow.xaml.h"
 #include "HotKey.h"
-#include "HotKeyManager.h"
 #include "DebugOutput.h"
 
 #define ENABLE_HOTKEYS
@@ -329,7 +328,8 @@ namespace winrt::Croak::implementation
     void MainWindow::DisableHotKeysIconButton_Click(IconToggleButton const& /*sender*/, Xaml::RoutedEventArgs const& /*args*/)
     {
         hotKeysEnabled = !hotKeysEnabled;
-        ::Croak::System::HotKeys::HotKeyManager::GetHotKeyManager().EditKey(MOVE_WINDOW, hotKeysEnabled);
+        // TODO: Move window hot keys.
+        //::Croak::System::HotKeys::HotKeyManager::GetHotKeyManager().EditKey(MOVE_WINDOW, hotKeysEnabled);
 
         WindowMessageBar().EnqueueString(resourceLoader.GetString(hotKeysEnabled ? L"InfoHotKeysEnabled" : L"InfoHotKeysDisabled"));
 
@@ -663,7 +663,7 @@ namespace winrt::Croak::implementation
                     systemBackdropConfiguration.IsInputActive(true);
                     systemBackdropConfiguration.Theme((UI::SystemBackdropTheme)RootGrid().ActualTheme());
 
-                    backdropController = BackdropController();
+                    backdropController = {};
                     backdropController.TintColor(Xaml::Application::Current().Resources().TryLookup(box_value(L"SolidBackgroundFillColorBase")).as<Windows::UI::Color>());
                     backdropController.FallbackColor(Xaml::Application::Current().Resources().TryLookup(box_value(L"SolidBackgroundFillColorBase")).as<Windows::UI::Color>());
                     backdropController.TintOpacity(static_cast<float>(Xaml::Application::Current().Resources().TryLookup(box_value(L"BackdropTintOpacity")).as<double>()));
@@ -715,10 +715,7 @@ namespace winrt::Croak::implementation
 
     void MainWindow::LoadHotKeys()
     {
-        using namespace ::Croak::System::HotKeys;
-        HotKeyManager& hotKeyManager = HotKeyManager::GetHotKeyManager();
         hotKeyManager.HotKeyFired({ this, &MainWindow::HotKeyFired });
-
         try
         {
             hotKeyManager.RegisterHotKey(Windows::System::VirtualKeyModifiers::Menu, VK_SPACE, true, MOVE_WINDOW);
@@ -928,14 +925,15 @@ namespace winrt::Croak::implementation
 
             return defaultProfile;
         }
-        catch (const winrt::hresult_error& ex)
+        catch (const winrt::hresult_error&)
         {
             DebugBreak();
         }
-        catch (const std::exception& ex)
+        catch (const std::exception&)
         {
             DebugBreak();
         }
+        return nullptr;
     }
 
     void MainWindow::AppWindow_Closing(UI::AppWindow, UI::AppWindowClosingEventArgs)
@@ -960,9 +958,6 @@ namespace winrt::Croak::implementation
 
     void MainWindow::HotKeyFired(const uint32_t& id, const Foundation::IInspectable&)
     {
-        constexpr float stepping = 0.01f;
-        constexpr float largeStepping = 0.07f;
-
         if (id == MOVE_WINDOW || id == MOVE_WINDOW_ALT)
         {
             if (windowActivated)

@@ -13,6 +13,7 @@
 #define USE_TIMER
 //#define DEACTIVATE_TIMER
 #define ENABLE_HOTKEYS
+#define ALLOW_SELECTION
 
 constexpr int VOLUME_DOWN = 1;
 constexpr int VOLUME_UP = 2;
@@ -82,9 +83,9 @@ namespace winrt::Croak::implementation
         e_propertyChanged.remove(token);
     }
 
-    void AudioViewer::SetMessageBar(const winrt::Croak::MessageBar& messageBar)
+    void AudioViewer::SetMessageBar(const winrt::Croak::MessageBar& value)
     {
-        this->messageBar = messageBar;
+        this->messageBar = value;
     }
 
     void AudioViewer::CloseAudioObjects()
@@ -121,7 +122,7 @@ namespace winrt::Croak::implementation
             AudioSessionsGridView().ItemsSource(nullptr);
 
             // Set audio sessions volume.
-            std::unique_lock lock{ audioSessionsMutex }; // Taking the lock will also lock sessions from being added to the display.
+            std::lock_guard lock{ audioSessionsMutex }; // Taking the lock will also lock sessions from being added to the display.
             auto audioSessionsSettings = audioProfile.AudioSessionsSettings();
             for (auto&& audioSessionSettings : audioSessionsSettings)
             {
@@ -377,7 +378,7 @@ namespace winrt::Croak::implementation
         }
 
         {
-            std::unique_lock lock{ audioSessionsMutex };
+            std::lock_guard lock{ audioSessionsMutex };
             for (std::pair<guid, CAudio::AudioSession*> iter : audioSessions)
             {
                 iter.second->Muted(setMute);
@@ -408,7 +409,7 @@ namespace winrt::Croak::implementation
 
         // Unregister VolumeChanged event handler & unregister audio sessions from audio events and release com ptrs.
         {
-            std::unique_lock lock{ audioSessionsMutex };
+            std::lock_guard lock{ audioSessionsMutex };
             for (auto& pair : audioSessions)
             {
                 CAudio::AudioSession* audioSession = pair.second;
@@ -461,13 +462,13 @@ namespace winrt::Croak::implementation
         // TODO: How do I insert the new sessions: lookup in the profile (if loaded) or insert at the end to not disrupt the UX too much.
         if (showingSessions)
         {
-            AudioSessionsGridView().SelectionMode(Xaml::ListViewSelectionMode::None);
-            auto&& selectedItems = AudioSessionsGridView().SelectedItems();
+            AudioSessionsGridView().SelectionMode(Xaml::ListViewSelectionMode::Extended);
+            /*auto&& selectedItems = AudioSessionsGridView().SelectedItems();
             auto ranges = AudioSessionsGridView().SelectedRanges();
             for (auto&& range : ranges)
             {
                 DebugLog(std::format("[{0:d}, {1:d}] length={2:d}", range.FirstIndex(), range.LastIndex(), range.Length()));
-            }
+            }*/
         }
         else
         {
@@ -529,7 +530,7 @@ namespace winrt::Croak::implementation
         SystemVolumeNumberBlock().Double(e.NewValue());
     }
 
-    void AudioViewer::AudioSessionsPanel_Loading(Xaml::FrameworkElement const&, Foundation::IInspectable const& args)
+    void AudioViewer::AudioSessionsPanel_Loading(Xaml::FrameworkElement const&, Foundation::IInspectable const&)
     {
         LoadContent();
 
@@ -629,7 +630,7 @@ namespace winrt::Croak::implementation
         }
     }
 
-    void AudioViewer::AudioSessionView_VolumeStateChanged(winrt::Croak::AudioSessionView const& sender, bool const& args)
+    void AudioViewer::AudioSessionView_VolumeStateChanged(winrt::Croak::AudioSessionView const& /*sender*/, bool const& /*args*/)
     {
         //TODO: 
     }
@@ -639,9 +640,44 @@ namespace winrt::Croak::implementation
         //CleanUpResources(false);
     }
 
-    void AudioViewer::AppBarButton_Click(Foundation::IInspectable const& sender, Xaml::RoutedEventArgs const& e)
+    void AudioViewer::AppBarButton_Click(Foundation::IInspectable const&, Xaml::RoutedEventArgs const&)
     {
         ShowHiddenAudioSessions();
+    }
+
+    void AudioViewer::AudioSessionsGridView_PointerPressed(Foundation::IInspectable const&, Xaml::Input::PointerRoutedEventArgs const&)
+    {
+        AudioSessionsGridView().SelectedIndex(-1);
+    }
+
+    void AudioViewer::AudioSessionsGridView_SelectionChanged(Foundation::IInspectable const&, Xaml::SelectionChangedEventArgs const & e)
+    {
+        std::lock_guard lock{ selectedIndicesMutex };
+        for (auto&& item : e.AddedItems())
+        {
+            auto&& bob = item.try_as<AudioSessionView>();
+            if (bob)
+            {
+                selectedAudioSessionsIndices.push_back(bob.Header());
+            }
+        }
+
+        for (auto&& item : e.RemovedItems())
+        {
+            auto&& bob = item.try_as<AudioSessionView>();
+            if (bob)
+            {
+                hstring name = bob.Header();
+                for (size_t i = 0; i < selectedAudioSessionsIndices.size(); i++)
+                {
+                    if (selectedAudioSessionsIndices[i] == name)
+                    {
+                        selectedAudioSessionsIndices.erase(selectedAudioSessionsIndices.begin() + i);
+                        break;
+                    }
+                }
+            }
+        }
     }
 
 
@@ -669,9 +705,9 @@ namespace winrt::Croak::implementation
     winrt::Croak::AudioSessionView AudioViewer::CreateView(CAudio::AudioSession* audioSession, bool checkDuplicates)
     {
         // Check for duplicates, multiple audio sessions might be grouped under one by the app/system owning the sessions.
-        if (checkDuplicates && audioSession->State() != ::AudioSessionState::AudioSessionStateActive)
+        if (checkDuplicates && audioSession->State() == ::AudioSessionState::AudioSessionStateActive)
         {
-            std::unique_lock lock{ audioSessionsMutex };
+            std::lock_guard lock{ audioSessionsMutex };
 
             uint8_t hitcount = 0u;
             for (auto& iter : audioSessions)
@@ -844,15 +880,13 @@ namespace winrt::Croak::implementation
                     throw;
                 }
 
-
                 // Create and setup peak meters timers
                 audioSessionsPeakTimer = DispatcherQueue().CreateTimer();
-                mainAudioEndpointPeakTimer = DispatcherQueue().CreateTimer();
-
                 audioSessionsPeakTimer.Interval(Foundation::TimeSpan(std::chrono::milliseconds(83)));
                 audioSessionsPeakTimer.Tick({ this, &AudioViewer::UpdatePeakMeters });
                 audioSessionsPeakTimer.Stop();
 
+                mainAudioEndpointPeakTimer = DispatcherQueue().CreateTimer();
                 mainAudioEndpointPeakTimer.Interval(Foundation::TimeSpan(std::chrono::milliseconds(83)));
                 mainAudioEndpointPeakTimer.Tick([&](auto, auto)
                 {
@@ -863,7 +897,7 @@ namespace winrt::Croak::implementation
 
                     try
                     {
-                        std::pair<float, float> peakValues = mainAudioEndpoint->GetPeaks();
+                        std::pair<float, float> peakValues = mainAudioEndpoint->GetStereoPeaks();
                         LeftVolumeAnimation().To(static_cast<double>(peakValues.first));
                         RightVolumeAnimation().To(static_cast<double>(peakValues.second));
                         VolumeStoryboard().Begin();
@@ -874,7 +908,6 @@ namespace winrt::Croak::implementation
                     }
                 });
 
-                //MainEndpointNameTextBlock().Text(mainAudioEndpoint->Name());
                 SystemVolumeSlider().Value(static_cast<double>(mainAudioEndpoint->Volume()) * 100.);
                 MuteToggleButton().IsChecked(mainAudioEndpoint->Muted());
                 MuteToggleButtonFontIcon().Glyph(mainAudioEndpoint->Muted() ? L"\ue74f" : L"\ue767");
@@ -893,9 +926,10 @@ namespace winrt::Croak::implementation
 
     void AudioViewer::SaveAudioLevels()
     {
+        using Disposition = Storage::ApplicationDataCreateDisposition;
         Storage::ApplicationDataContainer audioLevels = Storage::ApplicationData::Current().LocalSettings().CreateContainer(
             L"AudioLevels",
-            Storage::ApplicationData::Current().LocalSettings().Containers().HasKey(L"AudioLevels") ? Storage::ApplicationDataCreateDisposition::Existing : Storage::ApplicationDataCreateDisposition::Always
+            Storage::ApplicationData::Current().LocalSettings().Containers().HasKey(L"AudioLevels") ? Disposition::Existing : Disposition::Always
         );
 
         for (uint32_t i = 0; i < audioSessionViews.Size(); i++) // Only saving the visible audio sessions levels.
@@ -912,13 +946,11 @@ namespace winrt::Croak::implementation
 
     void AudioViewer::LoadHotKeys()
     {
-        ::Croak::System::HotKeys::HotKeyManager& hotKeyManager = ::Croak::System::HotKeys::HotKeyManager::GetHotKeyManager();
         hotKeyManager.HotKeyFired({ this, &AudioViewer::HotKeyFired });
-
         try
         {
-            hotKeyManager.RegisterHotKey(Windows::System::VirtualKeyModifiers::Windows | Windows::System::VirtualKeyModifiers::Control, VK_DOWN, true, VOLUME_DOWN);
-            hotKeyManager.RegisterHotKey(Windows::System::VirtualKeyModifiers::Windows | Windows::System::VirtualKeyModifiers::Control, VK_UP, true, VOLUME_UP);
+            hotKeyManager.RegisterHotKey(Windows::System::VirtualKeyModifiers::Shift | Windows::System::VirtualKeyModifiers::Control, VK_DOWN, true, VOLUME_DOWN);
+            hotKeyManager.RegisterHotKey(Windows::System::VirtualKeyModifiers::Shift| Windows::System::VirtualKeyModifiers::Control, VK_UP, true, VOLUME_UP);
             hotKeyManager.RegisterHotKey(Windows::System::VirtualKeyModifiers::Control | Windows::System::VirtualKeyModifiers::Menu, VK_UP, true, VOLUME_UP_ALT);
             hotKeyManager.RegisterHotKey(Windows::System::VirtualKeyModifiers::Control | Windows::System::VirtualKeyModifiers::Menu, VK_DOWN, true, VOLUME_DOWN_ALT);
             hotKeyManager.RegisterHotKey(Windows::System::VirtualKeyModifiers::Control | Windows::System::VirtualKeyModifiers::Shift, 'M', true, MUTE_SYSTEM);
@@ -949,7 +981,7 @@ namespace winrt::Croak::implementation
                 currentAudioProfile.ShowMenu(AppBarGrid().Visibility() == Xaml::Visibility::Visible);
                 currentAudioProfile.DisableAnimations(mainAudioEndpointPeakTimer.IsRunning());
 
-                std::unique_lock lock{ audioSessionsMutex };
+                std::lock_guard lock{ audioSessionsMutex };
                 for (std::pair<winrt::guid, CAudio::AudioSession*> iter : audioSessions)
                 {
                     auto name = iter.second->Name();
@@ -982,7 +1014,7 @@ namespace winrt::Croak::implementation
         // Unregister VolumeChanged event handler & unregister audio sessions from audio events and release com ptrs.
         if (audioSessions.size() > 0)
         {
-            std::unique_lock lock{ audioSessionsMutex };
+            std::lock_guard lock{ audioSessionsMutex };
 
             for (auto& iter : audioSessions)
             {
@@ -1021,8 +1053,9 @@ namespace winrt::Croak::implementation
         }
     }
 
-    void AudioViewer::InsertSessionAccordingToProfile(::Croak::Audio::AudioSession* audioSession)
+    void AudioViewer::InsertSessionAccordingToProfile(::Croak::Audio::AudioSession* /*audioSession*/)
     {
+        // TODO: Implement.
     }
 
     void AudioViewer::DrawSizeIndicators()
@@ -1074,47 +1107,81 @@ namespace winrt::Croak::implementation
 
     void AudioViewer::HotKeyFired(const uint32_t& id, const Foundation::IInspectable&)
     {
-        constexpr float stepping = 0.01f;
-        constexpr float largeStepping = 0.07f;
+        constexpr float normalStep = 0.01f;
+        constexpr float largeStep = 0.07f;
         try
         {
-            switch (id)
+            float stepping = (id == VOLUME_DOWN || id == VOLUME_UP) ? normalStep : largeStep;
+            if (id == MUTE_SYSTEM)
             {
-                case VOLUME_DOWN:
+                mainAudioEndpoint->SetMute(!mainAudioEndpoint->Muted());
+                DispatcherQueue().TryEnqueue([this]()
                 {
-                    mainAudioEndpoint->SetVolume(mainAudioEndpoint->Volume() - stepping > 0.f ? mainAudioEndpoint->Volume() - stepping : 0.f);
-                    break;
+                    MuteToggleButtonFontIcon().Glyph(mainAudioEndpoint->Muted() ? L"\ue74f" : L"\ue767");
+                    MuteToggleButton().IsChecked(Foundation::IReference(mainAudioEndpoint->Muted()));
+                });
+            }
+            else if (id == VOLUME_DOWN || id == VOLUME_DOWN_ALT)
+            {
+#ifdef ALLOW_SELECTION
+                using namespace std::chrono_literals;
+                std::unique_lock lock{ selectedIndicesMutex, std::defer_lock };
+                if (!lock.try_lock_for(100ms))
+                {
+                    return;
                 }
-                case VOLUME_UP:
-                {
-                    mainAudioEndpoint->SetVolume(mainAudioEndpoint->Volume() + stepping < 1.f ? mainAudioEndpoint->Volume() + stepping : 1.f);
-                    break;
-                }
-                case VOLUME_UP_ALT:
-                {
-                    mainAudioEndpoint->SetVolume(mainAudioEndpoint->Volume() + largeStepping < 1.f ? mainAudioEndpoint->Volume() + largeStepping : 1.f);
-                    break;
-                }
-                case VOLUME_DOWN_ALT:
-                {
-                    mainAudioEndpoint->SetVolume(mainAudioEndpoint->Volume() - largeStepping > 0.f ? mainAudioEndpoint->Volume() - largeStepping : 0.f);
-                    break;
-                }
-                case MUTE_SYSTEM:
-                {
-                    mainAudioEndpoint->SetMute(!mainAudioEndpoint->Muted());
 
-                    DispatcherQueue().TryEnqueue([this]()
-                    {
-                        MuteToggleButtonFontIcon().Glyph(mainAudioEndpoint->Muted() ? L"\ue74f" : L"\ue767");
-                        MuteToggleButton().IsChecked(Foundation::IReference(mainAudioEndpoint->Muted()));
-                    });
-                    break;
-                }
-                default:
+                if (!selectedAudioSessionsIndices.empty())
                 {
-                    DebugLog(std::format("Hot key not recognized. Id: {0}", id));
+                    std::unique_lock lock2{ audioSessionsMutex, std::defer_lock };
+                    if (lock2.try_lock_for(100ms))
+                    {
+                        for (auto&& kv : audioSessions)
+                        {
+                            for (size_t i = 0; i < selectedAudioSessionsIndices.size(); i++)
+                            {
+                                if (kv.second->Name() == selectedAudioSessionsIndices[i])
+                                {
+                                    kv.second->SetVolume(kv.second->Volume() - stepping > 0.f ? kv.second->Volume() - stepping : 0.f);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // TODO: Log "failed to lock audioSessionsMutex".
+                    }
+                    return;
                 }
+#endif
+                mainAudioEndpoint->SetVolume(mainAudioEndpoint->Volume() - stepping > 0.f ? mainAudioEndpoint->Volume() - stepping : 0.f);
+            }
+            else if (id == VOLUME_UP || id == VOLUME_UP_ALT)
+            {
+#ifdef ALLOW_SELECTION
+                std::lock_guard lock{ selectedIndicesMutex };
+                if (!selectedAudioSessionsIndices.empty())
+                {
+                    std::lock_guard lock2{ audioSessionsMutex };
+                    for (auto&& kv : audioSessions)
+                    {
+                        for (size_t i = 0; i < selectedAudioSessionsIndices.size(); i++)
+                        {
+                            if (kv.second->Name() == selectedAudioSessionsIndices[i])
+                            {
+                                kv.second->SetVolume(kv.second->Volume() + stepping < 1.f ? kv.second->Volume() + stepping : 1.f);
+                                break;
+                            }
+                        }
+                    }
+                    return;
+                }
+#endif
+                mainAudioEndpoint->SetVolume(mainAudioEndpoint->Volume() + stepping < 1.f ? mainAudioEndpoint->Volume() + stepping : 1.f);
+            }
+            else
+            {
+                DebugLog(std::format("Hot key not recognized. Id: {0}", id));
             }
         }
         catch (...)
@@ -1126,9 +1193,9 @@ namespace winrt::Croak::implementation
     {
         if (!atomicLoaded.load() || audioSessions.size() == 0) return;
 
-        for (auto const& view : audioSessionViews)
+        for (auto&& view : audioSessionViews)
         {
-            auto&& pair = audioSessions.at(view.Id())->GetChannelsPeak();
+            auto&& pair = audioSessions.at(view.Id())->GetStereoPeaks();
             view.SetPeak(pair.first, pair.second);
         }
     }
@@ -1192,7 +1259,7 @@ namespace winrt::Croak::implementation
 
                         DispatcherQueue().TryEnqueue([this, id]()
                         {
-                            std::unique_lock lock{ audioSessionsMutex };
+                            std::lock_guard lock{ audioSessionsMutex };
                             if (AudioSessionView view = CreateView(audioSessions.at(id), true))
                             {
                                 audioSessionViews.InsertAt(0, view);
@@ -1247,7 +1314,6 @@ namespace winrt::Croak::implementation
                             if (audioSessionViews.IndexOf(view, indexOf))
                             {
                                 audioSessionViews.RemoveAt(indexOf);
-
                                 if (audioSessionViews.Size() == 0)
                                 {
                                     EnqueueString(L"All sessions expired.");// I18N: Translate "All sessions expired"
@@ -1267,11 +1333,10 @@ namespace winrt::Croak::implementation
         DispatcherQueue().TryEnqueue([this]()
         {
             audioSessionsPeakTimer.Stop();
-
             while (CAudio::AudioSession* newSession = audioController->NewSession())
             {
                 {
-                    std::unique_lock lock{ audioSessionsMutex };
+                    std::lock_guard lock{ audioSessionsMutex };
                     audioSessions.insert({ newSession->Id(), newSession });
                 }
 
@@ -1281,7 +1346,6 @@ namespace winrt::Croak::implementation
                     audioSessionViews.InsertAt(0, view);
                 }
             }
-
             audioSessionsPeakTimer.Start();
         });
     }
@@ -1311,17 +1375,15 @@ namespace winrt::Croak::implementation
             });
         }
 
-
         DispatcherQueue().TryEnqueue([&]()
         {
             mainAudioEndpointPeakTimer.Start();
                                                                      
             SystemVolumeSlider().Value(static_cast<double>(mainAudioEndpoint->Volume()) * 100.);
             MuteToggleButton().IsChecked(mainAudioEndpoint->Muted());
+            DefaultAudioEndpointName(mainAudioEndpoint->Name());
 
             ReloadAudioSessions();
-
-            DefaultAudioEndpointName(mainAudioEndpoint->Name());
         });
     }
 

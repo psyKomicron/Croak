@@ -128,10 +128,10 @@ namespace Croak::System::AppX
                     wcmatch matches{};
                     if (regex_match(fileName.c_str(), matches, targetScaleRegx) && matches.size() >= 3u)
                     {
-                        int value = stoi(matches[2]);
-                        if (value > max)
+                        int n = stoi(matches[2]);
+                        if (n > max)
                         {
-                            max = value;
+                            max = n;
                             maxRes = assetsPath + fileName;
                         }
                     }

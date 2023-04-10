@@ -56,7 +56,7 @@ namespace winrt::Croak::implementation
         }
     }
 
-    void SecondWindow::NavigationFrame_Navigated(IInspectable const&, NavigationEventArgs const& e)
+    void SecondWindow::NavigationFrame_Navigated(IInspectable const&, NavigationEventArgs const&)
     {
     }
 
@@ -80,7 +80,7 @@ namespace winrt::Croak::implementation
             e.Handled(true);
             ErrorMessageBar().EnqueueString(L"Navigation failed");
         }
-        catch (const hresult_error& err)
+        catch (const hresult_error&)
         {
             ErrorMessageBar().EnqueueString(L"Navigation failed");
         }

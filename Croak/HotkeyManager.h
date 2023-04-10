@@ -8,22 +8,17 @@ namespace Croak::System::HotKeys
     typedef uint32_t HotKeyId;
 
     /**
-     * @brief Singleton class to manage hotkeys.
+     * @brief Class to manage hotkeys.
     */
     class HotKeyManager
     {
     public:
+        HotKeyManager() = default;
         /**
          * @brief Copy constructor.
         */
         HotKeyManager(const HotKeyManager& other) = delete;
         ~HotKeyManager();
-
-        static HotKeyManager& GetHotKeyManager()
-        {
-            static HotKeyManager instance{};
-            return instance;
-        }
 
         inline winrt::event_token HotKeyFired(const winrt::Windows::Foundation::TypedEventHandler<HotKeyId, winrt::Windows::Foundation::IInspectable>& handler)
         {
@@ -43,10 +38,10 @@ namespace Croak::System::HotKeys
          * @param agnosticId Identifier for the caller to recognize that hot key when fired.
         */
         void RegisterHotKey(const winrt::Windows::System::VirtualKeyModifiers& modifiers, const uint32_t& virtualKey, const bool& isRepeating, const HotKeyId& agnosticId);
-        void EditKey(const ::Croak::System::HotKeys::HotKeyId& agnosticId, const winrt::Windows::System::VirtualKeyModifiers& modifiers, const uint32_t& virtualKey);
-        void EditKey(const ::Croak::System::HotKeys::HotKeyId& agnosticId, const bool& state);
+        bool EditKey(const ::Croak::System::HotKeys::HotKeyId& agnosticId, const winrt::Windows::System::VirtualKeyModifiers& modifiers, const uint32_t& virtualKey);
+        void DeactivateKey(const ::Croak::System::HotKeys::HotKeyId& agnosticId, const bool& state);
         void ReplaceOrInsertKey(::Croak::System::HotKeys::HotKey* previousKey, ::Croak::System::HotKeys::HotKey* newKey);
-        std::map<HotKeyId, ::Croak::System::HotKeys::HotKeyView> GetManagedKeys();
+        std::map<HotKeyId, ::Croak::System::HotKeys::HotKeyView> ViewManagedKeys();
 
         /**
          * @brief Copy operator.
@@ -56,11 +51,6 @@ namespace Croak::System::HotKeys
     private:
         Concurrency::concurrent_unordered_map<HotKeyId, HotKeys::HotKey*> hotKeys{};
         winrt::event<winrt::Windows::Foundation::TypedEventHandler<HotKeyId, winrt::Windows::Foundation::IInspectable>> e_hotKeyFired{};
-
-        /**
-         * @brief Default constructor.
-        */
-        HotKeyManager() = default;
     };
 }
 
